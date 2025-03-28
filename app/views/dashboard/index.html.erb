@@ -104,24 +104,41 @@
           <div class="text-lg mb-2 font-semibold">Products</div>
         </div>
       </div>
-
+      
       <!-- Products List Section -->
       <div class="space-y-6 mt-6">
-        
+
         <!-- Perishable Products -->
         <div>
           <div class="text-2xl font-semibold mb-1"><%= @perishables.size %></div>
-          <h4 class="text-lg mb-2 font-semibold">Perishables</h4>
+          <h4 class="text-lg mb-4 font-semibold">Perishables</h4>
           <ul class="space-y-3">
             <% @perishables.each do |product| %>
-              <li class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all flex justify-between items-center">
-                <span class="text-sm text-gray-600"><%= product.name %></span>
-                <span class="text-sm text-red-600 font-medium">
+              <li class="p-6 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all flex flex-col">
+                
+                <!-- Product Name -->
+                <span class="text-sm text-gray-600 font-medium mb-2"><%= product.name %></span>
+                
+                <!-- Expiration Date -->
+                <span class="text-sm text-red-600 font-medium mb-2">
                   <%= product.batch&.expiration_date&.strftime('%B %d, %Y') || 'No Expiry Set' %>
                 </span>
+
+                <!-- Quantity and Location Details -->
+                <% product.inventory_items.each do |inventory_item| %>
+                  <div class="flex justify-between">
+                    <span class="text-sm text-blue-600 font-medium mb-2">
+                      Quantity: <%= inventory_item.quantity || 0 %>
+                    </span>
+                    <span class="text-sm text-gray-500 mb-2">
+                      Location: <%= inventory_item.location&.name || 'Not Set' %>
+                    </span>
+                  </div>
+                <% end %>
               </li>
             <% end %>
           </ul>
+
 
           <!-- Action Links -->
           <div class="space-y-2 mt-6">
@@ -134,12 +151,26 @@
         <!-- Non-Perishable Products -->
         <div>
           <div class="text-2xl font-semibold mb-1"><%= @non_perishables.count %></div>
-          <h4 class="text-lg mb-2 font-semibold">Non-Perishables</h4>
+          <h4 class="text-lg mb-4 font-semibold">Non-Perishables</h4>
           <ul class="space-y-3">
             <% @non_perishables.each do |product| %>
-              <li class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all flex justify-between items-center">
-                <span class="text-sm text-gray-600"><%= product.name %></span>
+              <li class="p-6 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all flex justify-between items-center">
+                <span class="text-sm text-gray-600 font-medium"><%= product.name %></span>
                 <span class="text-sm text-green-600 font-medium">No Expiry</span>
+
+                <!-- Display Quantity and Locations for Non-Perishables -->
+                <div class="mt-4 space-y-2">
+                  <% product.inventory_items.each do |inventory_item| %>
+                    <div class="flex justify-between">
+                      <span class="text-sm text-blue-600 font-medium">
+                        Quantity: <%= inventory_item.quantity || 0 %>
+                      </span>
+                      <span class="text-sm text-gray-500">
+                        Location: <%= inventory_item.location&.name || 'Not Set' %>
+                      </span>
+                    </div>
+                  <% end %>
+                </div>
               </li>
             <% end %>
           </ul>
@@ -147,13 +178,7 @@
 
       </div>
 
-      <!-- Action Links -->
-      <div class="space-y-2 mt-6">
-        <a href="/products" class="text-[#f84525] font-medium text-sm hover:text-red-800">View All</a>
-        <br>
-        <a href="/products/new" class="text-[#f84525] font-medium text-sm hover:text-red-800">Add New</a>
-      </div>
-    </div>
+     </div>
   </div>
 </div>
 <!-- End Content -->

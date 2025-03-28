@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  attr_reader :low_threshold
+
   belongs_to :supplier, optional: true
   belongs_to :account
   belongs_to :batch, optional: true

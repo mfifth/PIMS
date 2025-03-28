@@ -9,7 +9,7 @@ class DashboardController < ApplicationController
                                             .sum('inventory_items.quantity * products.price')
     
     # Fetch perishable products by checking if they have a batch with a valid expiration date
-    @perishables = Product.where(user_id: Current.user.id, user_id: Current.user.id, perishable: true).distinct
+    @perishables = Product.where(user_id: Current.user.id, perishable: true).distinct
 
     # Non-perishable products: Exclude perishables and filter by user
     @non_perishables = Product.where(user_id: Current.user.id, perishable: false)

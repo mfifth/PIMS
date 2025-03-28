@@ -33,11 +33,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
     t.integer "notification_days_before_expiration"
     t.date "manufactured_date"
     t.date "expiration_date"
-    t.references "supplier", foreign_key: true, null: false
-    t.references "account", foreign_key: true, null: false
-    t.timestamps
+    t.integer "supplier_id"
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_batches_on_account_id"
+    t.index ["supplier_id"], name: "index_batches_on_supplier_id"
   end
-
 
   create_table "inventory_items", force: :cascade do |t|
     t.integer "product_id", null: false
@@ -171,6 +173,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "batches", "accounts"
+  add_foreign_key "batches", "suppliers"
   add_foreign_key "inventory_items", "products"
   add_foreign_key "location_product_capacities", "locations"
   add_foreign_key "location_product_capacities", "products"

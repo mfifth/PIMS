@@ -92,7 +92,8 @@ class ProductsController < ApplicationController
     if params[:product][:batch_id].present?
       @product.batch_id = params[:product][:batch_id]
     else
-      batch = Batch.create!(batch_params.merge(account_id: Current.account.id))
+      batch = Batch.create!(batch_params.merge(account_id: Current.account.id, 
+      notification_days_before_expiration: params[:product][:notification_days_before_expiration]))
       @product.batch = batch
       @product.save
     end
@@ -101,6 +102,7 @@ class ProductsController < ApplicationController
   def create_inventory_item
     InventoryItem.find_or_create_by!(
       location_id: inventory_item_params[:location_id],
+      low_threshold: params[:product][:low_threshold],
       product_id: @product.id,
       quantity: inventory_item_params[:quantity],
       daily_usage: inventory_item_params[:daily_usage]

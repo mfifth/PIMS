@@ -8,10 +8,14 @@ class Batch < ApplicationRecord
 
   after_save :check_expiration
 
+  def batch_info
+    "#{batch_number} - MFG: #{manufactured_date || 'N/A'} | EXP: #{expiration_date || 'N/A'}"
+  end
+
   private
 
   def check_expiration
-    if expiration_date.present? && expiration_date <= Date.today + notification_days_before.days
+    if expiration_date.present? && !notification_days_before_expiration.zero? && expiration_date <= Date.today + notification_days_before_expiration.days
       message = "Batch ##{batch_number} with #{products.count} products at is expiring soon (#{expiration_date})" +
         (Current.account.email_notification ? "Email alerts are enabled." : "Email alerts are disabled.") +
         (Current.account.text_notification ? "Text alerts are enabled." : "Text alerts are disabled.")

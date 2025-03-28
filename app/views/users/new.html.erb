@@ -22,6 +22,14 @@
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 
+      <!-- Phone Field -->
+      <div>
+        <%= form.telephone_field :phone, 
+          autocomplete: "Phone Number", 
+          placeholder: "Phone Number",
+          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
       <!-- Email Field -->
       <div>
         <%= form.email_field :email_address, 

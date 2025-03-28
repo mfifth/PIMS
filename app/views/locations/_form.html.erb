@@ -1,36 +1,47 @@
-<%= form_with(model: @location, local: true, class: "space-y-4") do |f| %>
-  <div>
-    <%= f.label :name, class: "block font-medium text-gray-700" %>
-    <%= f.text_field :name, class: "w-full p-2 border rounded mt-1" %>
-  </div>
+<div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6"><%= @location.new_record? ? "Add New Location" : "Edit Location" %></h1>
 
-  <div>
-    <%= f.label :address, class: "block font-medium text-gray-700" %>
-    <%= f.text_field :address, class: "w-full p-2 border rounded mt-1" %>
-  </div>
+  <%= form_with(model: @location, local: true, class: "space-y-6") do |f| %>
+    <!-- Name -->
+    <div>
+      <%= f.label :name, "Location Name", class: "block font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :name, class: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
 
-  <div>
-    <%= f.label :city, class: "block font-medium text-gray-700" %>
-    <%= f.text_field :city, class: "w-full p-2 border rounded mt-1" %>
-  </div>
+    <!-- Address -->
+    <div>
+      <%= f.label :address, "Street Address", class: "block font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :address, class: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+    </div>
 
-  <div>
-    <%= f.label :state, class: "block font-medium text-gray-700" %>
-    <%= f.text_field :state, class: "w-full p-2 border rounded mt-1" %>
-  </div>
+    <!-- City, State, Zip -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :city, "City", class: "block font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :city, class: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :state, "State", class: "block font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :state, class: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+    </div>
 
-  <div>
-    <%= f.label :zip_code, class: "block font-medium text-gray-700" %>
-    <%= f.text_field :zip_code, class: "w-full p-2 border rounded mt-1" %>
-  </div>
+    <!-- Zip Code & Country -->
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= f.label :zip_code, "Zip Code", class: "block font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :zip_code, class: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      <div>
+        <%= f.label :country, "Country", class: "block font-medium text-gray-700 mb-1" %>
+        <%= f.text_field :country, class: "w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+    </div>
 
-  <div>
-    <%= f.label :country, class: "block font-medium text-gray-700" %>
-    <%= f.text_field :country, class: "w-full p-2 border rounded mt-1" %>
-  </div>
-
-  <div class="mt-4">
-    <%= f.submit "Save", class: "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" %>
-    <%= link_to "Cancel", locations_path, class: "ml-2 text-gray-500 hover:underline" %>
-  </div>
-<% end %>
+    <!-- Buttons -->
+    <div class="mt-6 flex justify-between">
+      <%= f.submit "Save Location", class: "bg-green bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition" %>
+      <%= link_to "Cancel", locations_path, class: "bg-gray text-white hover:text-gray-700 rounded-lg px-6 py-3 transition" %>
+    </div>
+  <% end %>
+</div>

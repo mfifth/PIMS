@@ -3,7 +3,7 @@ class BatchesController < ApplicationController
 
   # GET /batches
   def index
-    @batches = Current.account.batches.includes(:products).order(created_at: :desc)
+    @batches = Current.account.batches.includes(:products).order(:expiration_date)
   end
 
   # GET /batches/:id
