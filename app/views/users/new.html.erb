@@ -1,0 +1,64 @@
+<!-- app/views/users/new.html.erb -->
+<div class="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+  <div class="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
+
+    <!-- Page Title -->
+    <h2 class="text-3xl font-semibold text-center text-gray-700">Sign Up</h2>
+
+    <% if flash[:alert] %>
+      <div class="mt-4 text-sm text-red-600 bg-red-100 border border-red-400 rounded-md p-3">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <!-- Sign-Up Form -->
+    <%= form_with model: @user, class: "mt-6 space-y-4" do |form| %>
+
+      <!-- Name Field -->
+      <div>
+        <%= form.text_field :name, 
+          required: true, autofocus: true, 
+          placeholder: "Full Name",
+          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <!-- Email Field -->
+      <div>
+        <%= form.email_field :email_address, 
+          required: true, autocomplete: "email", 
+          placeholder: "Email Address",
+          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <!-- Password Field -->
+      <div>
+        <%= form.password_field :password, 
+          required: true, 
+          placeholder: "Create Password", maxlength: 72,
+          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <!-- Confirm Password Field -->
+      <div>
+        <%= form.password_field :password_confirmation, 
+          required: true, 
+          placeholder: "Confirm Password", maxlength: 72,
+          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="w-full px-1 py-1 text-white text-center bg-blue-600 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
+        <%= form.submit "Create Account" %>
+      </div>
+
+    <% end %>
+
+    <!-- Already Have an Account? -->
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-600">Already have an account? 
+        <%= link_to "Sign In", '/session/new', class: "text-blue-600 hover:underline" %>
+      </p>
+    </div>
+
+  </div>
+</div>

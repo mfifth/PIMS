@@ -1,0 +1,12 @@
+<div class="max-w-2xl mx-auto mt-10 bg-white shadow-md rounded-lg p-6">
+  <h1 class="text-2xl font-bold mb-4"><%= @supplier.name %></h1>
+
+  <div class="mb-2"><strong>Contact:</strong> <%= @supplier.contact_name %></div>
+  <div class="mb-2"><strong>Email:</strong> <%= @supplier.contact_email %></div>
+  <div class="mb-2"><strong>Phone:</strong> <%= @supplier.phone_number %></div>
+
+  <div class="mt-6 flex space-x-4">
+    <%= link_to "Edit", edit_supplier_path(@supplier), class: "bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600" %>
+    <%= link_to "Back", suppliers_path, class: "bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600" %>
+  </div>
+</div>

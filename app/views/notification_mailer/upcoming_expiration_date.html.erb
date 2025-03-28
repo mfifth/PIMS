@@ -1,0 +1,101 @@
+<!-- app/views/user_mailer/upcoming_expiration_date.html.erb -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9fafb;
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #2c3e50;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #e74c3c;
+    }
+
+    .batch-number {
+      color: #2980b9;
+      font-weight: bold;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #777;
+    }
+
+    .footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 20px;
+      background-color: #2980b9;
+      color: #fff;
+      font-size: 16px;
+      text-align: center;
+      border-radius: 5px;
+      text-decoration: none;
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Upcoming Expiration Date Alert</h1>
+
+    <p>Dear <%= @user.name %>,</p>
+
+    <p>We wanted to notify you that the batch <span class="batch-number"><%= @batch.batch_number %></span> is approaching its expiration date.</p>
+
+    <p><span class="highlight">Expiration Date:</span> <%= @batch.expiration_date.strftime('%B %d, %Y') %></p>
+
+    <p>If you need to take any action, please review the batch details in your account.</p>
+
+    <a href="<%= url_for(controller: 'batches', action: 'show', id: @batch.id) %>" class="button">View Batch Details</a>
+
+    <div class="footer">
+      <p>Best regards,</p>
+      <p>Your Company Name</p>
+      <p><a href="http://www.yourcompany.com">www.yourcompany.com</a></p>
+    </div>
+  </div>
+
+</body>
+</html>

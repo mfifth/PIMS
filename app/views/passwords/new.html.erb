@@ -1,0 +1,39 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100 px-4">
+  <div class="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
+
+    <!-- Page Title -->
+    <h1 class="text-3xl font-semibold text-center text-gray-700">Forgot Your Password?</h1>
+
+    <!-- Flash Messages -->
+    <% if flash[:alert] %>
+      <div class="mt-4 text-sm text-red-600 bg-red-100 border border-red-400 rounded-md p-3">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+
+    <!-- Password Reset Form -->
+    <%= form_with url: passwords_path, class: "mt-6 space-y-6" do |form| %>
+
+      <!-- Email Field -->
+      <div>
+        <%= form.email_field :email_address, 
+          required: true, autofocus: true, autocomplete: "username", 
+          placeholder: "Enter your email address",
+          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="w-full px-4 py-3 text-white text-center bg-blue-600 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
+        <%= form.submit "Email Reset Instructions" %>
+      </div>
+
+    <% end %>
+
+    <!-- Back to Sign In Button -->
+    <div class="mt-4 text-center">
+      <%= link_to "Back to Sign In", '/signin', 
+        class: "w-full inline-block px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition font-semibold text-lg" %>
+    </div>
+
+  </div>
+</div>

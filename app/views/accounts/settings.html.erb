@@ -1,0 +1,41 @@
+<h1 class="text-2xl font-semibold mb-4">Account Settings</h1>
+
+<%= form_with(url: '/update_settings', local: true, method: :put, class: "space-y-4 bg-white p-8 rounded-lg shadow-xl border border-gray-300") do |form| %>
+  <!-- User Information Section -->
+  <h2 class="text-lg font-semibold mb-4">User Information</h2>
+  
+  <!-- Email Field -->
+  <div>
+    <%= form.label :email, "Email", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.email_field :email, value: Current.user.email_address, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+  </div>
+  
+  <!-- Phone Number Field -->
+  <div>
+    <%= form.label :phone, "Phone Number", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.text_field :phone, value: Current.user.phone, 
+        class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500", 
+        pattern: "[0-9]*", 
+        title: "Please enter only numbers" %>
+  </div>
+
+
+  <hr class="my-8">
+
+  <!-- Account Settings Section -->
+  <h2 class="text-lg font-semibold mb-4">Notification Settings</h2>
+
+  <!-- Email Notification Toggle -->
+  <div>
+    <%= label_tag :email_notification, "Receive Email Notifications", class: "block text-sm font-medium text-gray-700" %>
+    <%= check_box_tag :email_notification, Current.account.email_notification, Current.account.email_notification, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+  </div>
+
+  <!-- Text Notification Toggle -->
+  <div>
+    <%= label_tag :text_notification, "Receive Text Notifications", class: "block text-sm font-medium text-gray-700" %>
+    <%= check_box_tag :text_notification, Current.account.text_notification, Current.account.text_notification, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500" %>
+  </div>
+
+  <%= form.submit "Update Settings", class: "bg-blue bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700" %>
+<% end %>

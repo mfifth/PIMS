@@ -1,0 +1,159 @@
+<!-- Content -->
+<div class="p-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+    
+  <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+    <div class="flex justify-between mb-6">
+      <div>
+        <div class="flex items-center mb-1">
+          <div class="text-2xl font-semibold"><%= @batches.count %></div>
+        </div>
+        <div class="text-lg mb-2 font-semibold">Batches</div>
+      </div>
+    </div>
+
+    <!-- List of Batches -->
+    <ul class="space-y-4">
+      <% @batches.each do |batch| %>
+        <li class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all">
+          <a href="<%= batch_path(batch) %>" class="flex justify-between items-center text-[#f84525] font-medium text-sm hover:text-red-800">
+            <span>Batch:
+            <br> 
+            <%= batch.batch_number %></span>
+            <span class="text-gray-500 text-xs">
+              MFG: <%= batch.manufactured_date %> 
+              <br>
+              EXP: <%= batch.expiration_date %>
+            </span>
+          </a>
+
+          <!-- Locations with Products in this Batch -->
+          <div class="text-sm text-gray-600 mt-1">
+            <strong>Locations:</strong> 
+            <%= batch.products.joins(:inventory_items).joins("INNER JOIN locations ON inventory_items.location_id = locations.id").distinct.pluck('locations.name').join(', ') %>
+          </div>
+
+          <!-- Product Categories in this Batch -->
+          <div class="text-sm text-gray-600 mt-1">
+            <strong>Categories:</strong> 
+            <%= batch.products.distinct.pluck(:category).join(', ') %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+
+
+    <!-- Action Links -->
+    <div class="mt-4 space-y-2">
+      <a href="/batches" class="text-[#f84525] font-medium text-sm hover:text-red-800">View All</a>
+      <br>
+      <a href="/batches/new" class="text-[#f84525] font-medium text-sm hover:text-red-800">Add New</a>
+    </div>
+  </div>
+
+
+
+    <!-- Locations Card -->
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+      <div class="flex justify-between mb-6">
+        <div>
+          <div class="text-2xl font-semibold"><%= @locations.count %></div>
+          <div class="text-lg mb-2 font-semibold">Locations</div>
+        </div>
+      </div>
+
+      <!-- Locations List -->
+      <ul class="space-y-4">
+        <% @locations.each do |location| %>
+          <% 
+            low_stock = location.inventory_items.any? { |item| item.quantity < 5 }
+            has_perishables = location.inventory_items.any? { |item| item.product.perishable? }
+          %>
+          <li class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all">
+            <a href="<%= location_path(location) %>" class="flex justify-between items-center text-[#f84525] font-medium text-sm hover:text-red-800">
+              <span><%= location.name %></span>
+
+              <!-- Indicators: Low Stock & Perishable Items -->
+              <div class="flex space-x-3">
+                <span class="<%= low_stock ? 'text-red-500' : 'text-green-500' %> text-xs font-semibold">
+                  <%= low_stock ? 'Low Stock' : 'Stock OK' %>
+                </span>
+
+                <span class="<%= has_perishables ? 'text-orange-500' : 'text-gray-400' %> text-xs font-semibold">
+                  <%= has_perishables ? 'Perishables Present' : 'No Perishables' %>
+                </span>
+              </div>
+            </a>
+          </li>
+        <% end %>
+      </ul>
+
+      <!-- Action Links -->
+      <div class="mt-4 space-y-2">
+        <a href="/locations" class="text-[#f84525] font-medium text-sm hover:text-red-800">View All</a>
+        <br>
+        <a href="/locations/new" class="text-[#f84525] font-medium text-sm hover:text-red-800">Add New</a>
+      </div>
+    </div>
+
+    <!-- Products Card -->
+    <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
+      <div class="flex justify-between mb-6">
+        <div>
+          <div class="text-2xl font-semibold mb-1"><%= Current.user.products.count %></div>
+          <div class="text-lg mb-2 font-semibold">Products</div>
+        </div>
+      </div>
+
+      <!-- Products List Section -->
+      <div class="space-y-6 mt-6">
+        
+        <!-- Perishable Products -->
+        <div>
+          <div class="text-2xl font-semibold mb-1"><%= @perishables.size %></div>
+          <h4 class="text-lg mb-2 font-semibold">Perishables</h4>
+          <ul class="space-y-3">
+            <% @perishables.each do |product| %>
+              <li class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all flex justify-between items-center">
+                <span class="text-sm text-gray-600"><%= product.name %></span>
+                <span class="text-sm text-red-600 font-medium">
+                  <%= product.batch&.expiration_date&.strftime('%B %d, %Y') || 'No Expiry Set' %>
+                </span>
+              </li>
+            <% end %>
+          </ul>
+
+          <!-- Action Links -->
+          <div class="space-y-2 mt-6">
+            <a href="/products" class="text-[#f84525] font-medium text-sm hover:text-red-800">View All</a>
+            <br>
+            <a href="/products/new" class="text-[#f84525] font-medium text-sm hover:text-red-800">Add New</a>
+          </div>
+        </div>
+
+        <!-- Non-Perishable Products -->
+        <div>
+          <div class="text-2xl font-semibold mb-1"><%= @non_perishables.count %></div>
+          <h4 class="text-lg mb-2 font-semibold">Non-Perishables</h4>
+          <ul class="space-y-3">
+            <% @non_perishables.each do |product| %>
+              <li class="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-all flex justify-between items-center">
+                <span class="text-sm text-gray-600"><%= product.name %></span>
+                <span class="text-sm text-green-600 font-medium">No Expiry</span>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Action Links -->
+      <div class="space-y-2 mt-6">
+        <a href="/products" class="text-[#f84525] font-medium text-sm hover:text-red-800">View All</a>
+        <br>
+        <a href="/products/new" class="text-[#f84525] font-medium text-sm hover:text-red-800">Add New</a>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End Content -->

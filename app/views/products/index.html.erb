@@ -1,0 +1,51 @@
+<h1 class="text-2xl font-semibold mb-4">Products</h1>
+
+<!-- Search Bar -->
+<div style='background-color: white;' class="mb-4 rounded">
+  <%= form_with url: products_path, method: :get, local: true, class: "flex space-x-2" do |form| %>
+    <%= form.text_field :query, value: params[:query], placeholder: "Search by name or SKU", class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+    <%= form.submit "Search", class: "bg-blue bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition" %>
+  <% end %>
+</div>
+
+<div class="bg-white shadow-md rounded-lg p-6">
+  <% if @products.any? %>
+    <ul class="divide-y divide-gray-200">
+      <% @products.each do |product| %>
+        <br>
+        <li class="py-4">
+          <div>
+            <!-- Product Name -->
+            <div class="text-lg font-semibold text-gray-800"><%= product.name %></div>
+            <div class="text-sm text-gray-600">
+              SKU: <%= product.sku %> | Category: <%= product.category %> |
+              <%= show_price(product) %>
+              <%= show_batch_info(product) %>
+            </div>
+          </div>
+
+          <!-- Product Locations & Quantities -->
+          <div class="mt-2 text-sm text-gray-700">
+            <strong>Stock Locations:</strong>
+            <% product.inventory_items.includes(:location).each do |inventory_item| %>
+              <p><%= inventory_item.location.name %>: <%= inventory_item.quantity %> in stock</p>
+            <% end %>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="mt-2 space-x-2">
+            <%= link_to 'Show', product, class: "text-blue-500 hover:underline" %>
+            <%= link_to 'Edit', edit_product_path(product), class: "text-yellow-500 hover:underline" %>
+            <%= link_to 'Delete', product, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-500">No products available.</p>
+  <% end %>
+</div>
+
+<div class="mt-4">
+  <%= link_to 'New Product', new_product_path, class: "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" %>
+</div>

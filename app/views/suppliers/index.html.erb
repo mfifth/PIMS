@@ -1,0 +1,35 @@
+<div class="max-w-4xl mx-auto mt-10">
+  <h1 class="text-2xl font-bold mb-4">Suppliers</h1>
+
+  <div class="mb-4">
+    <%= link_to "New Supplier", new_supplier_path, class: "bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+  </div>
+
+  <div class="bg-white shadow-md rounded-lg overflow-hidden">
+    <table class="w-full table-auto">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="px-4 py-2 text-left">Name</th>
+          <th class="px-4 py-2 text-left">Contact</th>
+          <th class="px-4 py-2 text-left">Email</th>
+          <th class="px-4 py-2 text-left">Phone</th>
+          <th class="px-4 py-2 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @suppliers.each do |supplier| %>
+          <tr class="border-b">
+            <td class="px-4 py-2"><%= link_to supplier.name, supplier, class: "text-blue-500 hover:underline" %></td>
+            <td class="px-4 py-2"><%= supplier.contact_name %></td>
+            <td class="px-4 py-2"><%= supplier.contact_email %></td>
+            <td class="px-4 py-2"><%= supplier.phone_number %></td>
+            <td class="px-4 py-2">
+              <%= link_to "Edit", edit_supplier_path(supplier), class: "text-yellow-500 hover:underline" %> |
+              <%= link_to "Delete", supplier, method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-500 hover:underline" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

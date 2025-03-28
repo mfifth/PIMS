@@ -1,0 +1,36 @@
+<%= form_with(model: @location, local: true, class: "space-y-4") do |f| %>
+  <div>
+    <%= f.label :name, class: "block font-medium text-gray-700" %>
+    <%= f.text_field :name, class: "w-full p-2 border rounded mt-1" %>
+  </div>
+
+  <div>
+    <%= f.label :address, class: "block font-medium text-gray-700" %>
+    <%= f.text_field :address, class: "w-full p-2 border rounded mt-1" %>
+  </div>
+
+  <div>
+    <%= f.label :city, class: "block font-medium text-gray-700" %>
+    <%= f.text_field :city, class: "w-full p-2 border rounded mt-1" %>
+  </div>
+
+  <div>
+    <%= f.label :state, class: "block font-medium text-gray-700" %>
+    <%= f.text_field :state, class: "w-full p-2 border rounded mt-1" %>
+  </div>
+
+  <div>
+    <%= f.label :zip_code, class: "block font-medium text-gray-700" %>
+    <%= f.text_field :zip_code, class: "w-full p-2 border rounded mt-1" %>
+  </div>
+
+  <div>
+    <%= f.label :country, class: "block font-medium text-gray-700" %>
+    <%= f.text_field :country, class: "w-full p-2 border rounded mt-1" %>
+  </div>
+
+  <div class="mt-4">
+    <%= f.submit "Save", class: "bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600" %>
+    <%= link_to "Cancel", locations_path, class: "ml-2 text-gray-500 hover:underline" %>
+  </div>
+<% end %>

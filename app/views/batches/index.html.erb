@@ -1,0 +1,35 @@
+<!-- Index View: List all batches with associated products and supplier -->
+<h1 class="text-3xl font-semibold text-gray-700 mb-6">Batches</h1>
+<table class="min-w-full bg-white border border-gray-300">
+  <thead>
+    <tr>
+      <th class="px-4 py-2 border">Batch Number</th>
+      <th class="px-4 py-2 border">Manufactured Date</th>
+      <th class="px-4 py-2 border">Expiration Date</th>
+      <th class="px-4 py-2 border">Supplier</th>
+      <th class="px-4 py-2 border">Products</th>
+      <th class="px-4 py-2 border">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @batches.each do |batch| %>
+      <tr class="border">
+        <td class="px-4 py-2 border"><%= batch.batch_number %></td>
+        <td class="px-4 py-2 border"><%= batch.manufactured_date %></td>
+        <td class="px-4 py-2 border"><%= batch.expiration_date %></td>
+        <td class="px-4 py-2 border"><%= batch.supplier.name if batch.supplier %></td>
+        <td class="px-4 py-2 border">
+          <% batch.products.where(account_id: Current.account.id).each do |product| %>
+            <p><%= product.name %>- <%= product.sku %></p>
+          <% end %>
+        </td>
+        <td class="px-4 py-2 border">
+          <%= link_to 'Show', batch_path(batch), class: "text-blue-500" %> |
+          <%= link_to 'Edit', edit_batch_path(batch), class: "text-yellow-500" %> |
+          <%= link_to 'Delete', batch, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-500" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= link_to 'New Batch', new_batch_path, class: "mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded" %>

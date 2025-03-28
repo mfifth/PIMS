@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .container {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border: 1px solid #ddd;
+      max-width: 600px;
+      margin: auto;
+    }
+    .header {
+      background-color: #ffcc00;
+      padding: 10px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .content {
+      padding: 15px;
+    }
+    .footer {
+      margin-top: 20px;
+      font-size: 12px;
+      text-align: center;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      Low Inventory Alert
+    </div>
+    <div class="content">
+      <p>Hello <%= @user.name %>,</p>
+      <p>The following product is running low on stock:</p>
+      <ul>
+        <li><strong>Product:</strong> <%= @product.name %></li>
+        <li><strong>Current Quantity:</strong> <%= @inventory_item.quantity %></li>
+        <li><strong>Location:</strong> <%= @location.name %></li>
+      </ul>
+      <p>Please restock as soon as possible.</p>
+    </div>
+    <div class="footer">
+      This is an automated message. Please do not reply.
+    </div>
+  </div>
+</body>
+</html>

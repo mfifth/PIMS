@@ -1,0 +1,21 @@
+<h1 class="text-2xl font-semibold mb-4">Notifications</h1>
+
+<div class="bg-white shadow-md rounded-lg p-6">
+  <% if @notifications.any? %>
+    <ul class="divide-y divide-gray-200">
+      <% @notifications.each do |notification| %>
+        <li class="py-4 flex justify-between items-center <%= 'bg-yellow-100' unless notification.read %>">
+          <div>
+            <p class="text-lg font-semibold text-gray-800"><%= notification.message %></p>
+            <p class="text-sm text-gray-600"><%= notification.notification_type.humanize %> - <%= time_ago_in_words(notification.created_at) %> ago</p>
+          </div>
+          <% unless notification.read %>
+            <%= link_to 'Mark as Read', mark_as_read_notification_path(notification), method: :patch, class: "text-blue-500 hover:underline" %>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p class="text-gray-500">No notifications available.</p>
+  <% end %>
+</div>

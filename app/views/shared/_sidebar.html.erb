@@ -1,0 +1,76 @@
+<!-- Sidebar -->
+<div class="fixed left-0 top-0 w-64 h-full bg-[#f8f4f3] p-4 z-50 flex flex-col justify-between shadow-md transition-transform sidebar-menu">
+    <div>
+        <!-- Logo / Title -->
+        <a href="#" class="flex items-center pb-4 border-b border-gray-300">
+            <h2 class="font-bold text-2xl text-gray-900">PIMS</h2>
+        </a>
+
+        <!-- Navigation -->
+        <ul class="mt-4 space-y-1">
+            <span class="text-gray-500 text-xs font-bold uppercase tracking-wide">Admin</span>
+            
+            <li>
+                <a href="/" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                    <i class="ri-home-2-line mr-3 text-lg"></i>
+                    <span class="text-sm">Dashboard</span>
+                </a>
+            </li>
+
+            <!-- Suppliers Dropdown -->
+            <li>
+                <a href="<%= locations_path %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                    <i class="bx bx-list-ul mr-3 text-lg"></i>                
+                    <span class="text-sm">Locations</span>
+                </a>
+            </li>
+            <li>
+                <a href="<%= products_path %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                    <i class="bx bx-box mr-3 text-lg"></i>                
+                    <span class="text-sm">Products</span>
+                </a>
+            </li>
+            <li>
+                <a href="<%= batches_path %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                    <i class="bx bx-cart mr-3 text-lg"></i>                
+                    <span class="text-sm">Batches</span>
+                </a>
+            </li>
+            <li>
+                <a href="<%= suppliers_path %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md sidebar-dropdown-toggle">
+                    <i class="bx bx-user mr-3 text-lg"></i>                
+                    <span class="text-sm">Suppliers</span>
+                    <i class="ri-arrow-right-s-line ml-auto transition-transform"></i>
+                </a>
+            </li>
+
+            <span class="text-gray-500 text-xs font-bold uppercase tracking-wide">Personal</span>
+
+            <li>
+                <a href="<%= notifications_path %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                    <i class="bx bx-bell mr-3 text-lg"></i>                
+                    <span class="text-sm">Notifications</span>
+                    <span class="ml-auto px-2 py-0.5 text-xs font-medium text-red-600 bg-red-200 rounded-full"><%= Current.account.notifications.size %></span>
+                </a>
+            </li>
+
+            <li>
+                <a href="/settings" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                    <i class="bx bx-cog mr-3 text-lg"></i>                
+                    <span class="text-sm">Settings</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Sign Out Button -->
+    <div class="mt-auto">
+        <a href="/signout" class="flex items-center justify-center py-2 px-4 text-white bg-red-500 hover:bg-red-600 rounded-md">
+            <i class="bx bx-log-out mr-2 text-lg"></i>                
+            <span class="text-sm">Sign Out</span>
+        </a>
+    </div>
+</div>
+
+<!-- Sidebar Overlay for Mobile -->
+<div class="fixed top-0 left-0 w-full h-full bg-black/50 z-40 md:hidden sidebar-overlay hidden"></div>

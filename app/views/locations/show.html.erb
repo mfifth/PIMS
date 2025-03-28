@@ -1,0 +1,52 @@
+<h1 class="text-2xl font-semibold mb-4"><%= @location.name %></h1>
+
+<p><strong>Address:</strong> <%= @location.address %></p>
+<p><strong>City:</strong> <%= @location.city %></p>
+
+<br>
+<br>
+
+<h2 class="text-lg font-semibold mt-6">Inventory Items</h2>
+
+<div class="space-y-4 mt-4">
+  <% @inventory_items.group_by(&:product).each do |product, items| %>
+    <div class="bg-gray-50 p-4 rounded-lg shadow-sm hover:shadow-md transition-all">
+      <div class="flex justify-between items-center text-gray-700">
+        <span class="font-semibold"><%= product.name %></span>
+        
+        <!-- Display the sum of quantities for the product -->
+        <span class="text-gray-500">Total Quantity: <%= items.sum(&:quantity) %></span>
+      </div>
+      
+      <!-- Display Categories (if available) -->
+      <div class="mt-2 text-sm text-gray-600">
+        <% if product.category.present? %>
+          <strong>Category</strong>
+          <p><%= product.category %></p>
+        <% else %>
+          <p>No categories assigned</p>
+        <% end %>
+      </div>
+
+      <!-- Display Batch Information for Perishable Products -->
+      <% if product.perishable? %>
+        <div class="mt-2 text-sm text-gray-600">
+          <strong>Batch Information:</strong>
+          <ul class="list-disc pl-5">
+            <% items.each do |item| %>
+              <li>
+                <%= "Batch #{item.product.batch.batch_number} (Manufactured: #{item.product.batch.manufactured_date}, Expiration: #{item.product.batch.expiration_date})" %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+    </div>
+  <% end %>
+</div>
+
+<div class="mt-4">
+  <%= link_to 'Edit', edit_location_path(@location), class: "text-yellow-500 hover:underline" %> |
+  <%= link_to 'Back to Locations', locations_path, class: "text-blue-500 hover:underline" %>
+</div>

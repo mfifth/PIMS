@@ -1,0 +1,50 @@
+<h1 class="text-3xl font-semibold text-center text-gray-700 mb-6">
+  <%= @batch.new_record? ? 'Create New Batch' : 'Edit Batch' %>
+</h1>
+
+<%= form_with(model: @batch, local: true, class: "space-y-6 bg-white p-8 rounded-lg shadow-xl border border-gray-300") do |form| %>
+
+  <!-- Batch Details Section -->
+  <div class="space-y-4">
+    <div>
+      <%= form.label :batch_number, "Batch Number", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.text_field :batch_number, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <%= form.label :manufactured_date, "Manufactured Date", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.date_field :manufactured_date, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+      </div>
+      <div>
+        <%= form.label :expiration_date, "Expiration Date", class: "block text-sm font-medium text-gray-700" %>
+        <%= form.date_field :expiration_date, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+      </div>
+    </div>
+
+    <!-- Notification Days Before Expiration -->
+    <div>
+      <%= form.label :notification_days_before_expiration, "Notify Me (Days Before Expiration)", class: "block text-sm font-medium text-gray-700" %>
+      <%= form.number_field :notification_days_before_expiration, min: 1, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+    </div>
+  </div>
+
+  <!-- Supplier Section -->
+  <div>
+    <%= form.label :supplier_id, "Supplier", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.select :supplier_id, Supplier.all.collect { |s| [s.name, s.id] }, { include_blank: "Select Supplier" }, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <!-- Product Selection -->
+  <div>
+    <%= form.label :product_ids, "Select Products", class: "block text-sm font-medium text-gray-700" %>
+    <%= form.collection_select :product_ids, Current.account.products, :id, :name, {}, { multiple: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" } %>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="mt-6 flex space-x-4">
+    <%= form.submit @batch.new_record? ? "Create Batch" : "Update Batch", class: "bg-blue w-full py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition" %>
+    <%= link_to 'Cancel', batches_path, class: "w-full py-2 px-4 text-center text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition" %>
+  </div>
+
+<% end %>
