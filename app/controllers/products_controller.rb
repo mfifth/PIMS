@@ -27,7 +27,9 @@ class ProductsController < ApplicationController
 
   # POST /products
   def create
-    @product = Product.new(product_params.merge(account_id: Current.account.id))
+    category = create_category if product_params[:category_name].present?
+    @product = Product.new(product_params.merge(account_id: Current.account.id, 
+    category_id: category&.id || product_params[:category_id]))
 
     if @product.perishable?
       assign_or_create_batch
@@ -68,7 +70,7 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:name, :sku, :category, :description, :price, :perishable, :supplier_id, :user_id, :account_id, :batch_id)
+    params.require(:product).permit(:name, :sku, :category_name, :category_id, :description, :price, :perishable, :supplier_id, :user_id, :account_id, :batch_id)
   end
 
   def batch_params
@@ -97,6 +99,10 @@ class ProductsController < ApplicationController
       @product.batch = batch
       @product.save
     end
+  end
+
+  def create_category
+    Current.account.categories.find_or_create_by(name: product_params[:category_name].downcase)
   end
 
   def create_inventory_item

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_29_004929) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -19,8 +19,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
     t.integer "suppliers_id"
     t.integer "locations_id"
     t.integer "products_id"
-    t.boolean "text_notification", default: false
-    t.boolean "email_notification", default: false
     t.index ["locations_id"], name: "index_accounts_on_locations_id"
     t.index ["orders_id"], name: "index_accounts_on_orders_id"
     t.index ["products_id"], name: "index_accounts_on_products_id"
@@ -39,6 +37,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_batches_on_account_id"
     t.index ["supplier_id"], name: "index_batches_on_supplier_id"
+  end
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "account_id"
+    t.index ["account_id"], name: "index_categories_on_account_id"
   end
 
   create_table "inventory_items", force: :cascade do |t|
@@ -123,7 +129,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.string "sku", null: false
-    t.string "category"
     t.text "description"
     t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.boolean "perishable", default: false
@@ -133,8 +138,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
     t.integer "user_id"
     t.integer "account_id"
     t.integer "batch_id"
+    t.integer "category_id"
     t.index ["account_id"], name: "index_products_on_account_id"
     t.index ["batch_id"], name: "index_products_on_batch_id"
+    t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["supplier_id"], name: "index_products_on_supplier_id"
     t.index ["user_id"], name: "index_products_on_user_id"
   end
@@ -169,6 +176,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
     t.string "name"
     t.integer "account_id"
     t.string "phone"
+    t.boolean "text_notification", default: false
+    t.boolean "email_notification", default: false
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
@@ -183,6 +192,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_27_230240) do
   add_foreign_key "order_items", "products"
   add_foreign_key "orders", "suppliers"
   add_foreign_key "orders", "users"
+  add_foreign_key "products", "categories"
   add_foreign_key "products", "suppliers"
   add_foreign_key "sessions", "users"
 end

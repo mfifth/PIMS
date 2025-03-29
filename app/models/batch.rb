@@ -15,10 +15,11 @@ class Batch < ApplicationRecord
   private
 
   def check_expiration
-    if expiration_date.present? && !notification_days_before_expiration.zero? && expiration_date <= Date.today + notification_days_before_expiration.days
-      message = "Batch ##{batch_number} with #{products.count} products at is expiring soon (#{expiration_date})" +
-        (Current.account.email_notification ? "Email alerts are enabled." : "Email alerts are disabled.") +
-        (Current.account.text_notification ? "Text alerts are enabled." : "Text alerts are disabled.")
+    if expiration_date.present? && expiration_date <= Date.today + notification_days_before_expiration.days
+      text = "Batch ##{batch_number} with #{products.count} products at is expiring soon (#{expiration_date})"
+      message = text + 
+        (Current.account.email_notification ? "Email alerts are enabled." : "") +
+        (Current.account.text_notification ? "Text alerts are enabled." : "")
 
       Notification.create(
         message: message,
@@ -29,7 +30,7 @@ class Batch < ApplicationRecord
       NotificationMailer.upcoming_expiration_date(self, Current.user).deliver_now
 
       return unless Current.account.text_notification
-      NotificationService.send_sms(Current.user.phone, message)
+      NotificationService.send_sms(Current.user.phone, text)
     end
   end
 end

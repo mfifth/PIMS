@@ -14,7 +14,9 @@ Rails.application.routes.draw do
     end
   end
   resources :suppliers
-  resources :locations
+  resources :locations do
+    get 'inventory', to: 'locations#inventory_data'
+  end
   resources :batches
   resources :products do
     resources :batches, only: [:create, :update]
@@ -37,8 +39,10 @@ Rails.application.routes.draw do
   get 'signout', to: 'sessions#destroy'
   get 'signin', to: 'sessions#new'
   post 'signup', to: 'users#create'
-  get '/settings', to: 'accounts#settings'
-  put '/update_settings', to: 'accounts#update_settings'
+
+  get 'inventory', to: 'locations#inventory'
+  post 'update_inventory', to: 'locations#update_inventory'
+
   
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

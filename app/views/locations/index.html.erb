@@ -10,8 +10,8 @@
       <div class="mt-4">
         <h3 class="text-lg font-semibold text-gray-800">Product Inventory</h3>
         <ul class="list-disc list-inside text-gray-700 mt-2">
-          <% location.inventory_items.joins(:product).group("products.category").sum(:quantity).each do |category, quantity| %>
-            <li><strong><%= category %></strong>: <%= quantity %> items</li>
+          <% location.inventory_items.joins(product: :category).group("categories.name").sum(:quantity).each do |category_name, quantity| %>
+            <li><strong><%= category_name %></strong>: <%= quantity %> items</li>
           <% end %>
         </ul>
       </div>
@@ -20,8 +20,8 @@
       <div class="mt-4">
         <h3 class="text-lg font-semibold text-gray-800">Category Costs</h3>
         <ul class="list-disc list-inside text-gray-700 mt-2">
-          <% location.inventory_items.joins(:product).group("products.category").sum("inventory_items.quantity * products.price").each do |category, cost| %>
-            <li><strong><%= category %></strong>: <%= number_to_currency(cost) %></li>
+          <% location.inventory_items.joins(product: :category).group("categories.name").sum("inventory_items.quantity * products.price").each do |category_name, cost| %>
+            <li><strong><%= category_name %></strong>: <%= number_to_currency(cost) %></li>
           <% end %>
         </ul>
       </div>

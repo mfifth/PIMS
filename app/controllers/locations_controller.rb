@@ -37,6 +37,24 @@ class LocationsController < ApplicationController
     redirect_to locations_path, notice: 'Location was successfully deleted.'
   end
 
+  def inventory
+  end
+
+  def update_inventory
+    Product.find(params[:product_id]).update(batch_id: params[:batch_id])
+    InventoryItem.find_by(location_id: params[:location_id], product_id: params[:product_id])
+    .update(quantity: params[:quantity])
+
+    redirect_back fallback_location: '/', notice: "Inventory updated successfully."
+  end
+
+  # In your LocationsController
+  def inventory_data
+    location = Location.find(params[:location_id])
+    products = location.products
+    render json: { products: products }
+  end
+
   private
 
   def set_location

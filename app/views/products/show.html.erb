@@ -10,7 +10,7 @@
   <!-- Category & Description -->
   <div>
     <span class="text-gray-700 font-semibold">Category:</span>
-    <span class="text-gray-600"><%= @product.category %></span>
+    <span class="text-gray-600"><%= @product.category.name.capitalize %></span>
   </div>
   <div>
     <span class="text-gray-700 font-semibold">Description:</span>
@@ -75,10 +75,6 @@
             <div>
               <span class="text-gray-700 font-semibold">Quantity:</span>
               <span class="text-gray-600"><%= inventory_item.quantity %></span>
-            </div>
-            <div>
-              <span class="text-gray-700 font-semibold">Daily Usage:</span>
-              <span class="text-gray-600"><%= inventory_item.daily_usage || 'N/A' %></span>
             </div>
             <div>
               <span class="text-gray-700 font-semibold">Low Threshold:</span>

@@ -37,9 +37,9 @@
                 </a>
             </li>
             <li>
-                <a href="<%= suppliers_path %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md sidebar-dropdown-toggle">
+                <a href="/inventory" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md sidebar-dropdown-toggle">
                     <i class="bx bx-user mr-3 text-lg"></i>                
-                    <span class="text-sm">Suppliers</span>
+                    <span class="text-sm">Update Inventory</span>
                     <i class="ri-arrow-right-s-line ml-auto transition-transform"></i>
                 </a>
             </li>
@@ -55,7 +55,7 @@
             </li>
 
             <li>
-                <a href="/settings" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
+                <a href="<%= settings_user_path(Current.user) %>" class="flex items-center font-semibold py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md">
                     <i class="bx bx-cog mr-3 text-lg"></i>                
                     <span class="text-sm">Settings</span>
                 </a>

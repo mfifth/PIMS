@@ -1,0 +1,79 @@
+<h1 class="text-3xl font-semibold text-gray-900 mb-6">Update Product Inventory</h1>
+
+<%= form_with url: update_inventory_path, method: :post, local: true, class: "bg-white p-8 rounded-lg shadow-lg space-y-6" do |form| %>
+  
+  <!-- Location Selection -->
+  <div>
+    <%= form.label :location_id, "Select Location", class: "text-sm font-medium text-gray-800" %>
+    <%= form.collection_select :location_id, Location.where(account_id: Current.account.id), :id, :name, 
+        prompt: "Select a location", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <!-- Product Selection (Dynamically loaded) -->
+  <div id="product-selection" style="display: none;">
+    <%= form.label :product_id, "Select Product", class: "text-sm font-medium text-gray-800" %>
+    <%= form.collection_select :product_id, [], :id, :name, 
+        prompt: "Select a product", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <!-- Quantity Field -->
+  <div id="quantity-field" style="display: none;">
+    <%= form.label :quantity, "Quantity", class: "text-sm font-medium text-gray-800" %>
+    <%= form.number_field :quantity, min: 0, required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter quantity" %>
+  </div>
+
+  <!-- Batch Selection -->
+  <div id="batch-selection" style="display: none;">
+    <%= form.label :batch_id, "Select Existing Batch", class: "text-sm font-medium text-gray-800" %>
+    <%= form.collection_select :batch_id, Current.account.batches, :id, :batch_info, { include_blank: "N/A" }, 
+        class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+  <!-- Submit Button -->
+  <div id='submit-btn' style='display: none;' class="mt-6 text-center">
+    <%= form.submit "Update Inventory", class: "bg-blue w-full bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500" %>
+  </div>
+
+<% end %>
+
+<!-- JavaScript to handle dynamic product and batch selection based on location -->
+<script>
+  document.querySelector('[name="location_id"]').addEventListener('change', function() {
+    const locationId = this.value;
+
+    if (locationId) {
+      // Show product selection and fetch products for the selected location
+      document.getElementById("product-selection").style.display = "block";
+
+      fetch(`/locations/${locationId}/inventory`)
+        .then(response => response.json())
+        .then(data => {
+          const productSelect = document.querySelector('[name="product_id"]');
+          productSelect.innerHTML = "<option value=''>Select a product</option>"; // Clear previous options
+          data.products.forEach(product => {
+            const option = document.createElement("option");
+            option.value = product.id;
+            option.textContent = product.name;
+            productSelect.appendChild(option);
+          });
+        });
+    } else {
+      // Hide product selection if no location is selected
+      document.getElementById("product-selection").style.display = "none";
+    }
+  });
+
+  document.querySelector('[name="product_id"]').addEventListener('change', function() {
+    const productId = this.value;
+    if (productId) {
+      // Show quantity field and batch selection
+      document.getElementById("quantity-field").style.display = "block";
+      document.getElementById("batch-selection").style.display = "block";
+      document.getElementById("submit-btn").style.display = "block";
+    } else {
+      document.getElementById("quantity-field").style.display = "none";
+      document.getElementById("batch-selection").style.display = "none";
+      document.getElementById("submit-btn").style.display = "block";
+    }
+  });
+</script>

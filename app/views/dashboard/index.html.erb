@@ -36,7 +36,7 @@
           <!-- Product Categories in this Batch -->
           <div class="text-sm text-gray-600 mt-1">
             <strong>Categories:</strong> 
-            <%= batch.products.distinct.pluck(:category).join(', ') %>
+            <%= batch.products.joins(:category).distinct.pluck('categories.name').join(', ') %>
           </div>
         </li>
       <% end %>
