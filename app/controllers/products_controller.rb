@@ -23,15 +23,29 @@ class ProductsController < ApplicationController
     @batches = Batch.where(id: @product.batch_id) # Fetch the associated batch
     @inventory_items = InventoryItem.where(product_id: @product.id)
     @locations = Location.includes(:inventory_items).where(inventory_items: { product_id: @product.id })
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   # GET /products/new
   def new
     @product = Product.new
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   # GET /products/:id/edit
   def edit
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   # POST /products
@@ -64,11 +78,14 @@ class ProductsController < ApplicationController
   end
 
   # DELETE /products/:id
+
   def destroy
-    if @product.destroy
-      redirect_to products_url, notice: 'Product was successfully destroyed.'
-    else
-      redirect_to products_url, alert: 'There was an issue deleting the product.'
+    @product = Product.find(params[:id])
+    @product.destroy
+  
+    respond_to do |format|
+      format.html { redirect_to products_path, notice: "Product was successfully deleted." }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("product_#{@product.id}") }
     end
   end
 

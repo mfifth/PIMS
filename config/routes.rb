@@ -11,6 +11,8 @@ Rails.application.routes.draw do
     member do
       get :settings
       put :update_settings
+      post :send_test_email
+      post :send_test_text
     end
   end
   resources :suppliers

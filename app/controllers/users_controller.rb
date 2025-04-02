@@ -39,6 +39,30 @@ class UsersController < ApplicationController
     end
   end
 
+  def send_test_email
+    if NotificationMailer.test_email(Current.user).deliver_now
+      Notification.create(message: 'This is a test for email', notification_type: "Alert")
+      flash[:notice] = "Test email sent successfully!"
+    else
+      flash[:alert] = "Failed to send test email."
+    end
+
+    respond_to do |format|
+      format.html { redirect_to settings_user_path(Current.user), notice: 'Settings updated successfully.' }
+      format.turbo_stream
+    end
+  end
+
+  def send_test_text
+    NotificationService.send_sms(Current.user.phone, "This is a test.")
+    Notification.create(message: 'This is a test for text', notification_type: "Alert")
+
+    respond_to do |format|
+      format.html { redirect_to settings_user_path(Current.user), notice: 'Settings updated successfully.' }
+      format.turbo_stream
+    end
+  end
+
   private
 
   # Strong parameters to permit user inputs

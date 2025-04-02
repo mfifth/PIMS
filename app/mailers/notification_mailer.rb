@@ -18,4 +18,9 @@ class NotificationMailer < ApplicationMailer
     @batch = batch
     mail(to: @user.email_address, subject: "Upcoming Expiration Date for Batch ##{@batch.batch_number}")
   end
+
+  def test_email(user)
+    @user = user
+    mail(to: @user.email_address, subject: "This is a test")
+  end
 end

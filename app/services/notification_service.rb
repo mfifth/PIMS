@@ -1,5 +1,6 @@
 class NotificationService
   def self.send_sms(phone_number, message)
+    return if Rails.env.development?
     client = Twilio::REST::Client.new
 
     client.messages.create(

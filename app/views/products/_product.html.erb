@@ -16,8 +16,8 @@
   </div>
 
   <div class="mt-2 space-x-2">
-    <%= link_to 'Show', product, class: "text-blue-500 hover:underline" %>
-    <%= link_to 'Edit', edit_product_path(product), class: "text-yellow-500 hover:underline" %>
-    <%= link_to 'Delete', product, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
+    <%= link_to 'Show', product, data: { turbo_frame: 'main' }, class: "text-blue-500 hover:underline" %>
+    <%= link_to 'Edit', edit_product_path(product), data: { turbo_frame: 'main' }, class: "text-yellow-500 hover:underline" %>
+    <%= link_to 'Delete', product, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
   </div>
 </li>

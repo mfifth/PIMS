@@ -7,6 +7,11 @@ class LocationsController < ApplicationController
 
   def show
     @inventory_items = @location.inventory_items
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end 
   end
 
   def new
@@ -22,7 +27,12 @@ class LocationsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end 
+  end
 
   def update
     if @location.update(location_params)

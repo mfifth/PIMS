@@ -28,25 +28,38 @@
   <!-- Notification Settings -->
   <div>
     <h2 class="text-lg font-semibold mb-3 text-gray-700">Notification Settings</h2>
+    <br>
 
     <!-- Email Notifications -->
-    <div class="flex items-center space-x-2">
+    <div id='email-notification' class="flex items-center space-x-2">
       <%= form.check_box :email_notification, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5" %>
       <%= form.label :email_notification, "Receive Email Notifications", class: "text-sm text-gray-700" %>
     </div>
-
+      
     <!-- Text Notifications -->
-    <div class="flex items-center space-x-2 mt-2">
+    <div id='text-notification' class="flex items-center space-x-2 mt-2">
       <%= form.check_box :text_notification, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5" %>
       <%= form.label :text_notification, "Receive Text Notifications", class: "text-sm text-gray-700" %>
     </div>
-
-
   </div>
 
   <!-- Submit Button -->
-  <div class="mt-6 flex justify-end">
+  <div class="mt-6 flex">
     <%= form.submit "Update Settings", class: "bg-blue bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" %>
   </div>
-
 <% end %>
+
+<!-- Test Buttons Outside the Form -->
+<div class="mt-6 flex flex-col space-y-4 w-1/4">  
+  <!-- Send Test Email -->
+  <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "email-notification" }, class: "w-full" do %>
+    <%= submit_tag "Test Email", class: "bg-blue w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" %>
+  <% end %>
+  
+  <!-- Send Test Text -->
+  <turbo-frame>
+    <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "text-notification" }, class: "w-full" do %>
+      <%= submit_tag "Test Text", class: "bg-blue w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" %>
+    <% end %>
+  </turbo-frame>
+</div>

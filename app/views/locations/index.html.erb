@@ -1,49 +1,51 @@
-<h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Locations</h1>
+<turbo-frame id='main'>
+  <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Locations</h1>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-  <% @locations.each do |location| %>
-    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-300 transition hover:shadow-xl">
-      <!-- Location Title -->
-      <h2 class="text-2xl font-semibold text-gray-900 mb-3"><%= location.name %></h2>
-      
-      <!-- Address -->
-      <p class="text-gray-700 text-sm mb-4">
-        <strong class="font-semibold">Address:</strong> 
-        <%= location.address %>, <%= location.city %>, <%= location.state %>
-      </p>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <% @locations.each do |location| %>
+      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-300 transition hover:shadow-xl">
+        <!-- Location Title -->
+        <h2 class="text-2xl font-semibold text-gray-900 mb-3"><%= location.name %></h2>
+        
+        <!-- Address -->
+        <p class="text-gray-700 text-sm mb-4">
+          <strong class="font-semibold">Address:</strong> 
+          <%= location.address %>, <%= location.city %>, <%= location.state %>
+        </p>
 
-      <!-- Product Inventory Section -->
-      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4">
-        <h3 class="text-lg font-medium text-gray-800 mb-2">Product Inventory</h3>
-        <ul class="text-gray-600 text-sm space-y-1">
-          <% location.inventory_items.joins(:product).group("products.name").sum(:quantity).each do |product_name, quantity| %>
-            <li><strong><%= product_name %></strong>: <%= quantity %> items</li>
-          <% end %>
-        </ul>
+        <!-- Product Inventory Section -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4">
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Product Inventory</h3>
+          <ul class="text-gray-600 text-sm space-y-1">
+            <% location.inventory_items.joins(:product).group("products.name").sum(:quantity).each do |product_name, quantity| %>
+              <li><strong><%= product_name %></strong>: <%= quantity %> items</li>
+            <% end %>
+          </ul>
+        </div>
+
+
+        <!-- Category Costs -->
+        <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Category Costs</h3>
+          <ul class="text-gray-600 text-sm space-y-1">
+            <% location.inventory_items.joins(product: :category).group("categories.name").sum("inventory_items.quantity * products.price").each do |category_name, cost| %>
+              <li><strong><%= category_name %></strong>: <%= number_to_currency(cost) %></li>
+            <% end %>
+          </ul>
+        </div>
+
+        <!-- Actions -->
+        <div class="mt-5 flex justify-between">
+          <%= link_to 'Show', location, data: { turbo_frame: 'main' }, class: "text-blue-600 hover:text-blue-700 font-medium" %>
+          <%= link_to 'Edit', edit_location_path(location), data: { turbo_frame: 'main' }, class: "text-yellow-600 hover:text-yellow-700 font-medium" %>
+          <%= link_to 'Delete', location, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:text-red-700 font-medium" %>
+        </div>
       </div>
+    <% end %>
+  </div>
 
-
-      <!-- Category Costs -->
-      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-        <h3 class="text-lg font-medium text-gray-800 mb-2">Category Costs</h3>
-        <ul class="text-gray-600 text-sm space-y-1">
-          <% location.inventory_items.joins(product: :category).group("categories.name").sum("inventory_items.quantity * products.price").each do |category_name, cost| %>
-            <li><strong><%= category_name %></strong>: <%= number_to_currency(cost) %></li>
-          <% end %>
-        </ul>
-      </div>
-
-      <!-- Actions -->
-      <div class="mt-5 flex justify-between">
-        <%= link_to 'Show', location, class: "text-blue-600 hover:text-blue-700 font-medium" %>
-        <%= link_to 'Edit', edit_location_path(location), class: "text-yellow-600 hover:text-yellow-700 font-medium" %>
-        <%= link_to 'Delete', location, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-600 hover:text-red-700 font-medium" %>
-      </div>
-    </div>
-  <% end %>
-</div>
-
-<!-- New Location Button -->
-<div class="flex justify-center mt-8">
-  <%= link_to 'New Location', new_location_path, class: "bg-green-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-green-600 transition" %>
-</div>
+  <!-- New Location Button -->
+  <div class="flex justify-center mt-8">
+    <%= link_to 'New Location', new_location_path, class: "bg-green-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-green-600 transition" %>
+  </div>
+</turbo-frame>
