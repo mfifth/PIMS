@@ -1,4 +1,7 @@
-// Import and register all your controllers from the importmap via controllers/**/*_controller
-import { application } from "controllers/application"
-import { eagerLoadControllersFrom } from "@hotwired/stimulus-loading"
-eagerLoadControllersFrom("controllers", application)
+// import { application } from "../application"; // Import Stimulus application instance
+// import InfiniteScrollController from "./infinite_scroll_controller"; // Import your controller
+
+// // Register the controller manually
+// application.register("infinite-scroll", InfiniteScrollController);
+
+// export { InfiniteScrollController };

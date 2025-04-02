@@ -1,3 +1,8 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "@hotwired/turbo-rails"
-import "controllers"
+import { Application } from "@hotwired/stimulus";
+import InfiniteScrollController from "./controllers/infinite_scroll_controller";
+
+const application = Application.start();
+window.Stimulus = application; // ✅ Expose for debugging
+
+// Register controllers manually
+application.register("infinite-scroll", InfiniteScrollController);

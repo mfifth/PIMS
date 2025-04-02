@@ -1,0 +1,23 @@
+<li style='list-style-type: none;' class="py-6" id="product_<%= product.id %>">
+  <div>
+    <div class="text-lg font-semibold text-gray-800"><%= product.name %></div>
+    <div class="text-sm text-gray-600">
+      SKU: <%= product.sku %> | Category: <%= product.category.name.capitalize %> |
+      <%= show_price(product) %>
+      <%= show_batch_info(product) %>
+    </div>
+  </div>
+
+  <div class="mt-2 text-sm text-gray-700">
+    <strong>Stock Locations:</strong>
+    <% product.inventory_items.includes(:location).each do |inventory_item| %>
+      <p><%= inventory_item.location.name %>: <%= inventory_item.quantity %> in stock</p>
+    <% end %>
+  </div>
+
+  <div class="mt-2 space-x-2">
+    <%= link_to 'Show', product, class: "text-blue-500 hover:underline" %>
+    <%= link_to 'Edit', edit_product_path(product), class: "text-yellow-500 hover:underline" %>
+    <%= link_to 'Delete', product, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
+  </div>
+</li>

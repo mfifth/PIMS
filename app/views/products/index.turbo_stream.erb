@@ -1,0 +1,13 @@
+<%= turbo_stream.append "products_list" do %>
+  <%= render @products %>
+<% end %>
+
+<% if @products.next_page %>
+  <%= turbo_stream.replace "infinite-scroll-trigger" do %>
+    <div data-controller="infinite-scroll"
+      data-infinite-scroll-url-value="<%= products_path(page: @products.next_page) %>">
+    </div>
+  <% end %>
+<% else %>
+  <%= turbo_stream.remove "infinite-scroll-trigger" %>
+<% end %>

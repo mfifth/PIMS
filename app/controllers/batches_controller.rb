@@ -3,7 +3,15 @@ class BatchesController < ApplicationController
 
   # GET /batches
   def index
-    @batches = Current.account.batches.includes(:products).order(:expiration_date)
+    if params[:query].present?
+      @batches = Current.account.batches.joins(:products)
+                 .order(:expiration_date)
+                 .where("products.name LIKE ? OR batch_number LIKE ? OR expiration_date LIKE ?", 
+                 "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
+                 .page(params[:page]).per(4)
+    else
+      @batches = Current.account.batches.joins(:products).page(params[:page]).per(4)
+    end
   end
 
   # GET /batches/:id

@@ -3,9 +3,18 @@ class ProductsController < ApplicationController
 
   def index
     if params[:query].present?
-      @products = Current.account.products.where("name LIKE ? OR sku LIKE ? OR category LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
-    else
       @products = Current.account.products
+      .joins(:category)
+      .where("products.name LIKE ? OR products.sku LIKE ? OR categories.name LIKE ?", 
+             "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
+             .page(params[:page]).per(3)
+    else
+      @products = Current.account.products.page(params[:page]).per(3)
+    end
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
     end
   end
 
