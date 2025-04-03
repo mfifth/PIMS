@@ -5,18 +5,27 @@ class BatchesController < ApplicationController
   def index
     if params[:query].present?
       @batches = Current.account.batches
-                 .joins(:products)
+                 .left_joins(:products)
                  .order(:expiration_date)
                  .where("products.name LIKE ? OR batch_number LIKE ? OR expiration_date LIKE ?", 
                  "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
                  .page(params[:page]).per(3).distinct
     else
-      @batches = Current.account.batches.joins(:products).page(params[:page]).per(3).distinct
+      @batches = Current.account.batches.left_joins(:products).page(params[:page]).per(3).distinct
     end
 
     respond_to do |format|
       format.html
-      format.turbo_stream
+      format.turbo_stream do
+        if @batches.any?
+          render turbo_stream: [
+            turbo_stream.append("batches-list", partial: "batches/batch", collection: @batches),
+            turbo_stream.replace("infinite-scroll-metadata", partial: "batches/next_page_metadata", locals: { next_page: @batches.next_page })
+          ]
+        else
+          render turbo_stream: ""
+        end
+      end
     end
   end
 

@@ -2,14 +2,18 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static values = {
-    url: String,
     container: String,
   }
 
   connect() {
     this.isLoading = false
-    this.hasMorePages = !!this.urlValue  // Check if there's a next page
-    window.addEventListener("scroll", this.checkScroll.bind(this))
+    this.hasMorePages = true
+    this.scrollHandler = this.debounce(this.checkScroll.bind(this), 200)
+    window.addEventListener("scroll", this.scrollHandler)
+  }
+
+  disconnect() {
+    window.removeEventListener("scroll", this.scrollHandler)
   }
 
   checkScroll() {
@@ -22,7 +26,8 @@ export default class extends Controller {
   }
 
   async loadNextPage() {
-    if (!this.urlValue) {
+    const url = this.getNextPageUrl()
+    if (!url) {
       this.hasMorePages = false
       return
     }
@@ -32,42 +37,42 @@ export default class extends Controller {
     if (loading) loading.classList.remove("hidden")
 
     try {
-      const response = await fetch(this.urlValue)
-      if (response.ok) {
-        const html = await response.text()
-        const container = document.querySelector(this.containerValue)
+      const response = await fetch(url)
+      const html = await response.text()
 
-        if (!container) {
-          console.error("Batch container not found.")
-          this.hasMorePages = false
-          return
-        }
-
-        if (html.trim() === "") {
-          this.hasMorePages = false
-        } else {
-          container.insertAdjacentHTML("beforeend", html)
-
-          // Get the new next_page from the response
-          const parser = new DOMParser()
-          const doc = parser.parseFromString(html, "text/html")
-          const newUrl = doc.querySelector("[data-infinite-batch-scroll-url-value]")?.dataset.infiniteBatchScrollUrlValue
-
-          if (newUrl) {
-            this.urlValue = newUrl
-          } else {
-            this.hasMorePages = false
-          }
-        }
-      } else {
-        console.error("Error loading next page:", response.status)
+      const container = document.querySelector(this.containerValue)
+      if (!container) {
+        console.error("Scroll container not found")
         this.hasMorePages = false
+        return
+      }
+
+      if (html.trim() === "") {
+        this.hasMorePages = false
+      } else {
+        container.insertAdjacentHTML("beforeend", html)
+
+        // Update next page URL after insert
+        const nextUrl = this.getNextPageUrl()
+        if (!nextUrl) this.hasMorePages = false
       }
     } catch (err) {
-      console.error("Fetch failed:", err)
+      console.error("Error loading next page:", err)
     }
 
     this.isLoading = false
     if (loading) loading.classList.add("hidden")
+  }
+
+  getNextPageUrl() {
+    return document.getElementById("infinite-scroll-metadata")?.dataset.infiniteBatchScrollUrlValue || ""
+  }
+
+  debounce(func, delay) {
+    let timeout
+    return function () {
+      clearTimeout(timeout)
+      timeout = setTimeout(() => func.apply(this, arguments), delay)
+    }
   }
 }

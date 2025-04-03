@@ -23,15 +23,10 @@
       </div>
     <% end %>
 
+    <%= render partial: "batches/next_page_metadata", locals: { next_page: @batches.next_page } %>
+
     <div id="loading" class="hidden text-center py-4 text-gray-500">
       Loading more batches...
-    </div>
-  </div>
-
-      
-
-    <div id="loading" class="hidden text-center py-4 text-gray-500">
-      'Loading more batches...'
     </div>
   </div>
 </turbo-frame>
