@@ -17,6 +17,7 @@
     <% end %>
 
     <div class="space-y-6">
+      <% total_inventory_value = 0 %> <!-- To hold the sum of all inventory prices -->
       <% @inventory_items.group_by(&:product).each do |product, items| %>
         <div class="bg-gray-50 p-6 rounded-lg shadow hover:shadow-lg transition-all">
           <div class="flex justify-between items-center text-gray-800">
@@ -31,6 +32,12 @@
             <% else %>
               <p class="italic text-gray-500">No category assigned</p>
             <% end %>
+          </div>
+
+          <!-- Price and Total Value Calculation -->
+          <div class="mt-4 text-gray-700">
+            <p><strong>Price:</strong> <%= number_to_currency(product.price) %></p>
+            <strong>Total:</strong> <%= number_to_currency(items.sum { |item| item.quantity * product.price }) %>
           </div>
 
           <!-- Batch Information (for perishable products) -->

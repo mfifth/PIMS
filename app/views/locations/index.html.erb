@@ -1,5 +1,8 @@
 <turbo-frame id='main'>
-  <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Locations</h1>
+  <div class="flex justify-between items-center mb-6">
+    <h1 style='font-size: x-large' class="text-6xl font-bold text-gray-800">Locations</h1>
+    <%= link_to 'New Location', new_location_path, class: "bg-green-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-green-600 transition" %>
+  </div>
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
     <% @locations.each do |location| %>
@@ -15,20 +18,29 @@
 
         <!-- Product Inventory Section -->
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 mb-4">
-          <h3 class="text-lg font-medium text-gray-800 mb-2">Product Inventory</h3>
-          <ul class="text-gray-600 text-sm space-y-1">
-            <% location.inventory_items.joins(:product).group("products.name").sum(:quantity).each do |product_name, quantity| %>
-              <li><strong><%= product_name %></strong>: <%= quantity %> items</li>
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Perishable Inventory</h3>
+          <ul class="text-gray-600 text-sm space-y-3">
+            <% location.inventory_items.joins(product: :batch).not_expired
+            .order("batches.expiration_date ASC")
+            .each do |inventory_item| %>
+              <li>
+                <strong><%= inventory_item.product.name %></strong>: <%= inventory_item.quantity %> items
+                <br>
+                <% if inventory_item.product.perishable && inventory_item.product.batch %>
+                  EXP: <%= inventory_item.product.batch.expiration_date.strftime("%B %d, %Y") %>
+                <% else %>
+                  N/A
+                <% end %>
+              </li>
             <% end %>
           </ul>
         </div>
-
 
         <!-- Category Costs -->
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
           <h3 class="text-lg font-medium text-gray-800 mb-2">Category Costs</h3>
           <ul class="text-gray-600 text-sm space-y-1">
-            <% location.inventory_items.joins(product: :category).group("categories.name").sum("inventory_items.quantity * products.price").each do |category_name, cost| %>
+            <% location.inventory_items.limit(5).joins(product: :category).group("categories.name").sum("inventory_items.quantity * products.price").each do |category_name, cost| %>
               <li><strong><%= category_name %></strong>: <%= number_to_currency(cost) %></li>
             <% end %>
           </ul>
@@ -42,10 +54,5 @@
         </div>
       </div>
     <% end %>
-  </div>
-
-  <!-- New Location Button -->
-  <div class="flex justify-center mt-8">
-    <%= link_to 'New Location', new_location_path, class: "bg-green-500 text-white px-5 py-2.5 rounded-lg shadow-md hover:bg-green-600 transition" %>
   </div>
 </turbo-frame>

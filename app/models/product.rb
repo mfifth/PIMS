@@ -13,4 +13,6 @@ class Product < ApplicationRecord
 
   validates :name, presence: true
   validates :perishable, inclusion: { in: [true, false] }
+
+  scope :perishable, -> { where(perishable: true) }
 end

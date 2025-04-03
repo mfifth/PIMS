@@ -3,6 +3,7 @@ class InventoryItem < ApplicationRecord
   belongs_to :product
 
   scope :sorted_by_expiration, -> { order(:expiration_date) }
+  scope :not_expired, -> { where('expiration_date <= ?', Date.today) }
 
   validates :quantity, numericality: { greater_than_or_equal_to: 0 }
   
