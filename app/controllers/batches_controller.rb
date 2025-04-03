@@ -4,13 +4,19 @@ class BatchesController < ApplicationController
   # GET /batches
   def index
     if params[:query].present?
-      @batches = Current.account.batches.joins(:products)
+      @batches = Current.account.batches
+                 .joins(:products)
                  .order(:expiration_date)
                  .where("products.name LIKE ? OR batch_number LIKE ? OR expiration_date LIKE ?", 
                  "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
-                 .page(params[:page]).per(4)
+                 .page(params[:page]).per(3).distinct
     else
-      @batches = Current.account.batches.joins(:products).page(params[:page]).per(4)
+      @batches = Current.account.batches.joins(:products).page(params[:page]).per(3).distinct
+    end
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
     end
   end
 
@@ -55,10 +61,10 @@ class BatchesController < ApplicationController
   private
 
   def set_batch
-    @batch = Batch.includes(:account).find(params[:id])
+    @batch = Batch.includes(:account, products: :inventory_items).find(params[:id])
   end
 
   def batch_params
-    params.require(:batch).permit(:batch_number, :manufactured_date, :expiration_date, :supplier_id, product_ids: [])
+    params.require(:batch).permit(:batch_number, :manufactured_date, :notification_days_before_expiration, :expiration_date, :supplier_id, product_ids: [])
   end
 end

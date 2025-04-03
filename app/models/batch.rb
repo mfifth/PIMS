@@ -6,6 +6,8 @@ class Batch < ApplicationRecord
   validates :batch_number, presence: true
   validates :expiration_date, presence: true
 
+  validates :batch_number, uniqueness: { scope: :account_id }
+
   after_save :check_expiration
 
   def batch_info
@@ -17,7 +19,8 @@ class Batch < ApplicationRecord
   private
 
   def check_expiration
-    if expiration_date.present? && expiration_date <= Date.today + notification_days_before_expiration.days
+    return unless expiration_date.present? && notification_days_before_expiration.present?
+    if expiration_date <= Date.today + notification_days_before_expiration.days
       text = "Batch ##{batch_number} with #{products.count} products at is expiring soon (#{expiration_date})"
       message = text + 
         (Current.user.email_notification ? "Email alerts are enabled." : "") +

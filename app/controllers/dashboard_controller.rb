@@ -4,7 +4,7 @@ class DashboardController < ApplicationController
     @locations = Current.account.locations.includes(:inventory_items, products: :batch)
                                             
     # Fetch perishable products by checking if they have a batch with a valid expiration date
-    @perishables = Product.where(account_id: Current.account.id, perishable: true).includes(locations: :inventory_items).distinct
+    @perishables = Product.where(account_id: Current.account.id, perishable: true).includes(:batch, locations: :inventory_items,).distinct
 
     # Non-perishable products: Exclude perishables and filter by user
     @non_perishables = Product.where(account_id: Current.account.id, perishable: false)
