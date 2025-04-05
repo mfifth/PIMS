@@ -12,21 +12,19 @@ class InventoryItem < ApplicationRecord
   private
 
   def check_low_stock
-    if low_threshold && quantity <= low_threshold
-      text = "#{product.name} is running low at #{location.name} (#{quantity} left). "
-      message = text +
-        (Current.user.email_notification ? "Email alerts are enabled." : "") +
-        (Current.user.text_notification ? "Text alerts are enabled." : "")
-      Notification.create(
-        message: message,
-        notification_type: "Alert"
-      )
+    return unless low_threshold && quantity <= low_threshold
 
-      return unless Current.user.email_notification
-      NotificationMailer.low_inventory_alert(self, Current.user).deliver_now
+    text = "#{product.name} is running low at #{location.name} (#{quantity} left). "
 
-      return unless Current.user.text_notification
-      NotificationService.send_sms(Current.user.phone, text)
+    Notification.create(
+      message: text,
+      notification_type: "Alert"
+      account_id: product.account.id
+    )
+
+    product.account.users do |user|
+      NotificationMailer.low_inventory_alert(self, user).deliver_now if user.email_notification
+      NotificationService.send_sms(user.phone, text) if user.text_notification
     end
   end
 end

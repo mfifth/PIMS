@@ -1,5 +1,5 @@
 <turbo-frame id='main'>
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md" data-controller='batch'>
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md" data-controller='batch'>
     <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">
       <%= @product.new_record? ? 'Create New Product' : 'Edit Product' %>
     </h1>
@@ -10,119 +10,111 @@
       <div class="border-b pb-4">
         <h2 class="text-lg font-medium text-gray-700 mb-2">General Information</h2>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <%= form.label :name, "Product Name", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.text_field :name, required: true, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter product name" %>
+            <%= form.text_field :name, required: true, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
 
           <div>
             <%= form.label :sku, "SKU/Barcode", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.text_field :sku, required: true, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter SKU" %>
+            <%= form.text_field :sku, required: true, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4 mt-4">
-          <% if Current.account.categories.any? %>
-            <div class="space-y-2">
-              <%= form.label :category_id, "Select an existing category", class: "block text-sm font-medium text-gray-700" %>
-                <div class="relative">
-                  <%= form.select :category_id, Current.account.categories.collect { |c| [c.name, c.id] }, { prompt: "Select a category" }, 
-                    class: "block w-full px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none" %>
-                  <div class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500">
-                    <i class="fas fa-chevron-down"></i> <!-- Optional icon for dropdown -->
-                  </div>
-                </div>
-            </div>
-          <% end %>
 
           <div>
-            <%= form.label :category, "Create a New Category", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.text_field :category_name, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-gray-700 placeholder-gray-400" %>
+            <%= form.label :category_id, "Select Existing Category", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :category_id, Current.account.categories.collect { |c| [c.name, c.id] }, { prompt: "Select a category" },
+              class: "w-full px-4 py-2 border rounded-lg" %>
+          </div>
+
+          <div>
+            <%= form.label :category_name, "Or Create New Category", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :category_name, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
 
           <div>
             <%= form.label :price, "Price", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :price, step: 0.01, min: 0, required: true, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter price" %>
+            <%= form.number_field :price, step: 0.01, min: 0, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
         </div>
 
         <div class="mt-4">
           <%= form.label :description, "Description", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.text_area :description, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter product description" %>
+          <%= form.text_area :description, rows: 3, class: "w-full px-4 py-2 border rounded-lg" %>
         </div>
 
         <div class="mt-4 flex items-center">
-          <%= form.check_box :perishable, class: "form-checkbox h-5 w-5 text-green-600 focus:ring-green-500", id: "perishable_checkbox", data: { action: "change->batch#toggleBatchFields" } %>
+          <%= form.check_box :perishable, class: "h-5 w-5 text-green-600", id: "perishable_checkbox", data: { action: "change->batch#toggleBatchFields" } %>
           <%= form.label :perishable, "Is this product perishable?", class: "ml-2 text-sm font-medium text-gray-700" %>
         </div>
       </div>
 
-      <!-- Batch Information (Only visible if perishable) -->
+      <!-- Batch Information -->
       <div id="batch_fields" class="border-b pb-4" data-batch-target="batchFields" style="<%= @product.perishable? ? '' : 'display: none;' %>">
         <h2 class="text-lg font-medium text-gray-700 mb-2">Batch Information</h2>
 
         <div>
           <%= form.label :batch_id, "Select Existing Batch", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.collection_select :batch_id, Current.account.batches, :id, 
-            :batch_info, { include_blank: "Create a New Batch" }, 
-            class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", 
-            id: "batch_select", data: { action: "change->batch#toggleNewBatchFields" } %>
+          <%= form.collection_select :batch_id, Current.account.batches, :id, :batch_info, { include_blank: "Create a New Batch" },
+            class: "w-full px-4 py-2 border rounded-lg", id: "batch_select", data: { action: "change->batch#toggleNewBatchFields" } %>
         </div>
 
         <div id="new_batch_fields" data-batch-target="newBatchFields" style="<%= @product.batch_id.present? ? 'display: none;' : '' %>">
-          <div class="grid grid-cols-2 gap-4 mt-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div>
-              <%= form.label :batch_number, "Batch Number", class: "block text-sm font-medium text-gray-700" %>
-              <%= form.text_field :batch_number, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter batch number" %>
+              <%= form.label :batch_number, "Batch Number", id: 'batch-number', class: "block text-sm font-medium text-gray-700" %>
+              <%= form.text_field :batch_number, class: "w-full px-4 py-2 border rounded-lg" %>
             </div>
 
-            <div class="mt-4">
+            <div>
               <%= form.label :manufactured_date, "Manufactured Date", class: "block text-sm font-medium text-gray-700" %>
-              <%= form.date_field :manufactured_date, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" %>
+              <%= form.date_field :manufactured_date, class: "w-full px-4 py-2 border rounded-lg" %>
             </div>
           </div>
 
-          <div class="mt-4">
-            <%= form.label :expiration_date, "Expiration Date", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.date_field :expiration_date, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" %>
-          </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            <div>
+              <%= form.label :expiration_date, "Expiration Date", class: "block text-sm font-medium text-gray-700" %>
+              <%= form.date_field :expiration_date, min: Date.today.to_s, id: 'product_expiration_date', class: "w-full px-4 py-2 border rounded-lg" %>
+            </div>
 
-          <div class="mt-4">
-            <%= form.label :notification_days_before_expiration, "Notify Me (Days Before Expiration)", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :notification_days_before_expiration, 
-                  min: 0, step: 1, value: @product&.batch&.notification_days_before_expiration || 0, required: true,
-                  class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-            %>
+            <div>
+              <%= form.label :notification_days_before_expiration, "Notify Before Expiry (Days)", class: "block text-sm font-medium text-gray-700" %>
+              <%= form.number_field :notification_days_before_expiration, min: 0, step: 1,
+                value: @product&.batch&.notification_days_before_expiration || 0,
+                class: "w-full px-4 py-2 border rounded-lg" %>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Inventory Information -->
       <div class="border-b pb-4">
-        <h2 class="text-lg font-medium text-gray-700 mb-2">Inventory Information</h2>
+        <h2 class="text-lg font-medium text-gray-700 mb-2">Inventory</h2>
 
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <%= form.label :location_id, "Location", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.select :location_id, Location.where(account_id: Current.account.id).collect { |l| [l.name, l.id] }, { include_blank: "Select Location" }, required: true, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" %>
+            <%= form.select :location_id, Location.where(account_id: Current.account.id).collect { |l| [l.name, l.id] },
+              { include_blank: "Select Location" }, required: true, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
 
           <div>
             <%= form.label :quantity, "Quantity", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :quantity, step: 1, min: 0, required: true, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter quantity" %>
+            <%= form.number_field :quantity, required: true, step: 1, min: 0, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
 
           <div>
-            <%= form.label :low_threshold, "Receive an alert when stock is below this number", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :low_threshold, class: "w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" %>
+            <%= form.label :low_threshold, "Low Stock Alert Threshold", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.number_field :low_threshold, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
         </div>
       </div>
 
       <!-- Submit Button -->
-      <div class="w-full text-center py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500">
-        <%= form.submit @product.new_record? ? "Create Product" : "Update Product" %>
+      <div class="flex justify-center mt-6">
+        <%= form.submit @product.new_record? ? "Create Product" : "Update Product",
+            class: "bg-blue w-1/2 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500" %>
       </div>
 
     <% end %>

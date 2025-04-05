@@ -8,34 +8,10 @@ class Batch < ApplicationRecord
 
   validates :batch_number, uniqueness: { scope: :account_id }
 
-  after_save :check_expiration
-
   def batch_info
     "#{batch_number} - MFG: #{manufactured_date || 'N/A'} | EXP: #{expiration_date || 'N/A'}"
   end
 
   scope :not_expired, -> { where('expiration_date >= ?', Date.today) }
 
-  private
-
-  def check_expiration
-    return unless expiration_date.present? && notification_days_before_expiration.present?
-    if expiration_date <= Date.today + notification_days_before_expiration.days
-      text = "Batch ##{batch_number} with #{products.count} products at is expiring soon (#{expiration_date})"
-      message = text + 
-        (Current.user.email_notification ? "Email alerts are enabled." : "") +
-        (Current.user.text_notification ? "Text alerts are enabled." : "")
-
-      Notification.create(
-        message: message,
-        notification_type: "Alert"
-      )
-
-      return unless Current.user.email_notification
-      NotificationMailer.upcoming_expiration_date(Current.user, self).deliver_now
-
-      return unless Current.user.text_notification
-      NotificationService.send_sms(Current.user.phone, text)
-    end
-  end
 end

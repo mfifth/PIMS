@@ -30,7 +30,7 @@
         </div>
         <div>
           <%= form.label :expiration_date, "Expiration Date", class: "block text-sm font-medium text-gray-700" %>
-          <%= form.date_field :expiration_date, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+          <%= form.date_field :expiration_date, required: true, min: Date.today.to_s, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
         </div>
       </div>
 
