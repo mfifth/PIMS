@@ -1,6 +1,6 @@
 <!-- Content -->
 <div class="p-8 bg-gray-100 min-h-screen">
-  <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
+  <h1 style='font-size: x-large' class="text-6xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -8,7 +8,7 @@
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Batches</h2>
       <p class="text-4xl font-bold text-blue-600"><%= @batches.count %></p>
-
+    
       <ul class="mt-4 space-y-3">
         <% @batches.each do |batch| %>
           <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
@@ -16,19 +16,15 @@
               <%= batch.batch_number %>
             </a>
             <p class="text-gray-500 text-xs">
-              <strong>MFG:</strong> <%= batch.manufactured_date %>
-              <br>
-              <strong>EXP:</strong> <%= batch.expiration_date %>
+              <strong>MFG:</strong> <%= batch.manufactured_date || 'N/A' %><br>
+              <strong>EXP:</strong> <%= batch.expiration_date || 'N/A' %><br>
+              <strong>Products:</strong> <%= batch.products.count %>
             </p>
           </li>
         <% end %>
       </ul>
-
-      <div class="mt-4 flex space-x-3">
-        <a href="/batches" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">View All</a>
-        <a href="/batches/new" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add New</a>
-      </div>
     </div>
+  
 
     <!-- Locations Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
@@ -46,25 +42,36 @@
 
             <!-- List of Products & Perishable Count -->
             <div class="mt-2 text-sm text-gray-700">
-              <% location.inventory_items.limit(5).joins(product: :batch).each do |item| %>
-                <p><strong><%= item.product.name %></strong>: <%= item.quantity %> in stock</p>
+              <% all_items = location.inventory_items.includes(:product) %>
+              <% perishable_count = 0 %>
+              <% non_perishable_count = 0 %>
+              <% total_value = 0 %>
+
+              <% all_items.each do |item| %>
+                <% if item.product.perishable %>
+                  <% perishable_count += item.quantity %>
+                <% else %>
+                  <% non_perishable_count += item.quantity %>
+                <% end %>
+                <% total_value += item.quantity * (item.product.price || 0) %>
               <% end %>
-              
-              <% perishable_count = location.inventory_items.count { |item| item.product.perishable } %>
-              <br>
-              <p class="text-xs text-gray-500">
+
+              <p class="text-md text-gray-500">
                 <%= perishable_count %> perishable items
+              </p>
+              <p class="text-md text-gray-500">
+                <%= non_perishable_count %> non-perishable items
+              </p>
+              <p class="text-md text-gray-500">
+                Total value: $<%= number_with_precision(total_value, precision: 2) %>
               </p>
             </div>
           </li>
         <% end %>
       </ul>
-
-      <div class="mt-4 flex space-x-3">
-        <a href="/locations" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">View All</a>
-        <a href="/locations/new" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add New</a>
-      </div>
     </div>
+
+
 
     <!-- Products Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
@@ -73,7 +80,6 @@
 
       <!-- Perishable Products -->
       <div class="mt-6">
-        <h3 class="text-lg font-semibold text-gray-700">Perishables</h3>
         <ul class="mt-2 space-y-3">
           <% @perishables.each do |product| %>
             <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
@@ -97,11 +103,6 @@
             </li>
           <% end %>
         </ul>
-      </div>
-
-      <div class="mt-4 flex space-x-3">
-        <a href="/products" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">View All</a>
-        <a href="/products/new" class="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600">Add New</a>
       </div>
     </div>
   </div>

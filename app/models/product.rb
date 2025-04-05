@@ -13,6 +13,16 @@ class Product < ApplicationRecord
 
   validates :name, presence: true
   validates :perishable, inclusion: { in: [true, false] }
+  validate :product_limit_not_exceeded, on: :create
 
   scope :perishable, -> { where(perishable: true) }
+
+  private
+
+  def product_limit_not_exceeded
+    max_products = 100 # Set your product limit here
+    if account.products.count >= max_products
+      errors.add(:base, "You have reached the maximum limit of #{max_products} products.")
+    end
+  end
 end

@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  account: one
+  stripe_subscription_id: MyString
+  plan: MyString
+  status: MyString
+  started_at: 2025-04-03 17:24:25
+  ends_at: 2025-04-03 17:24:25
+
+two:
+  account: two
+  stripe_subscription_id: MyString
+  plan: MyString
+  status: MyString
+  started_at: 2025-04-03 17:24:25
+  ends_at: 2025-04-03 17:24:25

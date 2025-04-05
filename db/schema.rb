@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_29_004929) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -155,6 +155,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_29_004929) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.string "stripe_subscription_id"
+    t.string "plan"
+    t.string "status"
+    t.datetime "started_at"
+    t.datetime "ends_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_subscriptions_on_account_id"
+  end
+
   create_table "suppliers", force: :cascade do |t|
     t.string "name", null: false
     t.string "contact_name"
@@ -195,4 +207,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_29_004929) do
   add_foreign_key "products", "categories"
   add_foreign_key "products", "suppliers"
   add_foreign_key "sessions", "users"
+  add_foreign_key "subscriptions", "accounts"
 end

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get "users/create"
   resource :session
   resources :passwords, param: :token
+
   resources :users do
     member do
       get :settings
@@ -15,10 +16,12 @@ Rails.application.routes.draw do
       post :send_test_text
     end
   end
+
   resources :suppliers
   resources :locations do
     get 'inventory', to: 'locations#inventory_data'
   end
+
   resources :batches
   resources :products do
     resources :batches, only: [:create, :update]
@@ -29,6 +32,8 @@ Rails.application.routes.draw do
       patch :mark_as_read
     end
   end
+
+  resources :subscriptions, only: [:new, :create]
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -45,7 +50,8 @@ Rails.application.routes.draw do
   get 'inventory', to: 'locations#inventory'
   post 'update_inventory', to: 'locations#update_inventory'
 
-  
+  get 'subscriptions/success', to: 'subscriptions#success'
+  get 'subscriptions/cancel', to: 'subscriptions#cancel'
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
