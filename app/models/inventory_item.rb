@@ -18,7 +18,7 @@ class InventoryItem < ApplicationRecord
 
     Notification.create(
       message: text,
-      notification_type: "Alert"
+      notification_type: "Alert",
       account_id: product.account.id
     )
 

@@ -25,6 +25,10 @@ Rails.application.routes.draw do
   resources :batches
   resources :products do
     resources :batches, only: [:create, :update]
+    member do
+      delete :remove_category
+      delete :delete_category
+    end
   end
 
   resources :notifications, only: [:index] do

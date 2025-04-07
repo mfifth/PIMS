@@ -1,0 +1,2 @@
+<%= turbo_stream.replace("category_select_#{@product.id}", partial: "products/category_select", locals: { product: @product }) %>
+<%= turbo_stream.remove "category-remove" %>

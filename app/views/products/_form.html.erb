@@ -23,9 +23,22 @@
 
           <div>
             <%= form.label :category_id, "Select Existing Category", class: "block text-sm font-medium text-gray-700" %>
-            <%= form.select :category_id, Current.account.categories.collect { |c| [c.name, c.id] }, { prompt: "Select a category" },
-              class: "w-full px-4 py-2 border rounded-lg" %>
+            <%= turbo_frame_tag "category_select_#{form.object.id}" do %>
+              <%= render 'products/category_select', product: @product %>
+            <% end %>
           </div>
+
+          <% if @product.category.present? %>
+            <div class="mt-2">
+            <%= turbo_frame_tag "category-remove" do %>
+              <%= link_to 'Remove Category', remove_category_product_path(@product), data: { turbo_method: :delete, turbo_frame: "category_select_#{form.object.id}", turbo_confirm: 'Are you sure you want to remove this category?' },
+                class: "text-red-500 text-md" %>
+              
+              <%= link_to 'Delete Category', delete_category_product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure you want to delete this category from all products?' },
+            class: "text-red-500 text-md" %>
+            <% end %>
+            </div>
+          <% end %>
 
           <div>
             <%= form.label :category_name, "Or Create New Category", class: "block text-sm font-medium text-gray-700" %>

@@ -2,7 +2,7 @@
   <div>
     <div class="text-lg font-semibold text-gray-800"><%= product.name %></div>
     <div class="text-sm text-gray-600">
-      SKU: <%= product.sku %> | Category: <%= product.category.name.capitalize %> |
+      SKU: <%= product.sku %> | Category: <%= product.category&.name&.capitalize || 'N/A' %> |
       <%= show_price(product) %>
       <%= show_batch_info(product) %>
     </div>

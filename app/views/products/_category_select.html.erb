@@ -1,0 +1,7 @@
+<%= select_tag "product[category_id]",
+  options_for_select(
+    Current.account.categories.collect { |c| [c.name, c.id] },
+    product.category_id
+  ),
+  include_blank: "Select a category",
+  class: "w-full px-4 py-2 border rounded-lg" %>

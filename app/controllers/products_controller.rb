@@ -50,15 +50,14 @@ class ProductsController < ApplicationController
 
   # POST /products
   def create
-    category = create_category if product_params[:category_name].present?
-    @product = Product.new(product_params.merge(account_id: Current.account.id, 
-    category_id: category&.id || product_params[:category_id]))
+    @product = Product.new(product_params.merge(account_id: Current.account.id))
 
     if @product.perishable?
       assign_or_create_batch
     end
 
     if @product.save
+      assign_or_create_category
       create_inventory_item if inventory_item_params.present?
       redirect_to @product, notice: 'Product was successfully created.'
     else
@@ -69,6 +68,7 @@ class ProductsController < ApplicationController
   # PATCH/PUT /products/:id
   def update
     if @product.update(product_params)
+      assign_or_create_category
       update_inventory_item if update_inventory?
       assign_or_create_batch if @product.perishable?
       redirect_to @product, notice: 'Product was successfully updated.'
@@ -86,6 +86,27 @@ class ProductsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to products_path, notice: "Product was successfully deleted." }
       format.turbo_stream { render turbo_stream: turbo_stream.remove("product_#{@product.id}") }
+    end
+  end
+
+  def remove_category
+    @product = Product.find(params[:id])
+    @product.update(category_id: nil)
+
+    # If it's a Turbo Stream request, return a Turbo Stream response to remove the category.
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to edit_product_path(@product), notice: "Category has been removed." }
+    end
+  end
+
+  def delete_category
+    @product = Product.find(params[:id])
+    @product.category.destroy
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to edit_product_path(@product), notice: "Category has been removed." }
     end
   end
 
@@ -127,8 +148,16 @@ class ProductsController < ApplicationController
     end
   end
 
-  def create_category
-    Current.account.categories.find_or_create_by(name: product_params[:category_name].downcase)
+  def assign_or_create_category
+    if product_params[:category_name].present? 
+      category = Current.account.categories.find_or_create_by(name: product_params[:category_name].downcase)
+      @product.category = category
+    elsif product_params[:category_id].present?
+      category = Category.find(product_params[:category_id])
+      @product.category = category
+    end
+
+    @product.save
   end
 
   def create_inventory_item
