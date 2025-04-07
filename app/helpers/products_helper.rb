@@ -4,6 +4,6 @@ module ProductsHelper
   end
 
   def show_batch_info(product)
-    product.batch ? "MFG: #{product.batch.manufactured_date} - EXP: #{product.batch.expiration_date} |" : nil
+    product.batch ? "MFG: #{product.batch.manufactured_date || 'N/A'} - EXP: #{product.batch.expiration_date} |" : nil
   end
 end
