@@ -29,13 +29,13 @@
           </div>
 
           <% if @product.category.present? %>
-            <div class="mt-2">
+            <div class="mt-2 flex justify-center items-center">
             <%= turbo_frame_tag "category-remove" do %>
               <%= link_to 'Remove Category', remove_category_product_path(@product), data: { turbo_method: :delete, turbo_frame: "category_select_#{form.object.id}", turbo_confirm: 'Are you sure you want to remove this category?' },
-                class: "text-red-500 text-md" %>
+                class: "text-red-500 text-md mx-[10px] my-0", style: "margin: 0px 10px;" %>
               
               <%= link_to 'Delete Category', delete_category_product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure you want to delete this category from all products?' },
-            class: "text-red-500 text-md" %>
+            class: "text-red-500 text-md mx-[10px] my-0", style: "margin: 0px 10px;" %>
             <% end %>
             </div>
           <% end %>
@@ -118,7 +118,7 @@
           </div>
 
           <div>
-            <%= form.label :low_threshold, "Low Stock Alert Threshold", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.label :low_threshold, "Low Stock Alert", class: "block text-sm font-medium text-gray-700" %>
             <%= form.number_field :low_threshold, class: "w-full px-4 py-2 border rounded-lg" %>
           </div>
         </div>

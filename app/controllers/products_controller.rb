@@ -106,7 +106,7 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to edit_product_path(@product), notice: "Category has been removed." }
+      format.html { redirect_to edit_product_path(@product), notice: "Category has been deleted." }
     end
   end
 
