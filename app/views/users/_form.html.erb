@@ -1,65 +1,72 @@
-<%= form_with(model: Current.user, local: true, data: { turbo_frame: "account_settings" }, method: :put, class: "space-y-6") do |form| %>
+<%= form_with(model: Current.user, local: true, data: { turbo_frame: "account_settings" }, method: :put, class: "space-y-2 max-w-3xl mx-auto mt-10") do |form| %>
   <!-- User Information Section -->
-  <div class="border-b pb-4">
-    <h2 class="text-lg font-semibold mb-3 text-gray-700">User Information</h2>
+  <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
+    <h2 class="text-lg font-semibold mb-6 text-gray-800">User Information</h2>
 
-    <!-- Name -->
-    <div>
-      <%= form.label :name, "Full Name", class: "block text-sm font-medium text-gray-700" %>
-      <%= form.text_field :name, value: Current.user.name, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Name -->
+      <div>
+        <%= form.label :name, "Full Name", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :name, value: Current.user.name, class: "w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" %>
+      </div>
+
+      <!-- Phone -->
+      <div>
+        <%= form.label :phone, "Phone Number", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.text_field :phone, value: Current.user.phone, 
+            class: "w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500",
+            pattern: "[0-9]*", 
+            title: "Please enter only numbers" %>
+      </div>
+
+      <!-- Email -->
+      <div class="md:col-span-2">
+        <%= form.label :email_address, "Email", class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= form.email_field :email_address, value: Current.user.email_address, class: "w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" %>
+      </div>
     </div>
+  </div>
 
-    <!-- Email -->
-    <div>
-      <%= form.label :email_address, "Email", class: "block text-sm font-medium text-gray-700" %>
-      <%= form.email_field :email_address, value: Current.user.email_address, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
-    </div>
+  <!-- Notification Settings Section -->
+  <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
+    <h2 class="text-lg font-semibold mb-6 text-gray-800">Notification Settings</h2>
 
-    <!-- Phone -->
-    <div>
-      <%= form.label :phone, "Phone Number", class: "block text-sm font-medium text-gray-700" %>
-      <%= form.text_field :phone, value: Current.user.phone, 
-          class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500",
-          pattern: "[0-9]*", 
-          title: "Please enter only numbers" %>
+    <div class="space-y-6">
+      <!-- Email Notification -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <%= form.check_box :email_notification, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
+          <%= form.label :email_notification, "Receive Email Notifications", class: "text-sm text-gray-700" %>
+        </div>
+      </div>
+
+      <!-- Text Notification -->
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <%= form.check_box :text_notification, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
+          <%= form.label :text_notification, "Receive Text Notifications", class: "text-sm text-gray-700" %>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Notification Settings -->
-  <div>
-    <h2 class="text-lg font-semibold mb-3 text-gray-700">Notification Settings</h2>
-    <br>
-
-    <!-- Email Notifications -->
-    <div id='email-notification' class="flex items-center space-x-2">
-      <%= form.check_box :email_notification, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5" %>
-      <%= form.label :email_notification, "Receive Email Notifications", class: "text-sm text-gray-700" %>
-    </div>
-      
-    <!-- Text Notifications -->
-    <div id='text-notification' class="flex items-center space-x-2 mt-2">
-      <%= form.check_box :text_notification, class: "rounded border-gray-300 text-blue-600 focus:ring-blue-500 h-5 w-5" %>
-      <%= form.label :text_notification, "Receive Text Notifications", class: "text-sm text-gray-700" %>
-    </div>
-  </div>
 
   <!-- Submit Button -->
-  <div class="mt-6 flex">
-    <%= form.submit "Update Settings", class: "bg-blue bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" %>
+  <br>
+  <div class="flex">
+    <%= form.submit "Update Settings", class: "bg-blue bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition", style: 'padding-left: 2.2rem; padding-right: 2.2rem;' %>
   </div>
 <% end %>
+<br>
 
-<!-- Test Buttons Outside the Form -->
-<div class="mt-6 flex flex-col space-y-4 w-1/4">  
-  <!-- Send Test Email -->
-  <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "email-notification" }, class: "w-full" do %>
-    <%= submit_tag "Test Email", class: "bg-blue w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" %>
+<div id='notifications'>
+  <!-- Test Email (separate form) -->
+  <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: true do %>
+    <%= submit_tag "Test Email", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
   <% end %>
-  
-  <!-- Send Test Text -->
-  <turbo-frame>
-    <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "text-notification" }, class: "w-full" do %>
-      <%= submit_tag "Test Text", class: "bg-blue w-full bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700" %>
-    <% end %>
-  </turbo-frame>
+
+  <!-- Test Text (separate form) -->
+  <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: true do %>
+    <%= submit_tag "Test Text", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
+  <% end %>
 </div>

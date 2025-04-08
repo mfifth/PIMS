@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[show edit update destroy]
+  before_action :check_limit, only: %i[create]
 
   def index
     if params[:query].present?
@@ -133,7 +134,7 @@ class ProductsController < ApplicationController
   end
 
   def update_inventory_item
-    InventoryItem.find_by(location_id: inventory_item_params[:location_id], product_id: @product.id)
+    InventoryItem.find_or_create_by(location_id: inventory_item_params[:location_id], product_id: @product.id)
                  .update!(inventory_item_params)
   end
 
@@ -168,5 +169,12 @@ class ProductsController < ApplicationController
       quantity: inventory_item_params[:quantity],
       daily_usage: inventory_item_params[:daily_usage]
       )
+  end
+
+  def check_limit
+    unless Current.account.can_create_product?
+      redirect_to products_path, alert: "You’ve reached your limit. Upgrade to add more products."
+      return
+    end
   end
 end

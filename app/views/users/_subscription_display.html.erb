@@ -1,0 +1,31 @@
+<div class="mb-6 p-4 bg-gray-50 border rounded-lg">
+  <h2 class="text-md font-semibold text-gray-700">Subscription Plan</h2>
+  <p class="text-sm text-gray-600 mt-1">
+    You’re currently on the
+    <span class="font-medium text-blue-600"><%= Current.account.subscription.plan.titleize %></span> plan.
+  </p>
+
+  <p class="text-sm text-gray-600 mt-1">
+    Products used:
+    <span class="font-medium"><%= Current.account.products.count %></span>
+    of
+    <span class="font-medium"><%= product_limit.infinite? ? "∞" : product_limit %></span>
+  </p>
+
+  <p class="text-sm text-gray-600 mt-1">
+    Users on account:
+    <span class="font-medium"><%= Current.account.users.count %></span>
+    of
+    <span class="font-medium"><%= user_limit.infinite? ? "∞" : user_limit %></span>
+  </p>
+
+  <% if !product_limit.infinite? && Current.account.products.count >= product_limit %>
+    <p class="text-sm text-red-500 mt-2">You've reached your product limit.</p>
+  <% end %>
+
+  <% if !user_limit.infinite? && Current.account.users.count >= user_limit %>
+    <p class="text-sm text-red-500 mt-2">You've reached your user limit.</p>
+  <% end %>
+  <br>
+  <%= link_to "Manage Subscription", 'https://pims.lemonsqueezy.com/checkout', target: :_blank, class: "text-blue-600 hover:underline" %>
+</div>

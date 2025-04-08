@@ -1,9 +1,15 @@
 # app/controllers/users_controller.rb
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
-  # Show the sign-up form
+  before_action :check_limit, only: %i[create]
+
   def new
     @user = User.new
+
+    if params[:token].present?
+      invitation = Invitation.find_by(token: params[:token])
+      @user.email_address = invitation&.email
+    end
   end
 
   def show
@@ -12,17 +18,42 @@ class UsersController < ApplicationController
   # Create a new user account
   def create
     @user = User.new(user_params)
-
+  
+    if params[:user][:invitation_token].present?
+      invitation = Invitation.find_by(token: params[:user][:invitation_token])
+  
+      if invitation && invitation.email == @user.email_address
+        @user.skip_account_creation = true # Prevents auto-creating a new account
+      else
+        flash[:alert] = "Invalid or expired invitation token."
+        render :new
+        return
+      end
+    end
+  
     if @user.save
-      flash[:notice] = "Your account has been created successfully!"
+      if invitation
+        invitation.account.users << @user
+        @user.update(role: invitation.role) # Optional: If you track roles
+        invitation.destroy # or mark as used if you prefer
+      else
+        # Normal sign up: create account and subscription
+        account = Account.create
+        account.users << @user
+        Subscription.create(account: account)
+        flash[:notice] = "Your account has been created successfully!"
+      end
+
       start_new_session_for @user
-      redirect_to '/dashboard' # Redirect to login or dashboard after successful sign-up
+      redirect_to '/dashboard'
     else
-      render :new # Render sign-up form again with error messages
+      render :new
     end
   end
+  
 
   def settings
+    @invitations = Current.account.invitations
   end
 
   def update
@@ -65,8 +96,16 @@ class UsersController < ApplicationController
 
   private
 
+  def check_limit
+    return if Current.user.blank? #If the user is not signed in yet, first time don't check limits.
+    unless Current.account.can_create_user?
+      redirect_to settings_user_path(Current.user), alert: "You’ve reached your limit. Upgrade to add more users."
+      return
+    end
+  end
+
   # Strong parameters to permit user inputs
   def user_params
-    params.require(:user).permit(:name, :email_address, :phone, :password, :password_confirmation, :email_notification, :text_notification)
-  end
+    params.require(:user).permit(:name, :phone, :email_address, :password, :password_confirmation, :invitation_token)
+  end  
 end

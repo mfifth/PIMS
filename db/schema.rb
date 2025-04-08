@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_08_180127) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -19,6 +19,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
     t.integer "suppliers_id"
     t.integer "locations_id"
     t.integer "products_id"
+    t.string "stripe_customer_id"
     t.index ["locations_id"], name: "index_accounts_on_locations_id"
     t.index ["orders_id"], name: "index_accounts_on_orders_id"
     t.index ["products_id"], name: "index_accounts_on_products_id"
@@ -57,6 +58,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
     t.integer "location_id"
     t.index ["location_id"], name: "index_inventory_items_on_location_id"
     t.index ["product_id"], name: "index_inventory_items_on_product_id"
+  end
+
+  create_table "invitations", force: :cascade do |t|
+    t.string "email"
+    t.string "token"
+    t.integer "account_id", null: false
+    t.string "role"
+    t.boolean "accepted"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "confirmed_at"
+    t.index ["account_id"], name: "index_invitations_on_account_id"
   end
 
   create_table "location_product_capacities", force: :cascade do |t|
@@ -158,7 +171,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
   create_table "subscriptions", force: :cascade do |t|
     t.integer "account_id", null: false
     t.string "stripe_subscription_id"
-    t.string "plan"
+    t.string "plan", default: "free"
     t.string "status"
     t.datetime "started_at"
     t.datetime "ends_at"
@@ -190,6 +203,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
     t.string "phone"
     t.boolean "text_notification", default: false
     t.boolean "email_notification", default: false
+    t.boolean "admin", default: false
     t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
@@ -197,6 +211,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_002425) do
   add_foreign_key "batches", "accounts"
   add_foreign_key "batches", "suppliers"
   add_foreign_key "inventory_items", "products"
+  add_foreign_key "invitations", "accounts"
   add_foreign_key "location_product_capacities", "locations"
   add_foreign_key "location_product_capacities", "products"
   add_foreign_key "order_items", "locations"

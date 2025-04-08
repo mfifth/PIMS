@@ -38,6 +38,7 @@ Rails.application.routes.draw do
   end
 
   resources :subscriptions, only: [:new, :create]
+  resources :invitations, only: [:create, :destroy]
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -54,8 +55,15 @@ Rails.application.routes.draw do
   get 'inventory', to: 'locations#inventory'
   post 'update_inventory', to: 'locations#update_inventory'
 
+  # Add the token parameter to the route
+  get '/accept_invitation/:token', to: 'invitations#accept', as: :accept_invitation
+
   get 'subscriptions/success', to: 'subscriptions#success'
   get 'subscriptions/cancel', to: 'subscriptions#cancel'
+
+  # config/routes.rb
+  post "billing/checkout", to: "billing#create_checkout_session", as: :create_checkout
+  get "billing/portal", to: "billing#billing_portal", as: :billing_portal
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest

@@ -14,6 +14,11 @@
     <!-- Sign-Up Form -->
     <%= form_with model: @user, class: "mt-6 space-y-4" do |form| %>
 
+      <!-- Hidden Token -->
+      <% if params[:token].present? %>
+        <%= form.hidden_field :invitation_token, value: params[:token] %>
+      <% end %>
+
       <!-- Name Field -->
       <div>
         <%= form.text_field :name, 
@@ -25,7 +30,7 @@
       <!-- Phone Field -->
       <div>
         <%= form.telephone_field :phone, 
-          autocomplete: "Phone Number", 
+          autocomplete: "tel", 
           placeholder: "Phone Number",
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
@@ -35,6 +40,7 @@
         <%= form.email_field :email_address, 
           required: true, autocomplete: "email", 
           placeholder: "Email Address",
+          value: @user.email_address,
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 

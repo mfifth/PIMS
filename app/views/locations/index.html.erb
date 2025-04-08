@@ -38,7 +38,7 @@
 
         <!-- Category Costs -->
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-          <h3 class="text-lg font-medium text-gray-800 mb-2">Category Costs</h3>
+          <h3 class="text-lg font-medium text-gray-800 mb-2">Category Value</h3>
           <ul class="text-gray-600 text-sm space-y-1">
             <% location.inventory_items.limit(5).joins(product: :category).group("categories.name").sum("inventory_items.quantity * products.price").each do |category_name, cost| %>
               <li><strong><%= category_name %></strong>: <%= number_to_currency(cost) %></li>

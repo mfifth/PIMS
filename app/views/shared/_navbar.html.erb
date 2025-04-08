@@ -48,14 +48,7 @@
         
         <!-- Profile Dropdown -->
         <li class="relative dropdown">
-            <button type="button" class="dropdown-toggle flex items-center">
-                <img class="w-10 h-10 rounded-full" src="https://laravelui.spruko.com/tailwind/ynex/build/assets/images/faces/9.jpg" alt="Profile">
-            </button>
-            <ul class="dropdown-menu absolute right-0 mt-2 w-40 bg-white shadow-lg rounded-lg border border-gray-100 hidden">
-                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Profile</a></li>
-                <li><a href="#" class="block px-4 py-2 hover:bg-gray-100">Settings</a></li>
-                <li><a href="#" class="block px-4 py-2 text-red-500 hover:bg-gray-100">Log Out</a></li>
-            </ul>
+            <h1 class='text-xl'>Welcome <%= Current.user.name %></h1>
         </li>
     </ul>
 </div>
