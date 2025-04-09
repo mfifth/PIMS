@@ -14,7 +14,7 @@ class Account < ApplicationRecord
     'free'
     # Stripe::Subscription.retrieve(subscription.stripe_subscription_id).items.data.first.price.id
   end
-  
+
   def product_plan_limit
     20
     # PRODUCT_PLAN_LIMITS[stripe_plan_id] || 0
