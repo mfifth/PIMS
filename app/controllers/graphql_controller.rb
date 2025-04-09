@@ -11,7 +11,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      account: Current.account
+      account: Current.account,
       user: Current.user
     }
     result = PimsSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
