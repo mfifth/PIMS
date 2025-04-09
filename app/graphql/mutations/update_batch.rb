@@ -3,8 +3,8 @@ module Mutations
     argument :id, ID, required: true
     argument :batch_number, String, required: false
     argument :notification_days_before_expiration, Integer, required: false
-    argument :manufactured_date, Date, required: false
-    argument :expiration_date, Date, required: false
+    argument :manufactured_date, Types::DateType, required: false
+    argument :expiration_date, Types::DateType, required: false
 
     type Types::BatchType
 
