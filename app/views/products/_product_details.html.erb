@@ -11,7 +11,7 @@
     <!-- Category & Description -->
     <div>
       <span class="text-gray-700 font-semibold">Category:</span>
-      <span class="text-gray-600"><%= @product.category.name.capitalize %></span>
+      <span class="text-gray-600"><%= @product.category&.name&.titleize || 'N/A' %></span>
     </div>
     <div>
       <span class="text-gray-700 font-semibold">Description:</span>
@@ -95,7 +95,7 @@
     <div class="flex space-x-4 mt-4">
       <%= link_to "Edit Product", edit_product_path(@product), data: { turbo: false }, class: "px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" %>
       <%= link_to "Back to Products", products_path, data: { turbo: false }, class: "px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700" %>
-      <%= link_to "Delete", product_path(@product), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" %>
+      <%= link_to "Delete", product_path(@product), data: { turbo_method: :delete, turbo_frame: 'main', turbo_confirm: "Are you sure you want to delete this product?"}, class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" %>
     </div>
   </div>
 </turbo-frame>

@@ -5,12 +5,12 @@ class ProductsController < ApplicationController
   def index
     if params[:query].present?
       @products = Current.account.products
-      .joins(:category)
+      .left_joins(:category)
       .where("products.name LIKE ? OR products.sku LIKE ? OR categories.name LIKE ?", 
              "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
-             .page(params[:page]).per(3)
+             .page(params[:page]).per(5)
     else
-      @products = Current.account.products.page(params[:page]).per(3)
+      @products = Current.account.products.left_joins(:category).page(params[:page]).per(5)
     end
 
     respond_to do |format|
@@ -86,7 +86,7 @@ class ProductsController < ApplicationController
   
     respond_to do |format|
       format.html { redirect_to products_path, notice: "Product was successfully deleted." }
-      format.turbo_stream { render turbo_stream: turbo_stream.remove("product_#{@product.id}") }
+      format.turbo_stream
     end
   end
 
