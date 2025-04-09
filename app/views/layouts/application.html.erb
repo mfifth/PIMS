@@ -21,7 +21,7 @@
   </head>
 
   <body class="bg-gray-200">
-    <div class="flex min-h-screen">
+    <div data-controller="sidebar" class="flex min-h-screen">
       <% if Current.user %>
         <!-- Sidebar -->
         <%= render 'shared/sidebar' %>
