@@ -9,9 +9,9 @@ class BatchesController < ApplicationController
                  .order(:expiration_date)
                  .where("products.name LIKE ? OR batch_number LIKE ? OR expiration_date LIKE ?", 
                  "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
-                 .page(params[:page]).per(3).distinct
+                 .page(params[:page]).per(5).distinct
     else
-      @batches = Current.account.batches.left_joins(:products).page(params[:page]).per(3).distinct
+      @batches = Current.account.batches.left_joins(:products).page(params[:page]).per(5).distinct
     end
 
     respond_to do |format|
@@ -19,7 +19,7 @@ class BatchesController < ApplicationController
       format.turbo_stream do
         if @batches.any?
           render turbo_stream: [
-            turbo_stream.append("batches-list", partial: "batches/batch", collection: @batches),
+            turbo_stream.append("batches", partial: "batches/batch", collection: @batches),
             turbo_stream.replace("infinite-scroll-metadata", partial: "batches/next_page_metadata", locals: { next_page: @batches.next_page })
           ]
         else
@@ -64,7 +64,11 @@ class BatchesController < ApplicationController
   # DELETE /batches/:id
   def destroy
     @batch.destroy
-    redirect_to batches_url, notice: 'Batch was successfully deleted.'
+
+    respond_to do |format|
+      format.html { redirect_to batches_url, notice: 'Batch was successfully deleted.' }
+      format.turbo_stream { render turbo_stream: turbo_stream.remove("batch_#{@batch.id}") }
+    end
   end
 
   private
