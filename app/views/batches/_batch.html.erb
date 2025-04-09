@@ -1,4 +1,4 @@
-<div id="batch_#{batch.id}" class="bg-white p-6 shadow rounded-lg mb-4">
+<div id="batch_<%= batch.id %>" class="bg-white p-6 shadow rounded-lg mb-4">
   <h2 class="text-xl font-bold text-gray-800"><%= batch.batch_number %></h2>
   <p class="text-gray-600"><strong>Manufactured Date:</strong> <%= batch.manufactured_date || 'N/A' %></p>
   <p class="text-gray-600"><strong>Expiration Date:</strong> <%= batch.expiration_date || 'N/A' %></p>
@@ -24,6 +24,6 @@
   <div class="mt-4 space-x-2">
     <%= link_to 'Show', batch_path(batch), data: { turbo_frame: 'main' }, class: "text-blue-500 hover:underline" %>
     <%= link_to 'Edit', edit_batch_path(batch), data: { turbo_frame: 'main' }, class: "text-yellow-500 hover:underline" %>
-    <%= link_to 'Delete', batch, data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
+    <%= link_to 'Delete', batch, data: { turbo_method: :delete, turbo_frame: "batch_#{batch.id}", turbo_confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
   </div>
 </div>
