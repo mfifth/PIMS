@@ -7,7 +7,5 @@ module Types
     field :price, Float, null: true
     field :category, String, null: true
     field :batch_id, Integer, null: true
-
-    field :batch, Types::BatchType, null: true, resolve: ->(obj, _, _) { obj.batch }
   end
 end
