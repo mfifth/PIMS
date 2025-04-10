@@ -6,14 +6,26 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 # Rails app lives here
 WORKDIR /rails
 
-# Install base packages including dependencies for PostgreSQL (if used)
+# Install base packages including Node.js 18.x
 RUN sed -i 's/http:\/\/deb.debian.org/http:\/\/cloudfront.debian.net/g' /etc/apt/sources.list && \
     echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4 && \
     apt-get update -qq && \
-    (apt-get install --no-install-recommends -y \
-        curl libjemalloc2 libvips sqlite3 npm libpq-dev build-essential git libyaml-dev pkg-config || \
-    (apt-get update && apt-get install --no-install-recommends -y \
-        curl libjemalloc2 libvips sqlite3 npm libpq-dev build-essential git libyaml-dev pkg-config)) && \
+    # Install curl first to fetch NodeSource script
+    apt-get install --no-install-recommends -y curl ca-certificates && \
+    # Add Node.js 18.x repository
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    # Install packages including modern Node.js
+    apt-get install --no-install-recommends -y \
+        nodejs \
+        libjemalloc2 \
+        libvips \
+        sqlite3 \
+        libpq-dev \
+        build-essential \
+        git \
+        libyaml-dev \
+        pkg-config && \
+    # Clean up
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Set production environment
