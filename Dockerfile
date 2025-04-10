@@ -1,13 +1,5 @@
 # syntax=docker/dockerfile:1
-# check=error=true
 
-# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
-# docker build -t pims .
-# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name pims pims
-
-# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
-
-# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.2.0
 FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
@@ -15,9 +7,14 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 WORKDIR /rails
 
 # Install base packages including dependencies for PostgreSQL (if used)
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 npm libpq-dev build-essential git libyaml-dev pkg-config && \
-    rm -rf /var/lib/apt/lists /var/cache/apt/archives
+RUN sed -i 's/http:\/\/deb.debian.org/http:\/\/cloudfront.debian.net/g' /etc/apt/sources.list && \
+    echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4 && \
+    apt-get update -qq && \
+    (apt-get install --no-install-recommends -y \
+        curl libjemalloc2 libvips sqlite3 npm libpq-dev build-essential git libyaml-dev pkg-config || \
+    (apt-get update && apt-get install --no-install-recommends -y \
+        curl libjemalloc2 libvips sqlite3 npm libpq-dev build-essential git libyaml-dev pkg-config)) && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 # Set production environment
 ENV RAILS_ENV="production" \
