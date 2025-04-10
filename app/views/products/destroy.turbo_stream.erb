@@ -1,5 +1,5 @@
-<%= turbo_stream.remove dom_id(@product) %> <!-- Removes the product from the list -->
+<%= turbo_stream.remove dom_id(@product) %>
 
 <%= turbo_stream.replace 'main' do %>
-  <%= render 'products/products_index', products: Product.page(params[:page]).per(5) %> <!-- Renders the updated products index -->
+  <%= render 'products/products_index', products: Product.page(params[:page]).per(5) %>
 <% end %>

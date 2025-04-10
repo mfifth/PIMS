@@ -16,18 +16,22 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Set production-specific environment variables
+# Environment variables
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
+
+# Allow passing master key for asset precompilation
+ARG RAILS_MASTER_KEY
+ENV RAILS_MASTER_KEY=$RAILS_MASTER_KEY
 
 # --------------------------------------
 # Build stage (to compile gems, assets)
 # --------------------------------------
 FROM base AS build
 
-# Install libraries needed to build native extensions (e.g. pg)
+# Install libraries needed to build native extensions
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y \
       build-essential \
@@ -38,23 +42,26 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy Gemfiles and install gems
+# Copy gemfiles and install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-# Precompile bootsnap for faster boot
+# Precompile gems with bootsnap
 RUN bundle exec bootsnap precompile --gemfile
 
-# Copy full application code
+# Copy full application
 COPY . .
 
-# Precompile app code for bootsnap
+# Ensure scripts are executable
+RUN chmod +x bin/*
+
+# Precompile app code
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompile assets (skip master key check by using dummy secret)
-# RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# Precompile assets (requires master key if credentials used)
+RUN ./bin/rails assets:precompile
 
-# Optional cleanup (after build)
+# Optional cleanup
 RUN rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 
@@ -63,19 +70,29 @@ RUN rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bund
 # --------------------------------------
 FROM base
 
-# Copy gems and app code from build stage
+# Install runtime dependencies (e.g., git if needed by any gems)
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y \
+      git && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Copy gems and app from build
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
-# Create non-root user
+# Ensure scripts are executable
+RUN chmod +x bin/*
+
+# Create non-root user and set permissions
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER 1000:1000
 
-# Entrypoint handles DB setup etc.
+# Entrypoint
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Default web server command (can override at runtime)
+# Start app server (simplified)
 EXPOSE 80
-CMD ["./bin/thrust", "./bin/rails", "server"]
+CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
