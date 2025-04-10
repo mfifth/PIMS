@@ -10,7 +10,7 @@ export default class extends Controller {
     const locationId = this.locationSelectTarget.value
     if (!locationId || !this.productIdValue) return
 
-    const url = `/products/lookup?product_id=${this.productIdValue}&location_id=${locationId}`
+    const url = `/inventory_items/lookup?product_id=${this.productIdValue}&location_id=${locationId}`
 
     try {
       const response = await fetch(url)
