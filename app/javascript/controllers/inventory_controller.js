@@ -1,0 +1,27 @@
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["locationSelect", "quantity", "lowThreshold"]
+  static values = {
+    productId: Number
+  }
+
+  async fetchInventory() {
+    const locationId = this.locationSelectTarget.value
+    if (!locationId || !this.productIdValue) return
+
+    const url = `/products/lookup?product_id=${this.productIdValue}&location_id=${locationId}`
+
+    try {
+      const response = await fetch(url)
+      if (!response.ok) throw new Error("Network response was not ok")
+
+      const data = await response.json()
+
+      this.quantityTarget.value = data.quantity || ""
+      this.lowThresholdTarget.value = data.low_threshold || ""
+    } catch (error) {
+      console.error("Failed to fetch inventory info:", error)
+    }
+  }
+}

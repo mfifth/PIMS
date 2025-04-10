@@ -61,6 +61,8 @@ Rails.application.routes.draw do
   get 'subscriptions/success', to: 'subscriptions#success'
   get 'subscriptions/cancel', to: 'subscriptions#cancel'
 
+  get 'products/lookup', to: 'products#lookup'
+
   # config/routes.rb
   post "billing/checkout", to: "billing#create_checkout_session", as: :create_checkout
   get "billing/portal", to: "billing#billing_portal", as: :billing_portal
