@@ -12,6 +12,10 @@ Rails.application.configure do
   # Full error reports are disabled.
   config.consider_all_requests_local = false
 
+  config.action_cable.mount_path = nil
+  config.action_cable.url = nil
+  config.action_cable.allowed_request_origins = []
+
   # Turn on fragment caching in view templates.
   config.action_controller.perform_caching = true
 
