@@ -39,3 +39,7 @@
 /node_modules
 .env
 db/queue_migrate/
+
+db/*.sqlite3-shm
+db/*.sqlite3-wal
+db/development.sqlite3

@@ -29,13 +29,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_180127) do
 
   create_table "batches", force: :cascade do |t|
     t.string "batch_number", null: false
-    t.integer "notification_days_before_expiration"
     t.date "manufactured_date"
     t.date "expiration_date"
-    t.integer "supplier_id"
-    t.integer "account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "supplier_id"
+    t.integer "account_id"
+    t.integer "notification_days_before_expiration", default: 0
     t.index ["account_id"], name: "index_batches_on_account_id"
     t.index ["supplier_id"], name: "index_batches_on_supplier_id"
   end
@@ -208,7 +208,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_08_180127) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
-  add_foreign_key "batches", "accounts"
   add_foreign_key "batches", "suppliers"
   add_foreign_key "inventory_items", "products"
   add_foreign_key "invitations", "accounts"

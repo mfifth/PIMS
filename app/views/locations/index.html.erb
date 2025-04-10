@@ -24,7 +24,9 @@
             .order("batches.expiration_date ASC")
             .each do |inventory_item| %>
               <li>
-                <strong><%= inventory_item.product.name %></strong>: <%= inventory_item.quantity %> items
+                <strong><%= inventory_item.product.name %>:</strong>
+                <br>
+                <%= inventory_item.quantity %> items
                 <br>
                 <% if inventory_item.product.perishable && inventory_item.product.batch %>
                   EXP: <%= inventory_item.product.batch.expiration_date.strftime("%B %d, %Y") %>
@@ -36,7 +38,7 @@
           </ul>
         </div>
 
-        <!-- Category Costs -->
+        <!-- Category Value -->
         <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
           <h3 class="text-lg font-medium text-gray-800 mb-2">Category Value</h3>
           <ul class="text-gray-600 text-sm space-y-1">

@@ -97,7 +97,7 @@
             </div>
           
               <% product.locations.each do |location| %>
-                <p class="text-gray-500 text-xs">Qty: <%= product.inventory_items.sum(:quantity) %></p>
+                <p class="text-gray-500 text-xs">Qty: <%= location.inventory_items.detect { |i| i.product_id == product.id }.quantity %></p>
                 <p class="text-gray-500 text-xs">Location: <%= location.name %></p>
               <% end %>
             </li>
