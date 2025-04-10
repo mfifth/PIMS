@@ -52,7 +52,7 @@ COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompile assets (skip master key check by using dummy secret)
-RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
+# RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
 # Optional cleanup (after build)
 RUN rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
