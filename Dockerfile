@@ -16,6 +16,12 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install Node.js and npm for jsbundling-rails
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Environment variables
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
@@ -48,6 +54,9 @@ RUN gem install bundler -v "~> 2.5"
 # Copy gemfiles and install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
+
+# Install JavaScript dependencies
+RUN npm install
 
 # Precompile gems with bootsnap
 RUN bundle exec bootsnap precompile --gemfile
