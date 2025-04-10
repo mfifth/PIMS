@@ -42,6 +42,9 @@ RUN apt-get update -qq && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install the correct version of bundler
+RUN gem install bundler -v "~> 2.5"
+
 # Copy gemfiles and install gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
