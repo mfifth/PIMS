@@ -1,110 +1,75 @@
 # syntax=docker/dockerfile:1
+# check=error=true
 
+# This Dockerfile is designed for production, not development. Use with Kamal or build'n'run by hand:
+# docker build -t pims .
+# docker run -d -p 80:80 -e RAILS_MASTER_KEY=<value from config/master.key> --name pims pims
+
+# For a containerized dev environment, see Dev Containers: https://guides.rubyonrails.org/getting_started_with_devcontainer.html
+
+# Make sure RUBY_VERSION matches the Ruby version in .ruby-version
 ARG RUBY_VERSION=3.2.0
-FROM ruby:$RUBY_VERSION-slim AS base
+FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
-# Set working directory
+# Rails app lives here
 WORKDIR /rails
 
-# Install base system packages needed at runtime
+# Install base packages
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
-      curl \
-      libjemalloc2 \
-      libvips \
-      sqlite3 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install --no-install-recommends -y curl libjemalloc2 libvips sqlite3 npm && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install Node.js and npm for jsbundling-rails
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Environment variables
+# Set production environment
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
     BUNDLE_WITHOUT="development"
 
-# Allow passing master key for asset precompilation
-ARG RAILS_MASTER_KEY
-ENV RAILS_MASTER_KEY=$RAILS_MASTER_KEY
-
-# --------------------------------------
-# Build stage (to compile gems, assets)
-# --------------------------------------
+# Throw-away build stage to reduce size of final image
 FROM base AS build
 
-# Install libraries needed to build native extensions
+# Install packages needed to build gems
 RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
-      build-essential \
-      git \
-      libyaml-dev \
-      pkg-config \
-      libpq-dev && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install --no-install-recommends -y build-essential git libyaml-dev pkg-config && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
-# Install the correct version of bundler
-RUN gem install bundler -v "~> 2.5"
-
-# Copy gemfiles and install gems
+# Install application gems
 COPY Gemfile Gemfile.lock ./
-RUN bundle install
+RUN bundle install && \
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git && \
+    bundle exec bootsnap precompile --gemfile
 
-# Install JavaScript dependencies
+# Copy package.json and package-lock.json for npm install
+COPY package.json package-lock.json ./
+
+# Install npm dependencies
 RUN npm install
 
-# Precompile gems with bootsnap
-RUN bundle exec bootsnap precompile --gemfile
-
-# Copy full application
+# Copy application code
 COPY . .
 
-# Ensure scripts are executable
-RUN chmod +x bin/*
-
-# Precompile app code
+# Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompile assets (requires master key if credentials used)
-RUN ./bin/rails assets:precompile
+# Precompiling assets for production without requiring secret RAILS_MASTER_KEY
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# Optional cleanup
-RUN rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
-
-
-# --------------------------------------
-# Final runtime image
-# --------------------------------------
+# Final stage for app image
 FROM base
 
-# Install runtime dependencies (e.g., git if needed by any gems)
-RUN apt-get update -qq && \
-    apt-get install --no-install-recommends -y \
-      git && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
-
-# Copy gems and app from build
+# Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
-# Ensure scripts are executable
-RUN chmod +x bin/*
-
-# Create non-root user and set permissions
+# Run and own only the runtime files as a non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails db log storage tmp
 USER 1000:1000
 
-# Entrypoint
+# Entrypoint prepares the database.
 ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
-# Start app server (simplified)
+# Start server via Thruster by default, this can be overwritten at runtime
 EXPOSE 80
-CMD ["./bin/rails", "server", "-b", "0.0.0.0"]
+CMD ["./bin/thrust", "./bin/rails", "server"]
