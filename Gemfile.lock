@@ -422,7 +422,7 @@ DEPENDENCIES
   jsbundling-rails
   kamal
   kaminari
-  nokogiri (~> 1.18)
+  nokogiri
   pg
   propshaft
   pry
