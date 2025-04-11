@@ -1,0 +1,3 @@
+---
+BUNDLE_BUILD__PG: "--with-pg-config=/usr/local/opt/libpq/bin/pg_config"
+BUNDLE_FORCE_RUBY_PLATFORM: "true"
