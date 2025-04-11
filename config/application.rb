@@ -27,17 +27,6 @@ module Pims
 
     config.importmap.enabled = true
 
-    if ENV["RUN_MIGRATIONS"] == "true"
-      begin
-        Rails.logger.info "Running migrations during deploy..."
-        ActiveRecord::Base.connection
-        ActiveRecord::Migrator.migrate(Rails.root.join("db/migrate"))
-        Rails.logger.info "Migrations completed successfully."
-      rescue => e
-        Rails.logger.error "Migration failed: #{e.message}"
-      end
-    end
-
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
