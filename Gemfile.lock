@@ -427,7 +427,6 @@ DEPENDENCIES
   stimulus-rails
   stripe
   tailwindcss-rails (~> 4.2)
-  tailwindcss-ruby (~> 4.0)
   thruster
   turbo-rails
   twilio-ruby

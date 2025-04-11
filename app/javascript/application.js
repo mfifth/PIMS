@@ -5,7 +5,6 @@ import InfiniteBatchScrollController from "./controllers/infinite_batch_scroll_c
 import SidebarController from "./controllers/sidebar_controller";
 import InventoryController from './controllers/inventory_controller';
 import * as Turbo from "@hotwired/turbo"
-import "../assets/stylesheets/application.css";
 
 const application = Application.start();
 window.Stimulus = application; // ✅ Expose for debugging
