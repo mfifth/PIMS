@@ -86,4 +86,4 @@ end
 gem "tailwindcss-rails", "~> 4.2"
 gem "graphiql-rails", group: :development
 
-gem 'nokogiri', platforms: [:ruby]
+gem 'nokogiri', '~> 1.15'
