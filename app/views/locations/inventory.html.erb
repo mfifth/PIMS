@@ -38,7 +38,6 @@
   <% end %>
 </div>
 
-<!-- JavaScript to handle dynamic product and batch selection based on location -->
 <script>
   document.querySelector('[name="location_id"]').addEventListener('change', function() {
     const locationId = this.value;
@@ -46,29 +45,50 @@
     if (locationId) {
       document.getElementById("product-selection").style.display = "block";
 
-      fetch(`/locations/${locationId}/inventory`)
+      fetch(`/locations/${locationId}/inventory_data`)
         .then(response => response.json())
         .then(data => {
           const productSelect = document.querySelector('[name="product_id"]');
           productSelect.innerHTML = "<option value=''>Select a product</option>";
+          
           data.products.forEach(product => {
             const option = document.createElement("option");
             option.value = product.id;
             option.textContent = product.name;
+            // Store inventory data as data attributes
+            option.dataset.quantity = product.quantity;
+            option.dataset.batchId = product.batch_id;
             productSelect.appendChild(option);
           });
         });
     } else {
       document.getElementById("product-selection").style.display = "none";
+      document.getElementById("quantity-field").style.display = "none";
+      document.getElementById("batch-selection").style.display = "none";
+      document.getElementById("submit-btn").style.display = "none";
     }
   });
 
   document.querySelector('[name="product_id"]').addEventListener('change', function() {
+    const selectedOption = this.options[this.selectedIndex];
     const productId = this.value;
+    
     if (productId) {
       document.getElementById("quantity-field").style.display = "block";
       document.getElementById("batch-selection").style.display = "block";
       document.getElementById("submit-btn").style.display = "block";
+      
+      // Pre-populate quantity
+      const quantityField = document.querySelector('[name="quantity"]');
+      quantityField.value = selectedOption.dataset.quantity || 0;
+      
+      // Pre-select batch if exists
+      const batchSelect = document.querySelector('[name="batch_id"]');
+      if (selectedOption.dataset.batchId) {
+        batchSelect.value = selectedOption.dataset.batchId;
+      } else {
+        batchSelect.value = "";
+      }
     } else {
       document.getElementById("quantity-field").style.display = "none";
       document.getElementById("batch-selection").style.display = "none";

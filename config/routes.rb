@@ -19,7 +19,7 @@ Rails.application.routes.draw do
 
   resources :suppliers
   resources :locations do
-    get 'inventory', to: 'locations#inventory_data'
+    get 'inventory_data', to: 'locations#inventory_data'
   end
 
   resources :batches

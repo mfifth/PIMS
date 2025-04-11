@@ -62,7 +62,21 @@ class LocationsController < ApplicationController
   def inventory_data
     location = Location.find(params[:location_id])
     products = location.products
-    render json: { products: products }
+                       .includes(:batch, :inventory_items)
+                       .where(inventory_items: { location_id: location.id })
+                       .references(:inventory_items)
+  
+    render json: {
+      products: products.map do |product|
+        inventory_item = product.inventory_items.find_by(location_id: location.id)
+        {
+          id: product.id,
+          name: product.name,
+          quantity: inventory_item&.quantity || 0,
+          batch_id: product.batch_id
+        }
+      end
+    }
   end
 
   private

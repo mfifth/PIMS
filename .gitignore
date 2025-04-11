@@ -42,4 +42,6 @@ db/queue_migrate/
 
 db/*.sqlite3-shm
 db/*.sqlite3-wal
-db/development.sqlite3
+db/development.sqlite3.DS_Store
+.sqlite3
+.DS_Store
