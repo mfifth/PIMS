@@ -1,9 +1,23 @@
+# Exported from Render on 2025-04-11T19:51:17Z
 services:
-  - type: web
-    name: PIMS
-    env: ruby
-    buildCommand: "bundle install && rails assets:precompile"
-    startCommand: "bundle exec puma -C config/puma.rb"
-
-    # This is the key line
-    preDeployCommand: "bundle exec rails db:migrate"
+- type: web
+  name: PIMS
+  runtime: ruby
+  repo: https://github.com/mfifth/PIMS
+  plan: free
+  envVars:
+  - key: SMTP_PASSWORD
+    sync: false
+  - key: SMTP_USERNAME
+    sync: false
+  - key: DATABASE_URL
+    sync: false
+  - key: RAILS_MASTER_KEY
+    sync: false
+  - key: WEB_CONCURRENCY
+    sync: false
+  region: oregon
+  buildCommand: bundle install && rails assets:precompile
+  startCommand: bundle exec puma -C config/puma.rb
+  preDeployCommand: bundle exec rails db:migrate
+version: "1"
