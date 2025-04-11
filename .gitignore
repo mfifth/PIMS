@@ -45,3 +45,4 @@ db/*.sqlite3-wal
 db/development.sqlite3.DS_Store
 .sqlite3
 .DS_Store
+db/development.sqlite3
