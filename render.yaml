@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: PIMS
+    env: ruby
+    buildCommand: "bundle install && rails assets:precompile"
+    startCommand: "bundle exec puma -C config/puma.rb"
+
+    # This is the key line
+    preDeployCommand: "bundle exec rails db:migrate"
