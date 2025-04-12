@@ -32,6 +32,24 @@ class User < ApplicationRecord
     confirmation_token
   end
 
+  def confirmation_token_valid?
+    confirmation_token_expires_at > Time.current
+  end
+  
+  # Check if user is confirmed
+  def confirmed?
+    confirmed_at.present?
+  end
+  
+  # Mark as confirmed
+  def confirm!
+    update_columns(
+      confirmed_at: Time.current,
+      confirmation_token: nil,
+      confirmation_token_expires_at: nil
+    )
+  end
+
   private
 
   def create_account_details
