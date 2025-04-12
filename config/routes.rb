@@ -60,6 +60,7 @@ Rails.application.routes.draw do
 
   get 'inventory_items/lookup', to: 'inventory_items#lookup'
 
+  get '/confirm_email/:token', to: 'confirmations#show', as: 'confirm_email'
   get '/invitations/:token/confirm', to: 'invitations#confirm', as: 'confirm_invitation'
   post '/invitations/:token/confirm', to: 'invitations#confirm'
   get '/invitations/:token/accept', to: 'invitations#accept', as: 'accept_invitation'

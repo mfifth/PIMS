@@ -10,11 +10,15 @@ class InvitationMailer < ApplicationMailer
     mail(to: invitation.email, subject: "You've been invited!")
   end
 
+  # app/mailers/user_mailer.rb
   def confirmation_instructions(user)
     @user = user
-    @confirmation_url = confirm_email_url(token: @user.confirmation_token)
-    @expiration_hours = 24 # Token expiration period
-
+    @confirmation_url = confirm_email_url(
+      token: @user.confirmation_token,
+      host: ENV.fetch('MAILER_HOST', 'localhost:3000')
+    )
+    @expiration_hours = 24
+    
     mail(
       to: @user.email_address,
       subject: 'Confirm your email address'
