@@ -1,11 +1,30 @@
 class Invitation < ApplicationRecord
   belongs_to :account
-  before_create :generate_token
-  validates :email, presence: true, uniqueness: { scope: :account_id }
+  has_secure_token
+  
+  before_create :set_defaults
+  after_create :send_invitation_email
+
+  def confirm!
+    update(confirmed_at: Time.current)
+  end
+
+  def confirmed?
+    confirmed_at.present?
+  end
+
+  def expired?
+    created_at < 7.days.ago
+  end
 
   private
 
-  def generate_token
-    self.token = SecureRandom.hex(16)
+  def set_defaults
+    self.accepted = false
+    self.token ||= SecureRandom.urlsafe_base64
+  end
+
+  def send_invitation_email
+    InvitationMailer.invite(self).deliver_later
   end
 end

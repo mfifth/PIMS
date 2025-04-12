@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+</head>
+<body>
+  <h1>Welcome to <%= Rails.application.class.module_parent_name %>, <%= @user.name %>!</h1>
+  
+  <p>"You're just one step away from activating your account. Please confirm your email address by clicking the link below:"</p>
+  
+  <p>
+    <%= link_to 'Confirm my email address', @confirmation_url %>
+  </p>
+  
+  <p>This link will expire in <%= @expiration_hours %> hours.</p>
+  
+  <p"If you didn't request this, please ignore this email."</p>
+  
+  <p>Thanks,<br>The <%= Rails.application.class.module_parent_name %> Team</p>
+</body>
+</html>

@@ -18,39 +18,39 @@ class UsersController < ApplicationController
   # Create a new user account
   def create
     @user = User.new(user_params)
-  
+    
     if params[:user][:invitation_token].present?
       invitation = Invitation.find_by(token: params[:user][:invitation_token])
-  
-      if invitation && invitation.email == @user.email_address
-        @user.skip_account_creation = true # Prevents auto-creating a new account
+      
+      if invitation && invitation.email == @user.email_address && invitation.confirmed?
+        @user.skip_account_creation = true
+        account = invitation.account
       else
-        flash[:alert] = "Invalid or expired invitation token."
+        flash[:alert] = "Invalid, expired, or unconfirmed invitation."
         render :new
         return
       end
     end
-  
+    
     if @user.save
       if invitation
-        invitation.account.users << @user
-        @user.update(role: invitation.role) # Optional: If you track roles
-        invitation.destroy # or mark as used if you prefer
+        account.users << @user
+        @user.update(role: invitation.role)
+        invitation.update(accepted: true)
+        start_new_session_for(@user)
+        redirect_to dashboard_path, notice: "Account created successfully!"
       else
-        # Normal sign up: create account and subscription
+        # Normal sign up flow
         account = Account.create
         account.users << @user
         Subscription.create(account: account)
-        flash[:notice] = "Your account has been created successfully!"
+        @user.send_confirmation_email!
+        redirect_to root_path, notice: "Please check your email to confirm your account"
       end
-
-      start_new_session_for @user
-      redirect_to '/dashboard'
     else
       render :new
     end
   end
-  
 
   def settings
     @invitations = Current.account.invitations

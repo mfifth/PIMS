@@ -55,13 +55,14 @@ Rails.application.routes.draw do
   get 'inventory', to: 'locations#inventory'
   post 'update_inventory', to: 'locations#update_inventory'
 
-  # Add the token parameter to the route
-  get '/accept_invitation/:token', to: 'invitations#accept', as: :accept_invitation
-
   get 'subscriptions/success', to: 'subscriptions#success'
   get 'subscriptions/cancel', to: 'subscriptions#cancel'
 
   get 'inventory_items/lookup', to: 'inventory_items#lookup'
+
+  get '/invitations/:token/confirm', to: 'invitations#confirm', as: 'confirm_invitation'
+  post '/invitations/:token/confirm', to: 'invitations#confirm'
+  get '/invitations/:token/accept', to: 'invitations#accept', as: 'accept_invitation'
 
   # config/routes.rb
   post "billing/checkout", to: "billing#create_checkout_session", as: :create_checkout
