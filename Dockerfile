@@ -25,7 +25,8 @@ RUN sed -i 's/http:\/\/deb.debian.org/http:\/\/cloudfront.debian.net/g' /etc/apt
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
-    BUNDLE_WITHOUT="development"
+    BUNDLE_WITHOUT="development" \
+    RAILS_MASTER_KEY=""
 
 FROM base AS build
 
@@ -38,6 +39,9 @@ RUN bundle exec bootsnap precompile --gemfile
 
 COPY package.json package-lock.json ./
 RUN npm install
+
+# Copy credentials (but NOT master.key)
+COPY config/credentials.yml.enc config/
 
 COPY . .
 RUN bundle exec bootsnap precompile app/ lib/
@@ -52,13 +56,7 @@ RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails /rails
 
-# Only include if using the entrypoint script
-# RUN chmod +x /rails/bin/docker-entrypoint
-
 USER 1000:1000
-
-# Include only if using entrypoint:
-# ENTRYPOINT ["/rails/bin/docker-entrypoint"]
 
 EXPOSE ${PORT:-3000}
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]

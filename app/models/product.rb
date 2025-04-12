@@ -20,9 +20,8 @@ class Product < ApplicationRecord
   private
 
   def product_limit_not_exceeded
-    max_products = 100 # Set your product limit here
-    if account.products.count >= max_products
-      errors.add(:base, "You have reached the maximum limit of #{max_products} products.")
+    if account.products.count >= PRODUCT_PLAN_LIMITS[account.subscription.plan]
+      errors.add(:base, "You have reached the maximum limit of #{PRODUCT_PLAN_LIMITS[account.subscription.plan]} products.")
     end
   end
 end

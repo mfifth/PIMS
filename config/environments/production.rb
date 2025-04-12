@@ -83,17 +83,6 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
-  if ENV["RUN_MIGRATIONS"] == "true"
-    begin
-      Rails.logger.info "Running migrations during deploy..."
-      ActiveRecord::Base.connection
-      ActiveRecord::Migrator.migrate(Rails.root.join("db/migrate"))
-      Rails.logger.info "Migrations completed successfully."
-    rescue => e
-      Rails.logger.error "Migration failed: #{e.message}"
-    end
-  end
-
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
