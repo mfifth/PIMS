@@ -30,15 +30,12 @@ class User < ApplicationRecord
   after_create :create_account_details
 
   def send_confirmation_email!
-    self.confirmation_token ||= SecureRandom.urlsafe_base64
+    generate_confirmation_token unless confirmation_token?
     self.confirmation_sent_at = Time.current
     self.confirmation_token_expires_at = 24.hours.from_now
-    save!
-    InvitationMailer.confirmation_instructions(self).deliver_now
-  end
 
-  def confirmation_token
-    SecureRandom.urlsafe_base64 # Fallback for unsaved records
+    save! # Save the token if newly generated
+    InvitationMailer.confirmation_instructions(self).deliver_now
   end
 
   def generate_confirmation_token
