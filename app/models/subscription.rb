@@ -9,8 +9,8 @@ class Subscription < ApplicationRecord
   }
 
   USER_PLAN_LIMITS = {
-    'free' => 2,
-    'basic' => 4,
+    'free' => 1,
+    'basic' => 3,
     'pro' => 6,
     'enterprise' => Float::INFINITY
   }

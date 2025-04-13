@@ -1,9 +1,4 @@
-<h1>You’ve been invited to join as an admin/user!</h1>
+<h1>"You've been invited!"</h1>
+<p>Click below to accept your invitation.</p>
 
-<p>Click below to accept the invitation and verify your email:</p>
-
-<p>
-  <a href="<%= @invite_url %>">Accept Invitation</a>
-</p>
-
-<p>This link will expire once used.</p>
+<%= link_to "Accept Invitation", @url, class: "button" %>

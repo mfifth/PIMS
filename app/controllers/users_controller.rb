@@ -15,35 +15,18 @@ class UsersController < ApplicationController
   def show
   end
 
-  # Create a new user account
   def create
-    @user = User.new(user_params)
-    
-    if params[:user][:invitation_token].present?
-      invitation = Invitation.find_by(token: params[:user][:invitation_token])
-      
-      if invitation && invitation.email == @user.email_address && invitation.confirmed?
-        @user.skip_account_creation = true
-        account = invitation.account
-      else
-        flash[:alert] = "Invalid, expired, or unconfirmed invitation."
-        render :new
-        return
-      end
-    end
-    
+    @user = User.new(user_params.except(:invitation_token))
+    invitation = Invitation.find_by(token: params[:user][:invitation_token]) if params[:user][:invitation_token].present?
+
     if @user.save
       if invitation
-        account.users << @user
-        @user.update(role: invitation.role)
-        invitation.update(accepted: true)
+        invitation.account.users << @user
+        invitation.update(accepted: true, confirmed_at: Time.current)
+        @user.update(confirmed_at: Time.current)
         start_new_session_for(@user)
         redirect_to dashboard_path, notice: "Account created successfully!"
       else
-        # Normal sign up flow
-        account = Account.create
-        account.users << @user
-        Subscription.create(account: account)
         @user.send_confirmation_email!
         redirect_to root_path, notice: "Please check your email to confirm your account"
       end

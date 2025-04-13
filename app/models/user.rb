@@ -35,7 +35,7 @@ class User < ApplicationRecord
     self.confirmation_token_expires_at = 24.hours.from_now
 
     save! # Save the token if newly generated
-    InvitationMailer.confirmation_instructions(self).deliver_later
+    InvitationMailer.confirmation_instructions(self).deliver_now
   end
 
   def generate_confirmation_token
@@ -64,10 +64,13 @@ class User < ApplicationRecord
   private
 
   def create_account_details
-    return if skip_account_creation
+    return if Invitation.find_by(email: email_address).present?
+
     account = Account.create
     account.users << self
     account.save
+
+    Subscription.create(account_id: account.id)
   end
 
   def user_limit_not_exceeded

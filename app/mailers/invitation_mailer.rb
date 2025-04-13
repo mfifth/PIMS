@@ -3,20 +3,20 @@ class InvitationMailer < ApplicationMailer
 
   def invite(invitation)
     @invitation = invitation
-    @url = invitation.confirmed? ? 
-      accept_invitation_url(token: invitation.token) : 
-      confirm_invitation_url(token: invitation.token)
-    
-    mail(to: invitation.email, subject: "You've been invited!")
+    @url = new_user_url(
+      invitation_token: invitation.token,
+      email: invitation.email
+    )
+
+    mail(
+      to: invitation.email,
+      subject: "Join PIMS as an admin."
+    )
   end
 
-  # app/mailers/user_mailer.rb
   def confirmation_instructions(user)
     @user = user
-    @confirmation_url = confirm_email_url(
-      token: @user.confirmation_token,
-      host: ENV.fetch('MAILER_HOST', 'localhost:3000')
-    )
+    @confirmation_url = confirm_email_url(token: @user.confirmation_token)
     @expiration_hours = 24
     
     mail(
