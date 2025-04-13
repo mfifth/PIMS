@@ -1,6 +1,4 @@
 class InvitationMailer < ApplicationMailer
-  default from: ENV.fetch('MAILER_FROM_ADDRESS', 'no-reply@example.com')
-
   def invite(invitation)
     @invitation = invitation
     @url = new_user_url(
