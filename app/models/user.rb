@@ -38,7 +38,7 @@ class User < ApplicationRecord
   end
 
   def confirmation_token
-    super || SecureRandom.urlsafe_base64 # Fallback for unsaved records
+    SecureRandom.urlsafe_base64 # Fallback for unsaved records
   end
 
   def generate_confirmation_token
