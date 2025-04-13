@@ -1,31 +1,47 @@
 <div class="mb-6 p-4 bg-gray-50 border rounded-lg">
   <h2 class="text-md font-semibold text-gray-700">Subscription Plan</h2>
   <p class="text-sm text-gray-600 mt-1">
-    You’re currently on the
-    <span class="font-medium text-blue-600"><%= Current.account.subscription.plan.titleize %></span> plan.
+    You are currently on the
+    <span class="font-medium text-blue-600"><%= account.subscription.plan.titleize %></span> plan.
+  </p>
+
+  <br>
+
+  <p class="text-sm text-gray-600 mt-1">
+    Locations created:
+    <span class="font-medium"><%= account.locations.size %></span>
+    of
+    <span class="font-medium"><%= location_limit(account) %></span>
   </p>
 
   <p class="text-sm text-gray-600 mt-1">
     Products used:
-    <span class="font-medium"><%= Current.account.products.count %></span>
+    <span class="font-medium"><%= account.products.size %></span>
     of
-    <span class="font-medium"><%= product_limit.infinite? ? "∞" : product_limit %></span>
+    <span class="font-medium"><%= product_limit(account) %></span>
   </p>
 
   <p class="text-sm text-gray-600 mt-1">
     Users on account:
-    <span class="font-medium"><%= Current.account.users.count %></span>
+    <span class="font-medium"><%= account.users.size %></span>
     of
-    <span class="font-medium"><%= user_limit.infinite? ? "∞" : user_limit %></span>
+    <span class="font-medium"><%= user_limit(account) %></span>
   </p>
 
-  <% if !product_limit.infinite? && Current.account.products.count >= product_limit %>
-    <p class="text-sm text-red-500 mt-2">You've reached your product limit.</p>
+  <br>
+
+  <% if account.products.count >= product_limit(account) %>
+    <p class="text-sm text-red-500 mt-2">You have reached your product limit.</p>
   <% end %>
 
-  <% if !user_limit.infinite? && Current.account.users.count >= user_limit %>
-    <p class="text-sm text-red-500 mt-2">You've reached your user limit.</p>
+  <% if account.users.count >= user_limit(account) %>
+    <p class="text-sm text-red-500 mt-2">You have reached your user limit.</p>
   <% end %>
+
+  <% if account.locations.count >= location_limit(account) %>
+    <p class="text-sm text-red-500 mt-2">You have reached your location limit.</p>
+  <% end %>
+
   <br>
   <%= link_to "Manage Subscription", 'https://pims.lemonsqueezy.com/checkout', target: :_blank, class: "text-blue-600 hover:underline" %>
 </div>

@@ -6,15 +6,15 @@ class Location < ApplicationRecord
   has_many :location_product_capacities, dependent: :destroy
 
   validates :name, presence: true, uniqueness: { scope: :account_id }
-  validates :address, presence: true
-
   validate :location_limit_not_exceeded, on: :create
 
   private
 
   def location_limit_not_exceeded
-    if account.locations.count >= LOCATION_PLAN_LIMITS[account.subscription.plan]
-      errors.add(:base, "You have reached the maximum limit of #{LOCATION_PLAN_LIMITS[account.subscription.plan]} locations.")
-    end
+    return unless account.locations.count >= 
+    Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]
+
+    errors.add(:base, "You have reached the maximum limit of 
+    #{Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]} locations for your plan.")
   end
 end
