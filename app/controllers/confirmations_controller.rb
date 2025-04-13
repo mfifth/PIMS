@@ -7,11 +7,11 @@ class ConfirmationsController < ApplicationController
     
     if @user.nil?
       redirect_to root_path, alert: "Invalid confirmation token."
-    elsif @user.confirmation_token_expired?
+    elsif !@user.confirmation_token_valid?
       redirect_to root_path, alert: "Confirmation token has expired."
     else
       @user.confirm!
-      sign_in(@user) # Optional: automatically sign in after confirmation
+      start_new_session_for(@user) # Optional: automatically sign in after confirmation
       redirect_to dashboard_path, notice: "Your email has been confirmed successfully!"
     end
   end

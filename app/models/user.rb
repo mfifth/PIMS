@@ -13,7 +13,17 @@ class User < ApplicationRecord
 
   has_many :sessions, dependent: :destroy
 
-  validates :email_address, presence: true, uniqueness: true
+  validates :email_address, 
+  presence: { message: "Email can't be blank" },
+  uniqueness: { 
+    case_sensitive: false,
+    message: 'is already registered. Please sign in or try forgot password.'
+  },
+  format: {
+    with: URI::MailTo::EMAIL_REGEXP,
+    message: 'Please enter a valid email address'
+  }
+  
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   validate :user_limit_not_exceeded, on: :create
 
@@ -21,14 +31,15 @@ class User < ApplicationRecord
 
   def send_confirmation_email!
     generate_confirmation_token unless confirmation_token?
+    self.confirmation_sent_at = Time.current
+    self.confirmation_token_expires_at = 24.hours.from_now
+
     save! # Save the token if newly generated
     InvitationMailer.confirmation_instructions(self).deliver_later
   end
 
   def generate_confirmation_token
     regenerate_confirmation_token
-    self.confirmation_sent_at = Time.current
-    self.confirmation_token_expires_at = 24.hours.from_now
     confirmation_token
   end
 

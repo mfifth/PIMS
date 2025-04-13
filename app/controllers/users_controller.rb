@@ -48,7 +48,7 @@ class UsersController < ApplicationController
         redirect_to root_path, notice: "Please check your email to confirm your account"
       end
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
