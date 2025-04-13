@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
   def new
     @user = User.new
+    @user.confirmation_token = generate_confirmation_token
 
     if params[:token].present?
       invitation = Invitation.find_by(token: params[:token])

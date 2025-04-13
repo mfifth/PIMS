@@ -35,6 +35,9 @@ Rails.application.routes.draw do
     member do
       patch :mark_as_read
     end
+    collection do
+      patch :mark_all_as_read
+    end
   end
 
   resources :subscriptions, only: [:new, :create]

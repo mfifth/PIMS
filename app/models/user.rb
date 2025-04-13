@@ -71,6 +71,9 @@ class User < ApplicationRecord
     account.save
 
     Subscription.create(account_id: account.id)
+    Notification.create(message: 'Congratulations on settings up your account! 
+    Make sure your email and phone are correct so you can get notifications directly to you.', 
+    notification_type: "notice", account_id: account.id)
   end
 
   def user_limit_not_exceeded
