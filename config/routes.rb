@@ -2,9 +2,13 @@ Rails.application.routes.draw do
   if Rails.env.development?
     # mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
+
+  mount StripeEvent::Engine, at: '/stripe/webhooks'
+
   post "/graphql", to: "graphql#execute"
   get "users/new"
   get "users/create"
+
   resource :session
   resources :passwords, param: :token
 
@@ -69,7 +73,6 @@ Rails.application.routes.draw do
   get '/invitations/:token/accept', to: 'invitations#accept', as: 'accept_invitation'
 
   # config/routes.rb
-  post "billing/checkout", to: "billing#create_checkout_session", as: :create_checkout
   get "billing/portal", to: "billing#billing_portal", as: :billing_portal
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)

@@ -71,6 +71,21 @@ class User < ApplicationRecord
     account.save
 
     Subscription.create(account_id: account.id)
+    customer_params = {
+        email: email_address,
+        metadata: { user_id: id, account_id: account.id, app: "PIMS" },
+        name: name
+      }
+
+    customer = Stripe::Customer.create(customer_params)
+    account.update(stripe_customer_id: customer['id'])
+
+    Stripe::Subscription.create(
+        customer: customer['id'],
+        items: [{ price: 'price_1RBPDiHCh3i3bWdKOrxWcGIF' }],
+        metadata: { account_id: account.id } # Custom tracking
+      )
+
     Notification.create(message: 'Congratulations on settings up your account! 
     Make sure your email and phone are correct so you can get notifications directly to you.', 
     notification_type: "notice", account_id: account.id)

@@ -29,6 +29,8 @@ gem 'whenever'
 
 gem 'stripe'
 
+gem 'stripe_event'
+
 gem 'dotenv-rails'
 
 gem 'pg', group: :production
