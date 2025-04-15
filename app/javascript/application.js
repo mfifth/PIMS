@@ -6,6 +6,7 @@ import SidebarController from "./controllers/sidebar_controller";
 import LookupController from './controllers/lookup_controller';
 import InventoryController from './controllers/inventory_controller';
 import * as Turbo from "@hotwired/turbo"
+import "./application.css";
 
 const application = Application.start();
 window.Stimulus = application; // ✅ Expose for debugging
