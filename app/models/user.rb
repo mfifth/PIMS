@@ -71,6 +71,7 @@ class User < ApplicationRecord
     account.save
 
     Subscription.create(account_id: account.id)
+
     customer_params = {
         email: email_address,
         metadata: { user_id: id, account_id: account.id, app: "PIMS" },
