@@ -7,7 +7,7 @@ class Account < ApplicationRecord
   has_many :notifications, dependent: :destroy
   has_many :categories, dependent: :destroy
   has_many :invitations
-  has_one :subscription
+  has_one :subscription, dependent: :destroy
 
   def stripe_plan_id
     'free'
