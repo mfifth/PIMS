@@ -62,15 +62,19 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "onrender.com" }
+  config.action_mailer.default_url_options = { host: "" }
+  config.action_mailer.default_options = { from: ENV['MAILJET_FROM_EMAIL'] }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   config.action_mailer.smtp_settings = {
-    address:        'in-v3.mailjet.com',
-    port:           587,
-    user_name:      ENV['MAILJET_API'],
-    password:       ENV['MAILJET_SECRET']
-  }
+  address:        'in-v3.mailjet.com',
+  port:           587,
+  domain:         'mailjet.com',  # ← Critical for authentication
+  user_name:      ENV['MAILJET_API_KEY'],  # Standard env var name
+  password:       ENV['MAILJET_SECRET_KEY'],
+  authentication: :plain,  # ← Required
+  enable_starttls_auto: true  # ← Encryption
+}
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
