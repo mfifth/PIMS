@@ -6,7 +6,7 @@ class Account < ApplicationRecord
   has_many :batches, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :categories, dependent: :destroy
-  has_many :invitations
+  has_many :invitations, dependent: :destroy
   has_one :subscription, dependent: :destroy
 
   def stripe_plan_id
