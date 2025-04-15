@@ -62,16 +62,15 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "https://pims-dnkv.onrender.com" }
-  config.action_mailer.default_options = { from: ENV['MAILJET_FROM_EMAIL'] }
+  config.action_mailer.default_url_options = { host: "https://pimsco.tech" }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   config.action_mailer.smtp_settings = {
-  address:        'in-v3.mailjet.com',
+  address:        'smtp.ionos.com',
   port:           587,
-  domain:         'mailjet.com',  # ← Critical for authentication
-  user_name:      ENV['MAILJET_API'],  # Standard env var name
-  password:       ENV['MAILJET_SECRET'],
+  domain:         'ionos.com',  # ← Critical for authentication
+  user_name:      ENV['SMTP_USERNAME'],  # Standard env var name
+  password:       ENV['SMTP_PASSWORD'],
   authentication: :plain,  # ← Required
   enable_starttls_auto: true  # ← Encryption
 }

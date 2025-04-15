@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   end
 
   mount StripeEvent::Engine, at: '/stripe/webhooks'
+  # post '/square/webhook', to: 'square#webhook'
 
   post "/graphql", to: "graphql#execute"
   get "users/new"
@@ -72,7 +73,6 @@ Rails.application.routes.draw do
   post '/invitations/:token/confirm', to: 'invitations#confirm'
   get '/invitations/:token/accept', to: 'invitations#accept', as: 'accept_invitation'
 
-  # config/routes.rb
   get "billing/portal", to: "billing#billing_portal", as: :billing_portal
 
   # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
