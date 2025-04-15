@@ -82,7 +82,7 @@ class User < ApplicationRecord
 
     Stripe::Subscription.create(
         customer: customer['id'],
-        items: [{ price: 'price_1RBPDiHCh3i3bWdKOrxWcGIF' }],
+        items: [{ price: ENV['STRIPE_FREE_SUBSCRIPTION_PRICE_ID'] }],
         metadata: { account_id: account.id }
       )
 
