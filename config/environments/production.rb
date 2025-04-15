@@ -66,13 +66,10 @@ Rails.application.configure do
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
   config.action_mailer.smtp_settings = {
-    address:        'smtp.sendgrid.net',
+    address:        'in-v3.mailjet.com',
     port:           587,
-    user_name:      'apikey',  # Literally the word 'apikey'
-    password:       ENV['SENDGRID_API_KEY'],  # Your API key
-    authentication: :plain,
-    domain:         'gmail.com',  # ← Match your verified sender’s domain
-    enable_starttls_auto: true
+    user_name:      ENV['MAILJET_API'],
+    password:       ENV['MAILJET_SECRET']
   }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to

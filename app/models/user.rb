@@ -83,7 +83,7 @@ class User < ApplicationRecord
     Stripe::Subscription.create(
         customer: customer['id'],
         items: [{ price: 'price_1RBPDiHCh3i3bWdKOrxWcGIF' }],
-        metadata: { account_id: account.id } # Custom tracking
+        metadata: { account_id: account.id }
       )
 
     Notification.create(message: 'Congratulations on settings up your account! 

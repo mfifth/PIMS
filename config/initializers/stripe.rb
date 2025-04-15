@@ -29,9 +29,6 @@ StripeEvent.configure do |events|
     end
   end
 
-  # -----------------------------------------
-  # Payment Events
-  # -----------------------------------------
   events.subscribe 'customer.subscription.deleted' do |event|
     event = event.data.object
     Account.find_by(stripe_customer_id: event.customer).update!(status: 'invalid')

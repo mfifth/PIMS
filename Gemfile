@@ -31,7 +31,7 @@ gem 'stripe'
 
 gem 'stripe_event'
 
-gem 'dotenv-rails'
+gem 'dotenv', groups: [:development, :test]
 
 gem 'pg', group: :production
 
