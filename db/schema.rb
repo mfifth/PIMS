@@ -10,18 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_13_025853) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_15_020438) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "orders_id"
     t.integer "suppliers_id"
     t.integer "locations_id"
     t.integer "products_id"
     t.string "stripe_customer_id"
     t.index ["locations_id"], name: "index_accounts_on_locations_id"
-    t.index ["orders_id"], name: "index_accounts_on_orders_id"
     t.index ["products_id"], name: "index_accounts_on_products_id"
     t.index ["suppliers_id"], name: "index_accounts_on_suppliers_id"
     t.index ["users_id"], name: "index_accounts_on_users_id"
@@ -124,21 +122,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_025853) do
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
 
-  create_table "orders", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "supplier_id", null: false
-    t.text "order_memo"
-    t.string "status", default: "Pending"
-    t.decimal "total_amount", precision: 10, scale: 2
-    t.boolean "recurring", default: false
-    t.date "arrival_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "replenish_on_arrival", default: false
-    t.index ["supplier_id"], name: "index_orders_on_supplier_id"
-    t.index ["user_id"], name: "index_orders_on_user_id"
-  end
-
   create_table "products", force: :cascade do |t|
     t.string "name", null: false
     t.string "sku", null: false
@@ -221,8 +204,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_13_025853) do
   add_foreign_key "order_items", "locations"
   add_foreign_key "order_items", "orders"
   add_foreign_key "order_items", "products"
-  add_foreign_key "orders", "suppliers"
-  add_foreign_key "orders", "users"
   add_foreign_key "products", "categories"
   add_foreign_key "products", "suppliers"
   add_foreign_key "sessions", "users"
