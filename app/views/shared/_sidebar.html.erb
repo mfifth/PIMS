@@ -26,8 +26,8 @@
         <li>
           <%= link_to notifications_path, class: "flex items-center justify-between font-semibold py-2 px-4 hover:bg-gray-950 hover:text-white rounded-md" do %>
             <span>Notifications</span>
-            <span class="px-2 py-0.5 text-xs font-medium rounded-full <%= Current.account.notifications.size > 5 ? 'text-red-600 bg-red-200' : 'text-white bg-green' %>">
-              <%= Current.account.notifications.size %>
+            <span class="px-2 py-0.5 text-xs font-medium rounded-full <%= Current.account.notifications.unread.size > 5 ? 'text-red-600 bg-red-200' : 'text-white bg-green' %>">
+              <%= Current.account.notifications.unread.size %>
             </span>
           <% end %>
         </li>
