@@ -8,9 +8,4 @@ class Account < ApplicationRecord
   has_many :categories, dependent: :destroy
   has_many :invitations, dependent: :destroy
   has_one :subscription, dependent: :destroy
-
-  def stripe_plan_id
-    'free'
-    # Stripe::Subscription.retrieve(subscription.stripe_subscription_id).items.data.first.price.id
-  end
 end
