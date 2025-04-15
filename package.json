@@ -2,7 +2,7 @@
   "name": "app",
   "private": true,
   "scripts": {
-    "build": "esbuild app/javascript/*.{js,ts,css} --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets"
+    "build": "esbuild app/javascript/*.{js,ts,css} --bundle --sourcemap --format=esm --outdir=public/assets --public-path=/assets --external:@hotwired/stimulus"
   },
   "devDependencies": {
     "@hotwired/stimulus": "^3.2.2",
