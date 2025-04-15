@@ -70,8 +70,8 @@ Rails.application.configure do
   address:        'in-v3.mailjet.com',
   port:           587,
   domain:         'mailjet.com',  # ← Critical for authentication
-  username:       ENV['MAILJET_API_KEY'],  # Standard env var name
-  password:       ENV['MAILJET_SECRET_KEY'],
+  username:       ENV['MAILJET_API'],  # Standard env var name
+  password:       ENV['MAILJET_SECRET'],
   authentication: :plain,  # ← Required
   enable_starttls_auto: true  # ← Encryption
 }
