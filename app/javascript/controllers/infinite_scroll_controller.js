@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
-import { Turbo } from "@hotwired/turbo-rails";
+import * as Turbo from "@hotwired/turbo-rails";
 
 export default class extends Controller {
   static values = { url: String };
@@ -29,3 +29,4 @@ export default class extends Controller {
     }
   }
 }
+//  SyntaxError: The requested module@hotwired--turbo-rails-99397bf3.js' doesn't provide an export named: 'Turbo'

@@ -23,7 +23,6 @@ gem 'kaminari'
 
 gem 'hotwire-rails'
 
-gem 'jsbundling-rails'
 
 gem 'whenever'
 

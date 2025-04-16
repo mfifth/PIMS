@@ -27,6 +27,11 @@ module Pims
 
     config.importmap.enabled = true
 
+    config.assets.configure do |env|
+      env.register_mime_type('application/javascript', extensions: ['.js'])
+      env.register_preprocessor('application/javascript', Sprockets::DirectiveProcessor)
+    end
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
