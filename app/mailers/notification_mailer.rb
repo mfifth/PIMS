@@ -1,6 +1,4 @@
 class NotificationMailer < ApplicationMailer
-  default from: 'notifications@example.com' # Change this to your sender email
-
   def low_inventory_alert(inventory_item, user)
     @inventory_item = inventory_item
     @user = user
