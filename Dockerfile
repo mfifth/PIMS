@@ -5,11 +5,14 @@ FROM docker.io/library/ruby:$RUBY_VERSION-slim AS base
 
 WORKDIR /rails
 
-# Install system dependencies
+# Install dependencies
 RUN sed -i 's/http:\/\/deb.debian.org/http:\/\/cloudfront.debian.net/g' /etc/apt/sources.list && \
     echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4 && \
     apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl ca-certificates && \
+    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install --no-install-recommends -y \
+        nodejs \
         libjemalloc2 \
         libvips \
         sqlite3 \
@@ -17,12 +20,9 @@ RUN sed -i 's/http:\/\/deb.debian.org/http:\/\/cloudfront.debian.net/g' /etc/apt
         build-essential \
         git \
         libyaml-dev \
-        pkg-config \
-        curl \
-        ca-certificates && \
+        pkg-config && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Set environment variables for production
 ENV RAILS_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
     BUNDLE_PATH="/usr/local/bundle" \
@@ -40,19 +40,17 @@ RUN gem install bundler -v '~> 2.5' && \
 # Precompile Ruby gems
 RUN bundle exec bootsnap precompile --gemfile
 
-# Copy credentials (but NOT master.key)
-COPY config/credentials.yml.enc config/
-
-# Copy application files
+# Copy app files (before running Tailwind or precompile)
 COPY . .
 
-# Precompile assets for production
+# Build Tailwind CSS (important for tailwindcss-rails)
+RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails tailwindcss:build
+
+# Precompile assets for production (using Importmap, Propshaft, etc.)
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
 
-# Final image configuration
 FROM base
 
-# Copy everything from build stage
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
@@ -61,9 +59,7 @@ RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R rails:rails /rails
 
-# Switch to non-root user for security
 USER 1000:1000
 
-# Expose port and start the server
 EXPOSE ${PORT:-3000}
 CMD ["bin/rails", "server", "-b", "0.0.0.0"]
