@@ -42,7 +42,7 @@ class SquareController < ApplicationController
         location.square_location_id = sq_loc.id unless location.square_location_id
         location.save!
       end
-      redirect_to square_locations_path, notice: "Fetched #{response.data.locations.size} locations. Please map them to your Locations."
+      redirect_to square_locations_path, notice: "Synced #{response.data.locations.size} locations. You are ready to sync products."
     else
       redirect_back fallback_location: root_path, alert: "Failed to fetch Square locations."
     end
@@ -63,8 +63,9 @@ class SquareController < ApplicationController
       )
   
       if response.success?
+        counter = 0
+
         response.data.counts.each do |count|
-          
           product = Product.find_or_initialize_by!(sku: count.catalog_object_id)
           product.name = count.catalog_object_name
           product.save!
@@ -76,13 +77,14 @@ class SquareController < ApplicationController
 
           inv_item.quantity = count.quantity.to_i
           inv_item.save!
+          counter += 1
         end
       else
         Rails.logger.error("Square inventory sync failed for location #{sl.square_id}: #{response.errors}")
       end
     end
   
-    redirect_to inventory_items_path, notice: "Inventory synced from Square!"
+    redirect_to inventory_items_path, notice: "Inventory synced from Square, #{counter} items synced"
   end
 
   def update_inventory
@@ -108,7 +110,7 @@ class SquareController < ApplicationController
     client_id = ENV['SQUARE_APPLICATION_ID']
     redirect_uri = square_oauth_callback_url
 
-    "https://connect.squareup.com/oauth2/authorize?client_id=#{client_id}&scope=ITEMS_READ+ORDERS_READ+INVENTORY_READ+MERCHANT_PROFILE_READ&session=false&redirect_uri=#{CGI.escape(redirect_uri)}"
+    "https://connect.squareup.com/oauth2/authorize?client_id=#{client_id}&scope=ITEMS_READ+INVENTORY_READ+MERCHANT_PROFILE_READ&session=false&redirect_uri=#{CGI.escape(redirect_uri)}"
   end
 
   def exchange_code_for_token(code)

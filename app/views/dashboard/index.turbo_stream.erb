@@ -1,8 +1,7 @@
-# app/views/dashboard/index.turbo_stream.erb
 <% case params[:card] %>
 <% when 'batches' %>
   <%= turbo_stream.append "batches-list" do %>
-    <%= render partial: "dashboard/batches", collection: @batches, as: :batch %>
+    <%= render partial: "dashboard/batch", collection: @batches, as: :batch %>
   <% end %>
   <%= turbo_stream.replace "batches-pagination" do %>
     <% if @batches.next_page %>
@@ -15,7 +14,7 @@
 
 <% when 'locations' %>
   <%= turbo_stream.append "locations-list" do %>
-    <%= render partial: "dashboard/locations", collection: @locations, as: :location %>
+    <%= render partial: "dashboard/location", collection: @locations, as: :location %>
   <% end %>
   <%= turbo_stream.replace "locations-pagination" do %>
     <% if @locations.next_page %>
@@ -28,7 +27,7 @@
 
 <% when 'products' %>
   <%= turbo_stream.append "products-list" do %>
-    <%= render partial: "dashboard/products", collection: @products, as: :product %>
+    <%= render partial: "dashboard/product", collection: @products, as: :product %>
   <% end %>
   <%= turbo_stream.replace "products-pagination" do %>
     <% if @products.next_page %>
