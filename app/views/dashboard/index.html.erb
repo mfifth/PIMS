@@ -1,109 +1,73 @@
-<!-- Content -->
-<div class="p-8 bg-gray-100 min-h-screen">
-  <h1 style='font-size: x-large' class="text-6xl font-bold text-gray-800 mb-6">Dashboard</h1>
+<div class="p-8 bg-gray-100 min-h-screen" data-controller="dashboard">
+  <h1 class="text-6xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
     <!-- Batches Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Batches</h2>
-      <p class="text-4xl font-bold text-blue-600"><%= @batches.count %></p>
+      <p class="text-4xl font-bold text-blue-600"><%= @batches.total_count %></p>
     
-      <ul class="mt-4 space-y-3">
-        <% @batches.each do |batch| %>
-          <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
-            <a href="<%= batch_path(batch) %>" class="block text-blue-600 font-medium">
-              <%= batch.batch_number %>
-            </a>
-            <p class="text-gray-500 text-xs">
-              <strong>MFG:</strong> <%= batch.manufactured_date || 'N/A' %><br>
-              <strong>EXP:</strong> <%= batch.expiration_date || 'N/A' %><br>
-              <strong>Products:</strong> <%= batch.products.count %>
-            </p>
-          </li>
+      <div id="batches-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
+        <ul class="space-y-3" data-dashboard-target="entries" id="batches-list">
+          <% @batches.each do |batch| %>
+            <%= render 'batches', batch: batch %>
+          <% end %>
+        </ul>
+        
+        <% if @batches.next_page %>
+          <div data-dashboard-target="pagination" id="batches-pagination" class="hidden">
+            <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
+            rel: 'next', data: { turbo_frame: "batches_frame" } %>
+          </div>
         <% end %>
-      </ul>
+      </div>
     </div>
   
-
     <!-- Locations Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Locations</h2>
-      <p class="text-4xl font-bold text-green-600"><%= @locations.count %></p>
+      <p class="text-4xl font-bold text-green-600"><%= @locations.total_count %></p>
 
-      <ul class="mt-4 space-y-3">
-        <% @locations.each do |location| %>
-          <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition flex flex-col">
-            <div class="flex justify-between items-center">
-              <a href="<%= location_path(location) %>" class="text-green-600 font-medium">
-                <%= location.name %>
-              </a>
-            </div>
-
-            <!-- List of Products & Perishable Count -->
-            <div class="mt-2 text-sm text-gray-700">
-              <% all_items = location.inventory_items.includes(:product) %>
-              <% perishable_count = 0 %>
-              <% non_perishable_count = 0 %>
-              <% total_value = 0 %>
-
-              <% all_items.each do |item| %>
-                <% if item.product.perishable %>
-                  <% perishable_count += item.quantity %>
-                <% else %>
-                  <% non_perishable_count += item.quantity %>
-                <% end %>
-                <% total_value += item.quantity * (item.product.price || 0) %>
-              <% end %>
-
-              <p class="text-md text-gray-500">
-                <%= perishable_count %> perishable items
-              </p>
-              <p class="text-md text-gray-500">
-                <%= non_perishable_count %> non-perishable items
-              </p>
-              <p class="text-md text-gray-500">
-                Total value: $<%= number_with_precision(total_value, precision: 2) %>
-              </p>
-            </div>
-          </li>
+      <div id="locations-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
+        <ul class="space-y-3" data-dashboard-target="entries" id="locations-list">
+          <% @locations.each do |location| %>
+            <%= render 'locations', location: location %>
+          <% end %>
+        </ul>
+        
+        <% if @locations.next_page %>
+          <div data-dashboard-target="pagination" id="locations-pagination" class="hidden">
+            <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
+            rel: 'next', data: { turbo_frame: "locations_frame" } %>
+          </div>
         <% end %>
-      </ul>
+      </div>
     </div>
-
-
 
     <!-- Products Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 mb-4">Products</h2>
-      <p class="text-4xl font-bold text-purple-600"><%= Current.account.products.perishable.count %></p>
+      <p class="text-4xl font-bold text-purple-600"><%= @products.total_count %></p>
 
-      <!-- Perishable Products -->
-      <div class="mt-6">
-        <ul class="mt-2 space-y-3">
-          <% @perishables.each do |product| %>
-            <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
-            <div class="flex justify-between">
-              <span class="text-gray-800 font-medium"><%= product.name %></span>
-              
-              <% if product.batch&.expiration_date.present? %>
-                <% expiration_date = product.batch.expiration_date %>
-                <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
-            
-                <span class="<%= color_class %> text-sm"><%= expiration_date %></span>
-              <% else %>
-                <span class="text-gray-500 text-sm">No Expiration Date</span>
-              <% end %>
-            </div>
-          
-              <% product.locations.each do |location| %>
-                <p class="text-gray-500 text-xs">Qty: <%= location.inventory_items.detect { |i| i.product_id == product.id }.quantity %></p>
-                <p class="text-gray-500 text-xs">Location: <%= location.name %></p>
-              <% end %>
-            </li>
+      <div id="products-scroll-container" class="mt-6 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
+        <ul class="space-y-3" data-dashboard-target="entries" id="products-list">
+          <% @products.each do |product| %>
+            <%= render 'products', product: product %>
           <% end %>
         </ul>
+
+        <% if @products.next_page %>
+          <div data-dashboard-target="pagination" id="products-pagination" class="hidden">
+            <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
+            rel: 'next',  data: { turbo_frame: "products_frame" } %>
+          </div>
+        <% end %>
       </div>
     </div>
   </div>
 </div>
+
+<%= turbo_frame_tag "batches_frame" %>
+<%= turbo_frame_tag "locations_frame" %>
+<%= turbo_frame_tag "products_frame" %>

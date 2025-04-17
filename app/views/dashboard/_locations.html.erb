@@ -1,0 +1,24 @@
+<li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition flex flex-col">
+  <div class="flex justify-between items-center">
+    <a href="<%= location_path(location) %>" class="text-green-600 font-medium">
+      <%= location.name %>
+    </a>
+  </div>
+
+  <div class="mt-2 text-sm text-gray-700">
+    <% all_items = location.inventory_items.includes(:product) %>
+    <% perishable_count = all_items.sum { |item| item.product.perishable ? item.quantity : 0 } %>
+    <% non_perishable_count = all_items.sum { |item| item.product.perishable ? 0 : item.quantity } %>
+    <% total_value = all_items.sum { |item| item.quantity * (item.product.price || 0) } %>
+
+    <p class="text-md text-gray-500">
+      <%= perishable_count %> perishable items
+    </p>
+    <p class="text-md text-gray-500">
+      <%= non_perishable_count %> non-perishable items
+    </p>
+    <p class="text-md text-gray-500">
+      Total value: $<%= number_with_precision(total_value, precision: 2) %>
+    </p>
+  </div>
+</li>

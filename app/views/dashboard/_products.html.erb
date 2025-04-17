@@ -1,0 +1,17 @@
+<li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
+  <div class="flex justify-between">
+    <span class="text-gray-800 font-medium"><%= product.name %></span>
+    
+    <% if product.batch&.expiration_date.present? %>
+      <% expiration_date = product.batch.expiration_date %>
+      <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
+  
+      <span class="<%= color_class %> text-sm">EXP: <%= expiration_date %></span>
+    <% end %>
+  </div>
+
+  <% product.locations.each do |location| %>
+    <p class="text-gray-500 text-xs">Qty: <%= location.inventory_items.detect { |i| i.product_id == product.id }&.quantity %></p>
+    <p class="text-gray-500 text-xs">Location: <%= location.name %></p>
+  <% end %>
+</li>

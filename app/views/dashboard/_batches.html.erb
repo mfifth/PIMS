@@ -1,0 +1,10 @@
+<li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
+  <a href="<%= batch_path(batch) %>" class="block text-blue-600 font-medium">
+    <%= batch.batch_number %>
+  </a>
+  <p class="text-gray-500 text-xs">
+    <strong>MFG:</strong> <%= batch.manufactured_date || 'N/A' %><br>
+    <strong>EXP:</strong> <%= batch.expiration_date || 'N/A' %><br>
+    <strong>Products:</strong> <%= batch.products.count %>
+  </p>
+</li>

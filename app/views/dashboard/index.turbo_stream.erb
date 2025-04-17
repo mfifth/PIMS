@@ -1,0 +1,41 @@
+# app/views/dashboard/index.turbo_stream.erb
+<% case params[:card] %>
+<% when 'batches' %>
+  <%= turbo_stream.append "batches-list" do %>
+    <%= render partial: "dashboard/batches", collection: @batches, as: :batch %>
+  <% end %>
+  <%= turbo_stream.replace "batches-pagination" do %>
+    <% if @batches.next_page %>
+      <div data-infinite-scroll-target="pagination" class="hidden" id="batches-pagination">
+        <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
+                    data: { turbo_frame: "batches_frame" } %>
+      </div>
+    <% end %>
+  <% end %>
+
+<% when 'locations' %>
+  <%= turbo_stream.append "locations-list" do %>
+    <%= render partial: "dashboard/locations", collection: @locations, as: :location %>
+  <% end %>
+  <%= turbo_stream.replace "locations-pagination" do %>
+    <% if @locations.next_page %>
+      <div data-infinite-scroll-target="pagination" class="hidden" id="locations-pagination">
+        <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
+                    data: { turbo_frame: "locations_frame" } %>
+      </div>
+    <% end %>
+  <% end %>
+
+<% when 'products' %>
+  <%= turbo_stream.append "products-list" do %>
+    <%= render partial: "dashboard/products", collection: @products, as: :product %>
+  <% end %>
+  <%= turbo_stream.replace "products-pagination" do %>
+    <% if @products.next_page %>
+      <div data-infinite-scroll-target="pagination" class="hidden" id="products-pagination">
+        <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
+                    data: { turbo_frame: "products_frame" } %>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>
