@@ -3,19 +3,19 @@ class Subscription < ApplicationRecord
 
   PRODUCT_PLAN_LIMITS = {
     'free' => 25,
-    'pro' => 100,
-    'enterprise' => Float::INFINITY
+    'plus' => 100,
+    'premium' => Float::INFINITY
   }
 
   USER_PLAN_LIMITS = {
     'free' => 1,
-    'pro' => 2,
-    'enterprise' => Float::INFINITY
+    'plus' => 2,
+    'premium' => Float::INFINITY
   }
 
   LOCATION_PLAN_LIMITS = {
     'free' => 1,
-    'pro' => 2,
-    'enterprise' => Float::INFINITY
+    'plus' => 2,
+    'premium' => Float::INFINITY
   }
 end

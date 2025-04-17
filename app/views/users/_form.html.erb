@@ -27,7 +27,7 @@
     </div>
   </div>
   
-  <% if ['pro', 'enterprise'].include?(Current.account.subscription.plan) %>
+  <% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
     <!-- Notification Settings Section -->
     <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
       <h2 class="text-lg font-semibold mb-6 text-gray-800">Notification Settings</h2>
@@ -60,7 +60,7 @@
 <% end %>
 <br>
 
-<% if ['pro', 'enterprise'].include?(Current.account.subscription.plan) %>
+<% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
   <div id='notifications'>
     <!-- Test Email (separate form) -->
     <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
