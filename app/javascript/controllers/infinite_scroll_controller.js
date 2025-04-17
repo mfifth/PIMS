@@ -1,5 +1,4 @@
 import { Controller } from "@hotwired/stimulus";
-import * as Turbo from "@hotwired/turbo-rails";
 
 export default class extends Controller {
   static values = { url: String };
@@ -24,9 +23,8 @@ export default class extends Controller {
     if (this.urlValue) {
       fetch(this.urlValue)
       .then(response => response.text())
-      .then(html => Turbo.renderStreamMessage(html))
+      .then(html => window.Turbo.renderStreamMessage(html))
       .catch(error => console.error("Infinite scroll error:", error));
     }
   }
 }
-//  SyntaxError: The requested module@hotwired--turbo-rails-99397bf3.js' doesn't provide an export named: 'Turbo'
