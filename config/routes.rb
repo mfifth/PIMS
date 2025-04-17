@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   end
 
   mount StripeEvent::Engine, at: '/stripe/webhooks'
-  # post '/square/webhook', to: 'square#webhook'
 
   post "/graphql", to: "graphql#execute"
   get "users/new"
@@ -75,11 +74,10 @@ Rails.application.routes.draw do
 
   get "billing/portal", to: "billing#billing_portal", as: :billing_portal
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  get  "/square/oauth/start",    to: "square#start"
+  get  "/square/oauth/callback", to: "square#callback"
+  post '/square/webhook', to: 'square#update_inventory'
 
   # Defines the root path route ("/")
   root "dashboard#index"
-
 end

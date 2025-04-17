@@ -7,6 +7,14 @@
     <%= render "form" %>
   </turbo-frame>
 
+  <% if square_connected? %>
+    <p class="text-green-600 font-semibold">✅ Square account connected</p>
+  <% else %>
+    <%= button_to "Connect with Square", "/square/oauth/start", method: :get,
+    class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
+    data: { disable_with: "Connecting..." } %>
+  <% end %>
+
   <% unless Current.account.users.size + @invitations.size >= user_limit(Current.account) %>
     <!-- Invite a User -->
     <div class="max-w-2xl mx-auto mt-10 border-t">

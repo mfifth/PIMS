@@ -40,7 +40,9 @@
             <%= form.label :email_notification, "Receive Email Notifications", class: "ml-2 text-sm text-gray-700" %>
           </div>
         </div>
+  <% end %>
 
+  <% if Current.account.subscription.plan == 'premium' %>
         <!-- Text Notification -->
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
@@ -66,7 +68,9 @@
     <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
       <%= submit_tag "Test Email", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
     <% end %>
+<% end %>
 
+<% if Current.account.subscription.plan == 'premium' %>
     <!-- Test Text (separate form) -->
     <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
       <%= submit_tag "Test Text", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>

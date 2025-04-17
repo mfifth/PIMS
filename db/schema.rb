@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_15_185302) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_17_174413) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -19,6 +19,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_15_185302) do
     t.integer "locations_id"
     t.integer "products_id"
     t.string "stripe_customer_id"
+    t.text "square_access_token"
+    t.string "square_merchant_id"
     t.index ["locations_id"], name: "index_accounts_on_locations_id"
     t.index ["products_id"], name: "index_accounts_on_products_id"
     t.index ["suppliers_id"], name: "index_accounts_on_suppliers_id"

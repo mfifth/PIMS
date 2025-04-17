@@ -1,72 +1,157 @@
-require 'base64'
-require 'openssl'
-
 class SquareController < ApplicationController
-	skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token
 
-	def webhook
-    signature = request.headers['X-Square-Signature']
-    body = request.body.read
-    signature_key = ENV['SQUARE_WEBHOOK_SIGNATURE_KEY']
-    endpoint_url = webhook_endpoint_url
+  def start
+    redirect_to oauth_authorize_url
+  end
 
-    unless valid_signature?(signature, signature_key, body, endpoint_url)
-      Rails.logger.warn "Square webhook signature mismatch"
-      return head :unauthorized
+  def callback
+    if params[:error]
+      redirect_to root_path, alert: "Authorization failed: #{params[:error_description] || params[:error] || 'Unknown error'}"
+      return
     end
 
-    payload = JSON.parse(body)
+    result = exchange_code_for_token(params[:code])
+    if result.success?
+      # Store access_token and other metadata (like location_id) for the user
+      access_token = result.data.access_token
+      merchant_id = result.data.merchant_id
 
-    if payload['type'] == 'order.created'
-      order_id = payload.dig('data', 'object', 'order', 'id')
-			square_location_id = params.dig('data', 'object', 'order', 'location_id')
-      process_order(order_id, square_location_id)
+      # You could look up/store a SquareAccount model associated with current_user
+      Current.account.update(
+        access_token: access_token,
+        merchant_id: merchant_id
+      )
+
+      redirect_to dashboard_path, notice: "Square account connected!"
+    else
+      redirect_to root_path, alert: "OAuth exchange failed"
     end
-
-    head :ok
   end
 
-	private
-
-	def valid_signature?(signature, key, body, url)
-    digest = OpenSSL::Digest.new('sha1')
-    string_to_sign = url + body
-    computed_signature = Base64.strict_encode64(OpenSSL::HMAC.digest(digest, key, string_to_sign))
-    ActiveSupport::SecurityUtils.secure_compare(signature, computed_signature)
-  end
-
-  def webhook_endpoint_url
-    "https://pimsco.tech/square/webhook"
-  end
-
-	def process_order(order_id, square_location_id)
-  	location = Location.find_by(square_location_id: square_location_id)
-		account = location.account
-  	return head :not_found unless location
-
+  def sync_locations
     client = Square::Client.new(
-      access_token: account.square_access_token,
-      environment: 'production' # or 'production'
+      access_token: Current.account.access_token,
+      environment: Rails.env.production? ? 'production' : 'sandbox'
     )
 
-    response = client.orders.retrieve_order(order_id: order_id)
-
+    response = client.locations.list_locations
     if response.success?
-      order = response.data.order
-      order.line_items.each do |line_item|
-        update_inventory(line_item, location)
+      response.data.locations.each do |sq_loc|
+        location = Current.account.locations.find_or_initialize_by(name: sq_loc.name)
+        location.square_location_id = sq_loc.id unless location.square_location_id
+        location.save!
       end
+      redirect_to square_locations_path, notice: "Fetched #{response.data.locations.size} locations. Please map them to your Locations."
     else
-      Rails.logger.error "Failed to fetch Square order #{order_id}: #{response.errors}"
+      redirect_back fallback_location: root_path, alert: "Failed to fetch Square locations."
     end
   end
 
-  def update_inventory(line_item, location)
-    product = Product.find_by(sku: line_item.catalog_object_id.to_s, account_id: location.account.id)
-		inventory_item = InventoryItem.find_by(location: location.id, product_id: product.id)
-    return unless inventory_item
+  def sync_inventory
+    client = Square::Client.new(
+      access_token: Current.account.access_token,
+      environment: Rails.env.production? ? 'production' : 'sandbox'
+    )
+  
+    Current.account.locations.where.not(square_location_id: nil).each do |location|
+      next unless location
+  
+      response = client.inventory.list_inventory_counts(
+        location_ids: [location.square_location_id],              # only this location
+        catalog_object_types: 'ITEM'                # only stockable items
+      )
+  
+      if response.success?
+        response.data.counts.each do |count|
+          
+          product = Product.find_or_initialize_by!(sku: count.catalog_object_id)
+          product.name = count.catalog_object_name
+          product.save!
+  
+          inv_item = InventoryItem.find_or_initialize_by(
+            product: product,
+            location: location
+          )
 
-    quantity_sold = line_item.quantity.to_i
-    inventory_item.update(quantity: inventory_item.quantity - quantity_sold)
+          inv_item.quantity = count.quantity.to_i
+          inv_item.save!
+        end
+      else
+        Rails.logger.error("Square inventory sync failed for location #{sl.square_id}: #{response.errors}")
+      end
+    end
+  
+    redirect_to inventory_items_path, notice: "Inventory synced from Square!"
+  end
+
+  def update_inventory
+    payload = request.body.read
+    signature = request.headers['X-Square-Signature']
+
+    if verify_square_signature(payload, signature)
+      event = JSON.parse(payload)
+
+      if event['type'] == 'inventory.count.updated'
+        handle_inventory_update(event['data'])
+      end
+
+      render json: { status: 'success' }, status: :ok
+    else
+      render json: { error: 'Invalid signature' }, status: :unauthorized
+    end
+  end
+  
+  private
+
+  def oauth_authorize_url
+    client_id = ENV['SQUARE_APPLICATION_ID']
+    redirect_uri = square_oauth_callback_url
+
+    "https://connect.squareup.com/oauth2/authorize?client_id=#{client_id}&scope=ITEMS_READ+ORDERS_READ+INVENTORY_READ+MERCHANT_PROFILE_READ&session=false&redirect_uri=#{CGI.escape(redirect_uri)}"
+  end
+
+  def exchange_code_for_token(code)
+    client = Square::Client.new(
+      environment: Rails.env.production? ? 'production' : 'sandbox'
+    )
+
+    client.oauth.obtain_token(
+      body: {
+        client_id: ENV['SQUARE_APPLICATION_ID'],
+        client_secret: ENV['SQUARE_SECRET'],
+        code: code,
+        grant_type: "authorization_code"
+      }
+    )
+  end
+
+  def verify_square_signature(payload, signature)
+    secret = ENV['SQUARE_WEBHOOK_SECRET']
+    string_to_sign = request.url + payload
+  
+    expected_signature = Base64.strict_encode64(
+      OpenSSL::HMAC.digest('sha1', secret, string_to_sign)
+    )
+  
+    ActiveSupport::SecurityUtils.secure_compare(expected_signature, signature)
+  end  
+
+  def handle_inventory_update(data)
+    counts = data.dig("object", "inventory_counts") || []
+  
+    counts.each do |count|
+      product = Product.find_by(sku: count["catalog_object_id"])
+      location = Location.find_by(square_location_id: count["location_id"])
+      next unless product && location
+  
+      inv_item = InventoryItem.find_or_initialize_by(product: product, location: location)
+      inv_item.quantity = count["quantity"].to_i
+      inv_item.save!
+    end
+  end  
+
+  def find_location(square_location_id)
+    Location.find_by(square_location_id: square_location_id)
   end
 end
