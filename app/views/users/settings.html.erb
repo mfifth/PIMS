@@ -23,7 +23,7 @@
           data: { disable_with: "Syncing..." } %>
       </div>
     </div>
-  <% else %>
+  <% elsif ['plus', 'premium'].include?(Current.account.subscription.plan) %>
     <%= button_to "Connect with Square", "/square/oauth/start", method: :get,
       class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
       data: { disable_with: "Connecting..." } %>

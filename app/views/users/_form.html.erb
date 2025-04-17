@@ -27,7 +27,7 @@
     </div>
   </div>
   
-  <% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
+  <% if ['plus', 'premium', 'starter'].include?(Current.account.subscription.plan) %>
     <!-- Notification Settings Section -->
     <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
       <h2 class="text-lg font-semibold mb-6 text-gray-800">Notification Settings</h2>
@@ -42,7 +42,7 @@
         </div>
   <% end %>
 
-  <% if Current.account.subscription.plan == 'premium' %>
+  <% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
         <!-- Text Notification -->
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-2">
@@ -62,7 +62,7 @@
 <% end %>
 <br>
 
-<% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
+<% if ['plus', 'premium', 'starter'].include?(Current.account.subscription.plan) %>
   <div id='notifications'>
     <!-- Test Email (separate form) -->
     <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
@@ -70,7 +70,7 @@
     <% end %>
 <% end %>
 
-<% if Current.account.subscription.plan == 'premium' %>
+<% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
     <!-- Test Text (separate form) -->
     <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
       <%= submit_tag "Test Text", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
