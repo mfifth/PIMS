@@ -82,10 +82,5 @@
       <% else %>
         <p class="text-gray-500">No users have been invited yet.</p>
       <% end %>
-
-      
-      <% if @invitations.size >= user_limit(Current.account) %>
-        <p class="text-red-500 text-sm mt-2">You have reached the maximum number of invited users for your plan.</p>
-      <% end %>
     </div>
 </div>
