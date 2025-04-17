@@ -60,14 +60,16 @@
 <% end %>
 <br>
 
-<div id='notifications'>
-  <!-- Test Email (separate form) -->
-  <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
-    <%= submit_tag "Test Email", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
-  <% end %>
+<% if ['pro', 'enterprise'].include?(Current.account.subscription.plan) %>
+  <div id='notifications'>
+    <!-- Test Email (separate form) -->
+    <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
+      <%= submit_tag "Test Email", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
+    <% end %>
 
-  <!-- Test Text (separate form) -->
-  <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
-    <%= submit_tag "Test Text", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
-  <% end %>
-</div>
+    <!-- Test Text (separate form) -->
+    <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
+      <%= submit_tag "Test Text", class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
+    <% end %>
+  </div>
+<% end %>
