@@ -5,7 +5,6 @@ export default class extends Controller {
   static values = { loading: Boolean }
 
   connect() {
-    console.log("Dashboard controller connected to:", this.element)
     this.scrollContainers = this.scrollContainerTargets
     this.scrollHandlers = []
     
@@ -13,7 +12,6 @@ export default class extends Controller {
       const handler = this.handleScroll.bind(this, container)
       this.scrollHandlers.push(handler)
       container.addEventListener('scroll', handler)
-      console.log(`Added scroll listener to:`, container)
     })
   }
 
@@ -25,7 +23,6 @@ export default class extends Controller {
 
   handleScroll(container) {
     if (this.loadingValue) {
-      console.log("Already loading, skipping")
       return
     }
 
@@ -33,11 +30,7 @@ export default class extends Controller {
     const scrollHeight = container.scrollHeight
     const threshold = 50 // pixels from bottom
 
-    console.log(`Scroll container: ${container.id}`)
-    console.log(`Position: ${scrollPosition}, Height: ${scrollHeight}, Threshold: ${scrollHeight - threshold}`)
-
     if (scrollPosition >= (scrollHeight - threshold)) {
-      console.log("Bottom reached for container:", container.id)
       this.loadMore(container)
     }
   }
@@ -47,11 +40,9 @@ export default class extends Controller {
     const nextPage = pagination?.querySelector("a[rel='next']")
     
     if (!nextPage) {
-      console.log("No more pages to load for container:", container.id)
       return
     }
 
-    console.log("Loading next page for container:", container.id, "URL:", nextPage.href)
     this.loadingValue = true
     
     fetch(nextPage.href, {
@@ -65,13 +56,11 @@ export default class extends Controller {
       return response.text()
     })
     .then(html => {
-      console.log("Received response for container:", container.id)
       Turbo.renderStreamMessage(html)
     })
     .catch(error => console.error("Error loading more items:", error))
     .finally(() => {
       this.loadingValue = false
-      console.log("Loading complete for container:", container.id)
     })
   }
 }
