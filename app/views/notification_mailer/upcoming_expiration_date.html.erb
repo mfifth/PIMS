@@ -1,4 +1,3 @@
-<!-- app/views/user_mailer/upcoming_expiration_date.html.erb -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,6 +72,48 @@
     .button:hover {
       background-color: #3498db;
     }
+
+    .product-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .product-table th {
+      background-color: #f2f2f2;
+      text-align: left;
+      padding: 10px;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .product-table td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .product-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .location-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background-color: #e3f2fd;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #1976d2;
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+
+    .quantity-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background-color: #e8f5e9;
+      border-radius: 4px;
+      font-size: 14px;
+      color: #2e7d32;
+    }
   </style>
 </head>
 <body>
@@ -86,14 +127,45 @@
 
     <p><span class="highlight">Expiration Date:</span> <%= @batch.expiration_date.strftime('%B %d, %Y') %></p>
 
+    <h3>Products in this batch:</h3>
+
+    <table class="product-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <th>Locations & Quantities</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @batch.products.each do |product| %>
+          <tr>
+            <td>
+              <strong><%= product.name %></strong><br>
+              <small>SKU: <%= product.sku %></small>
+            </td>
+            <td>
+              <% product.inventory_items.group_by(&:location).each do |location, items| %>
+                <div>
+                  <span class="location-badge"><%= location.name %></span>
+                  <span class="quantity-badge">
+                    <%= items.sum(&:quantity) %> units
+                  </span>
+                </div>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
     <p>If you need to take any action, please review the batch details in your account.</p>
 
     <a href="<%= url_for(controller: 'batches', action: 'show', id: @batch.id) %>" class="button">View Batch Details</a>
 
     <div class="footer">
       <p>Best regards,</p>
-      <p>Your Company Name</p>
-      <p><a href="http://www.yourcompany.com">www.yourcompany.com</a></p>
+      <p>Pimsco</p>
+      <p><a href="http://pimsco.tech">www.pimsco.tech</a></p>
     </div>
   </div>
 
