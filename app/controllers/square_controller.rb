@@ -1,3 +1,5 @@
+require 'square'
+
 class SquareController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -13,14 +15,12 @@ class SquareController < ApplicationController
 
     result = exchange_code_for_token(params[:code])
     if result.success?
-      # Store access_token and other metadata (like location_id) for the user
       access_token = result.data.access_token
       merchant_id = result.data.merchant_id
 
-      # You could look up/store a SquareAccount model associated with current_user
       Current.account.update(
-        access_token: access_token,
-        merchant_id: merchant_id
+        square_access_token: access_token,
+        square_merchant_id: merchant_id
       )
 
       redirect_to dashboard_path, notice: "Square account connected!"
@@ -31,7 +31,7 @@ class SquareController < ApplicationController
 
   def sync_locations
     client = Square::Client.new(
-      access_token: Current.account.access_token,
+      access_token: Current.account.square_access_token,
       environment: Rails.env.production? ? 'production' : 'sandbox'
     )
 
@@ -50,7 +50,7 @@ class SquareController < ApplicationController
 
   def sync_inventory
     client = Square::Client.new(
-      access_token: Current.account.access_token,
+      access_token: Current.account.square_access_token,
       environment: Rails.env.production? ? 'production' : 'sandbox'
     )
   
@@ -58,8 +58,8 @@ class SquareController < ApplicationController
       next unless location
   
       response = client.inventory.list_inventory_counts(
-        location_ids: [location.square_location_id],              # only this location
-        catalog_object_types: 'ITEM'                # only stockable items
+        location_ids: [location.square_location_id],
+        catalog_object_types: 'ITEM'
       )
   
       if response.success?

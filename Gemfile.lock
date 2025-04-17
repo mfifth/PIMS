@@ -74,16 +74,29 @@ GEM
       uri (>= 0.13.1)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    aes_key_wrap (1.1.0)
+    apimatic_core (0.3.15)
+      apimatic_core_interfaces (~> 0.2.0)
+      certifi (~> 2018.1, >= 2018.01.18)
+      faraday-multipart (~> 1.0)
+      nokogiri (~> 1.13, >= 1.13.10)
+    apimatic_core_interfaces (0.2.1)
+    apimatic_faraday_client_adapter (0.1.4)
+      apimatic_core_interfaces (~> 0.2.0)
+      certifi (~> 2018.1, >= 2018.01.18)
+      faraday (~> 2.0, >= 2.0.1)
+      faraday-follow_redirects (~> 0.2)
+      faraday-gzip (~> 1.0)
+      faraday-http-cache (~> 2.2)
+      faraday-multipart (~> 1.0)
+      faraday-net_http_persistent (~> 2.0)
+      faraday-retry (~> 2.0)
     ast (2.4.3)
-    attr_required (1.0.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     bcrypt_pbkdf (1.1.1)
     bcrypt_pbkdf (1.1.1-x86_64-darwin)
     benchmark (0.4.0)
     bigdecimal (3.1.9)
-    bindata (2.5.1)
     bindex (0.8.1)
     bootsnap (1.18.4)
       msgpack (~> 1.2)
@@ -99,12 +112,13 @@ GEM
       rack-test (>= 0.6.3)
       regexp_parser (>= 1.5, < 3.0)
       xpath (~> 3.2)
+    certifi (2018.01.18)
     childprocess (5.1.0)
       logger (~> 1.5)
     chronic (0.10.2)
     coderay (1.1.3)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.0)
+    connection_pool (2.5.1)
     crass (1.0.6)
     date (3.4.1)
     debug (1.10.0)
@@ -120,8 +134,20 @@ GEM
       logger
     faraday-follow_redirects (0.3.0)
       faraday (>= 1, < 3)
+    faraday-gzip (1.0.0)
+      faraday (>= 1.0)
+      zlib (~> 2.1)
+    faraday-http-cache (2.5.1)
+      faraday (>= 0.8)
+    faraday-multipart (1.1.0)
+      multipart-post (~> 2.0)
     faraday-net_http (3.4.0)
       net-http (>= 0.5.0)
+    faraday-net_http_persistent (2.3.0)
+      faraday (~> 2.5)
+      net-http-persistent (>= 4.0.4, < 5)
+    faraday-retry (2.3.1)
+      faraday (~> 2.0)
     fiber-storage (1.0.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
@@ -150,13 +176,6 @@ GEM
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     json (2.10.2)
-    json-jwt (1.16.7)
-      activesupport (>= 4.2)
-      aes_key_wrap
-      base64
-      bindata
-      faraday (~> 2.0)
-      faraday-follow_redirects
     jwt (2.10.1)
       base64
     kamal (2.5.3)
@@ -206,8 +225,11 @@ GEM
     mini_portile2 (2.8.8)
     minitest (5.25.5)
     msgpack (1.8.0)
+    multipart-post (2.4.1)
     net-http (0.6.0)
       uri
+    net-http-persistent (4.0.5)
+      connection_pool (~> 2.2)
     net-imap (0.5.6)
       date
       net-protocol
@@ -252,13 +274,6 @@ GEM
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (3.1.13)
-    rack-oauth2 (2.2.1)
-      activesupport
-      attr_required
-      faraday (~> 2.0)
-      faraday-follow_redirects
-      json-jwt (>= 1.11.0)
-      rack (>= 2.1.0)
     rack-session (2.1.0)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
@@ -344,8 +359,10 @@ GEM
       mini_portile2 (~> 2.8.0)
     sqlite3 (2.6.0-x86_64-darwin)
     sqlite3 (2.6.0-x86_64-linux-gnu)
-    square (0.0.4)
-      rack-oauth2
+    square.rb (42.1.0.20250416)
+      apimatic_core (~> 0.3.11)
+      apimatic_core_interfaces (~> 0.2.1)
+      apimatic_faraday_client_adapter (~> 0.1.4)
     sshkit (1.24.0)
       base64
       logger
@@ -402,6 +419,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.2)
+    zlib (2.1.1)
 
 PLATFORMS
   ruby
@@ -432,7 +450,7 @@ DEPENDENCIES
   rubocop-rails-omakase
   selenium-webdriver
   sqlite3 (>= 2.1)
-  square
+  square.rb
   stimulus-rails
   stripe
   stripe_event
