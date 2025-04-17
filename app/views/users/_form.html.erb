@@ -26,30 +26,31 @@
       </div>
     </div>
   </div>
+  
+  <% if ['pro', 'enterprise'].include?(Current.account.subscription.plan) %>
+    <!-- Notification Settings Section -->
+    <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
+      <h2 class="text-lg font-semibold mb-6 text-gray-800">Notification Settings</h2>
 
-  <!-- Notification Settings Section -->
-  <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
-    <h2 class="text-lg font-semibold mb-6 text-gray-800">Notification Settings</h2>
-
-    <div class="space-y-6">
-      <!-- Email Notification -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <%= form.check_box :email_notification, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
-          <%= form.label :email_notification, "Receive Email Notifications", class: "ml-2 text-sm text-gray-700" %>
+      <div class="space-y-6">
+        <!-- Email Notification -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <%= form.check_box :email_notification, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
+            <%= form.label :email_notification, "Receive Email Notifications", class: "ml-2 text-sm text-gray-700" %>
+          </div>
         </div>
-      </div>
 
-      <!-- Text Notification -->
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-2">
-          <%= form.check_box :text_notification, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
-          <%= form.label :text_notification, "Receive Text Notifications", class: "ml-2 text-sm text-gray-700" %>
+        <!-- Text Notification -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-2">
+            <%= form.check_box :text_notification, class: "h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500" %>
+            <%= form.label :text_notification, "Receive Text Notifications", class: "ml-2 text-sm text-gray-700" %>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-
+  <% end %>
 
   <!-- Submit Button -->
   <br>
