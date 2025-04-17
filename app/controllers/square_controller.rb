@@ -48,7 +48,7 @@ class SquareController < ApplicationController
     end
   end
 
-  def sync_inventory
+  def sync_products
     client = Square::Client.new(
       access_token: Current.account.square_access_token,
       environment: Rails.env.production? ? 'production' : 'sandbox'
@@ -87,7 +87,7 @@ class SquareController < ApplicationController
     redirect_to inventory_items_path, notice: "Inventory synced from Square, #{counter} items synced"
   end
 
-  def update_inventory
+  def sync_inventory
     payload = request.body.read
     signature = request.headers['X-Square-Signature']
 
@@ -151,9 +151,5 @@ class SquareController < ApplicationController
       inv_item.quantity = count["quantity"].to_i
       inv_item.save!
     end
-  end  
-
-  def find_location(square_location_id)
-    Location.find_by(square_location_id: square_location_id)
   end
 end

@@ -77,9 +77,9 @@ Rails.application.routes.draw do
   get  "/square/oauth/start",    to: "square#start"
   get  "/square/oauth/callback", to: "square#callback"
   post "/square/sync_locations", to: "square#sync_locations", as: :square_sync_locations
-  post "/square/sync_inventory", to: "square#sync_inventory", as: :square_sync_inventory
+  post "/square/sync_products", to: "square#sync_products", as: :square_sync_products
 
-  post '/square/webhook', to: 'square#update_inventory'
+  post '/square/webhook', to: 'square#sync_inventory'
 
   # Defines the root path route ("/")
   root "dashboard#index"

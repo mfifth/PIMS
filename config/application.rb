@@ -32,6 +32,8 @@ module Pims
       env.register_preprocessor('application/javascript', Sprockets::DirectiveProcessor)
     end
 
+    config.middleware.insert_before Rack::Sendfile, "RequestBlocker" 
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
