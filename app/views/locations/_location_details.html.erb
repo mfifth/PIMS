@@ -31,7 +31,7 @@
         <% @inventory_items.group_by(&:product).each do |product, items| %>
           <% items.each do |item| %>
             <% is_low_stock = item.low_threshold.present? && item.quantity <= item.low_threshold %>
-            <% expiration_notification = product.batch&.notification_days_before_expiration.present? %>
+            <% expiration_notification = product.batch&.notification_days_before_expiration.to_i.positive? %>
             <% days_until_expiry = product.batch ? (product.batch.expiration_date - Date.today).to_i : nil %>
             <% expiring_soon = expiration_notification && days_until_expiry && days_until_expiry <= product.batch.notification_days_before_expiration %>
 
