@@ -63,6 +63,7 @@ class BatchesController < ApplicationController
 
   # DELETE /batches/:id
   def destroy
+    @batch.products.update_all(perishable: false)
     @batch.destroy
 
     respond_to do |format|

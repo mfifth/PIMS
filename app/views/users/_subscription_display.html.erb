@@ -1,47 +1,37 @@
 <div class="mb-6 p-4 bg-gray-50 border rounded-lg">
-  <h2 class="text-md font-semibold text-gray-700">Subscription Plan</h2>
+  <h2 class="text-md font-semibold text-gray-700"><%= t("subscription.heading") %></h2>
   <p class="text-sm text-gray-600 mt-1">
-    You are currently on the
-    <span class="font-medium text-blue-600"><%= account.subscription.plan.titleize %></span> plan.
+    <%= t("subscription.current_plan", plan: account.subscription.plan.titleize) %>
   </p>
 
   <br>
 
   <p class="text-sm text-gray-600 mt-1">
-    Locations created:
-    <span class="font-medium"><%= account.locations.size %></span>
-    of
-    <span class="font-medium"><%= location_limit(account) %></span>
+    <%= t("subscription.locations_used", count: account.locations.size, limit: location_limit(account)) %>
   </p>
 
   <p class="text-sm text-gray-600 mt-1">
-    Products used:
-    <span class="font-medium"><%= account.products.size %></span>
-    of
-    <span class="font-medium"><%= product_limit(account) %></span>
+    <%= t("subscription.products_used", count: account.products.size, limit: product_limit(account)) %>
   </p>
 
   <p class="text-sm text-gray-600 mt-1">
-    Users on account:
-    <span class="font-medium"><%= account.users.size %></span>
-    of
-    <span class="font-medium"><%= user_limit(account) %></span>
+    <%= t("subscription.users_used", count: account.users.size, limit: user_limit(account)) %>
   </p>
 
   <br>
 
   <% if account.products.count >= product_limit(account) %>
-    <p class="text-sm text-red-500 mt-2">You have reached your product limit.</p>
+    <p class="text-sm text-red-500 mt-2"><%= t("subscription.limit_reached.products") %></p>
   <% end %>
 
   <% if account.users.count >= user_limit(account) %>
-    <p class="text-sm text-red-500 mt-2">You have reached your user limit.</p>
+    <p class="text-sm text-red-500 mt-2"><%= t("subscription.limit_reached.users") %></p>
   <% end %>
 
   <% if account.locations.count >= location_limit(account) %>
-    <p class="text-sm text-red-500 mt-2">You have reached your location limit.</p>
+    <p class="text-sm text-red-500 mt-2"><%= t("subscription.limit_reached.locations") %></p>
   <% end %>
 
   <br>
-  <%= link_to "Manage Subscription", billing_portal_path, target: :_blank, class: "text-blue-600 hover:underline" %>
+  <%= link_to t("subscription.manage_link"), billing_portal_path, target: :_blank, class: "text-blue-600 hover:underline" %>
 </div>

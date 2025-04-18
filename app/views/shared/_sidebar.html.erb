@@ -1,6 +1,5 @@
 <!-- Sidebar Wrapper with Stimulus -->
 <div>
-
   <!-- Sidebar -->
   <div data-sidebar-target="sidebar"
        class="fixed top-0 left-0 z-50 w-64 h-full bg-[#f8f4f3] p-4 flex flex-col justify-between shadow-md transition-transform duration-300 transform -translate-x-full md:!translate-x-0 md:relative">
@@ -8,38 +7,38 @@
     <div>
       <!-- Logo -->
       <div class="flex items-center justify-between pb-4 border-b border-gray-300">
-        <h2 class="font-bold text-2xl text-gray-900">PIMS</h2>
+        <h2 class="font-bold text-2xl text-gray-900"><%= t("sidebar.logo") %></h2>
       </div>
 
       <!-- Navigation -->
       <ul class="mt-4 space-y-1">
-        <span class="text-gray-500 text-xs font-bold uppercase tracking-wide">Admin</span>
+        <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.admin") %></span>
 
-        <li><%= link_to "Dashboard", "/", class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to "Locations", locations_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to "Products", products_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to "Batches", batches_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to "Quick Update", "/inventory", class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.dashboard"), "/", class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.locations"), locations_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.products"), products_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.batches"), batches_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.quick_update"), "/inventory", class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
 
-        <span class="text-gray-500 text-xs font-bold uppercase tracking-wide">Personal</span>
+        <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.personal") %></span>
 
         <li>
           <%= link_to notifications_path, class: "flex items-center justify-between font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" do %>
-            <span>Notifications</span>
+            <span><%= t("sidebar.notifications") %></span>
             <span class="px-2 py-0.5 text-xs font-medium rounded-full <%= Current.account.notifications.unread.size > 5 ? 'text-red-600 bg-red-200' : 'text-white bg-green' %>">
               <%= Current.account.notifications.unread.size %>
             </span>
           <% end %>
         </li>
 
-        <li><%= link_to "Settings", settings_user_path(Current.user), class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.settings"), settings_user_path(Current.user), class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
       </ul>
     </div>
 
     <!-- Sign Out -->
     <div class="mt-[10px] sm:mt-0">
       <%= link_to "/signout", class: "flex items-center justify-center py-2 px-4 text-white bg-red-500 hover:bg-red-600 rounded-md" do %>
-        <i class="bx bx-log-out mr-2 text-lg"></i> Sign Out
+        <i class="bx bx-log-out mr-2 text-lg"></i> <%= t("sidebar.sign_out") %>
       <% end %>
     </div>
   </div>
