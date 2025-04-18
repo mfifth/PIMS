@@ -1,13 +1,13 @@
 class SessionsController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
-  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_url, alert: "Try again later." }
+  rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_url, alert: t('notifications.try_again_later') }
 
   def new
   end
 
   def create
     user = User.authenticate_by(params.permit(:email_address, :password))
-    msg = user&.confirmed_at ? "Try another email address or password." : "Please confirm your email before logging in."
+    msg = user&.confirmed_at ? t('notifications.try_another_login') : t('notifications.confirm_email')
 
     if user && user.confirmed_at.present?
       start_new_session_for user

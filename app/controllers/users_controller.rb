@@ -1,7 +1,6 @@
 # app/controllers/users_controller.rb
 class UsersController < ApplicationController
   allow_unauthenticated_access only: %i[ new create ]
-  before_action :check_limit, only: %i[create]
 
   def new
     @user = User.new
@@ -25,10 +24,10 @@ class UsersController < ApplicationController
         invitation.update(accepted: true, confirmed_at: Time.current)
         @user.update(confirmed_at: Time.current)
         start_new_session_for(@user)
-        redirect_to dashboard_path, notice: "Account created successfully!"
+        redirect_to dashboard_path, notice: t('notifications.account_created')
       else
         @user.send_confirmation_email!
-        redirect_to root_path, notice: "Please check your email to confirm your account"
+        redirect_to root_path, notice: t('notifications.check_email')
       end
     else
       render :new, status: :unprocessable_entity
@@ -42,7 +41,7 @@ class UsersController < ApplicationController
   def update
     if Current.user.update!(user_params)
       respond_to do |format|
-        format.html { redirect_back fallback_location: '/', notice: 'Settings updated successfully.' }
+        format.html { redirect_back fallback_location: '/', notice: t('notifications.updated_settings') }
         format.turbo_stream
       end
     else
@@ -55,40 +54,31 @@ class UsersController < ApplicationController
 
   def send_test_email
     if NotificationMailer.test_email(Current.user).deliver_now
-      Notification.create(message: 'This is a test for email', notification_type: "Alert")
-      flash[:notice] = "Test email sent successfully!"
+      Notification.create(message: t('notifications.email_test'), notification_type: "Alert")
+      flash[:notice] = t('notifications.email_notice')
     else
-      flash[:alert] = "Failed to send test email."
+      flash[:alert] = t('notifications.failed_test_email')
     end
 
     respond_to do |format|
       format.html { redirect_to settings_user_path(Current.user), 
-      notice: 'Settings updated successfully.' }
+      notice: t('notifications.updated_settings') }
       format.turbo_stream
     end
   end
 
   def send_test_text
-    NotificationService.send_sms(Current.user.phone, "This is a test.")
-    Notification.create(message: 'This is a test for text', notification_type: "Alert")
+    NotificationService.send_sms(Current.user.phone, t('notifications.test_text'))
+    Notification.create(message: t('notifications.test_text_notification'), notification_type: "Alert")
 
     respond_to do |format|
       format.html { redirect_to settings_user_path(Current.user), 
-      notice: 'Settings updated successfully.' }
+      notice: t('notifications.updated_settings')}
       format.turbo_stream
     end
   end
 
   private
-
-  def check_limit
-    return if Current.user.blank?
-    unless Current.account.can_create_user?
-      redirect_to settings_user_path(Current.user), 
-      alert: "You’ve reached your limit. Upgrade to add more users."
-      return
-    end
-  end
 
   # Strong parameters to permit user inputs
   def user_params

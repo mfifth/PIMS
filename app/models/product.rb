@@ -23,7 +23,7 @@ class Product < ApplicationRecord
 
   def product_limit_not_exceeded
     if account.products.count >= Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]
-      errors.add(:base, "You have reached the maximum limit of #{Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]} products.")
+      errors.add(:base, t('notifications.product_limit_warning', limit: Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]))
     end
   end
 

@@ -42,7 +42,7 @@ class BatchesController < ApplicationController
   def create
     @batch = Batch.new(batch_params.merge(account_id: Current.account.id))
     if @batch.save
-      redirect_to @batch, notice: 'Batch was successfully created.'
+      redirect_to @batch, notice: t('notifications.batch_created')
     else
       render :new, status: :unprocessable_entity
     end
@@ -55,7 +55,7 @@ class BatchesController < ApplicationController
   # PATCH/PUT /batches/:id
   def update
     if @batch.update(batch_params)
-      redirect_to @batch, notice: 'Batch was successfully updated.'
+      redirect_to @batch, notice: t('notifications.batch_updated')
     else
       render :edit, status: :unprocessable_entity
     end
@@ -67,7 +67,7 @@ class BatchesController < ApplicationController
     @batch.destroy
 
     respond_to do |format|
-      format.html { redirect_to batches_url, notice: 'Batch was successfully deleted.' }
+      format.html { redirect_to batches_url, notice: t('notifications.batch_deleted') }
       format.turbo_stream { render turbo_stream: turbo_stream.remove("batch_#{@batch.id}") }
     end
   end

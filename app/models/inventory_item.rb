@@ -14,7 +14,8 @@ class InventoryItem < ApplicationRecord
   def check_low_stock
     return unless low_threshold && quantity <= low_threshold
 
-    text = "#{product.name} is running low at #{location.name} (#{quantity} left). "
+    text = t('notifications.low_limit_warning', product: product.name, 
+    location_name: location.name, quantity: quantity)
 
     Notification.create(
       message: text,

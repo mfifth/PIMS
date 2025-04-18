@@ -268,6 +268,55 @@ en:
       confirm_delete: "Are you sure you want to remove this user from your account?"
       none: "No users have been invited yet."
   notifications:
+    batch_updated: 'Batch was successfully updated.'
+    batch_created: 'Batch was created successfully.'
+    batch_deleted: 'Batch was removed.'
+    invalid_token: 'Invalid Confirmation Token'
+    confirmation_token_expired: 'Confirmation token has expired.'
+    successful_email_confirm: 'Your email has been confirmed successfully!'
+    invitation_sent: "Invitation sent!"
+    invitation_error: 'Could not send invitation.'
+    expired_invitation: 'Invalid or expired invitation.'
+    complete_registration: "Please complete your registration"
+    removed_user: "User removed successfully."
+    location_created: 'Location was created successfully.'
+    location_updated: 'Location was successfully updated'
+    location_deleted: 'Location was deleted.'
+    inventory_updated: 'Inventory updated successfully.'
+    mark_as_read: 'Notification marked as read.'
+    mark_all_as_read: "All notifications marked as read."
+    password_instructions_notice: "Password reset instructions sent (if user with that email address exists)."
+    password_reset_notice: "Password has been reset."
+    password_reset_link_expired: "Password reset link is invalid or has expired."
+    password_confirmation_error: "Passwords did not match."
+    product_deleted: "Product was successfully deleted."
+    category_removed: "Category has been removed."
+    category_deleted: "Category has been deleted."
+    try_again_later: "Try again later"
+    try_another_login: "Try another email address or password."
+    confirm_email: "Please confirm your email before logging in."
+    square_account_connected: "Square account connected!"
+    square_synced: "Synced %{quantity} locations. You are ready to sync products."
+    inventory_synced: "Inventory synced from Square, %{size} items synced"
+    failed_fetch: "Failed to fetch Square locations."
+    oauth_failed: "OAuth exchange failed"
+    account_created: "Account created successfully"
+    check_email: "Please check your email to confirm your account"
+    updated_settings: 'Settings updated successfully.'
+    email_test: 'This is a test for email'
+    email_notice: "Test email sent successfully!"
+    failed_email_test: "Failed to send test email."
+    test_text: "This is a test."
+    test_text_notification: 'This is a test for text notifications'
+    congrats_message: "Congratulations on settings up your account! Make sure your email and phone are correct so you can get notifications directly to you.'
+    user_limit: You have reached the maximum limit of %{limit} users for your subscription.
+    user_already_registered: 'is already registered. Please sign in or try forgot password.'
+    blank_email: "Email can't be blank"
+    email_warning: 'Please enter a valid email address'
+    product_limit_warning: "You have reached the maximum limit of %{limit} products for your subscription"
+    location_limit_warning: "You have reached the maximum limit of %{limit} locations for your subscription."
+    low_limit_warning: "%{product} is running low at %{location_name} (%{quantity} left)."
+    batch_expiry: "Batch %{batch_number} with %{product_count} products at is expiring soon %{expiration_date}"
     title: "Notifications"
     mark_all_as_read: "Mark all as read"
     ago: "%{time} ago"

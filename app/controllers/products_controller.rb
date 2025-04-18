@@ -84,7 +84,7 @@ class ProductsController < ApplicationController
     @product.destroy
   
     respond_to do |format|
-      format.html { redirect_to products_path, notice: "Product was successfully deleted." }
+      format.html { redirect_to products_path, notice: t('notifications.product_deleted') }
       format.turbo_stream
     end
   end
@@ -96,7 +96,7 @@ class ProductsController < ApplicationController
     # If it's a Turbo Stream request, return a Turbo Stream response to remove the category.
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to edit_product_path(@product), notice: "Category has been removed." }
+      format.html { redirect_to edit_product_path(@product), notice: t('notifications.category_removed') }
     end
   end
 
@@ -106,7 +106,7 @@ class ProductsController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to edit_product_path(@product), notice: "Category has been deleted." }
+      format.html { redirect_to edit_product_path(@product), notice: t('notifications.category_deleted') }
     end
   end
 

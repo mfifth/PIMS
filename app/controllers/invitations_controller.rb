@@ -4,9 +4,9 @@ class InvitationsController < ApplicationController
     @invitation.account = Current.account
     
     if @invitation.save
-      redirect_to settings_user_path(Current.user), notice: "Invitation sent!"
+      redirect_to settings_user_path(Current.user), notice: t('notifications.invitation_sent')
     else
-      redirect_to settings_user_path(Current.user), alert: "Could not send invitation."
+      redirect_to settings_user_path(Current.user), alert: t('notifications.invitation_error')
     end
   end
 
@@ -15,7 +15,7 @@ class InvitationsController < ApplicationController
     
     # Handle invalid cases
     if @invitation.nil? || @invitation.expired? || @invitation.accepted?
-      redirect_to root_path, alert: "Invalid or expired invitation."
+      redirect_to root_path, alert: t('notifications.expired_invitation')
       return
     end
 
@@ -24,7 +24,7 @@ class InvitationsController < ApplicationController
     redirect_to new_user_url(
       token: @invitation.token,
       email: @invitation.email
-    ), notice: "Please complete your registration"
+    ), notice: t('notifications.complete_registration')
   end
 
   def destroy
@@ -34,7 +34,7 @@ class InvitationsController < ApplicationController
     @invitation.destroy
     @user.destroy if @user
 
-    flash[:notice] = "User removed successfully."
+    flash[:notice] = t('notifications.removed_user')
     respond_to do |format|
       format.html { redirect_to account_settings_path }
       format.turbo_stream { render turbo_stream: turbo_stream.remove(@invitation) }

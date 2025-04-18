@@ -8,7 +8,8 @@ class ExpirationNotificationJob < ApplicationJob
       next unless batch.notification_days_before_expiration.present?
 
       notify_date = batch.expiration_date - batch.notification_days_before_expiration.days
-      text = "Batch ##{batch.batch_number} with #{batch.products.count} products at is expiring soon (#{batch.expiration_date})"
+      text = t('notifications.batch_expiry', batch_number: batch.batch_number, 
+      product_count: batch.products.count, expiration_date: batch.expiration_date)
 
       # Only send notifications if the expiration date is today
       if today == notify_date

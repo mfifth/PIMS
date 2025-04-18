@@ -23,9 +23,9 @@ class SquareController < ApplicationController
         square_merchant_id: merchant_id
       )
 
-      redirect_to dashboard_path, notice: "Square account connected!"
+      redirect_to dashboard_path, notice: t('notifications.square_account_connected')
     else
-      redirect_to root_path, alert: "OAuth exchange failed"
+      redirect_to root_path, alert: t('notifications.oauth_failed')
     end
   end
 
@@ -42,9 +42,9 @@ class SquareController < ApplicationController
         location.square_location_id = sq_loc.id unless location.square_location_id
         location.save!
       end
-      redirect_to square_locations_path, notice: "Synced #{response.data.locations.size} locations. You are ready to sync products."
+      redirect_to square_locations_path, notice: t('notifications.square_synced', quantity: response.data.locations.size)
     else
-      redirect_back fallback_location: root_path, alert: "Failed to fetch Square locations."
+      redirect_back fallback_location: root_path, alert: t('notifications.failed_fetch')
     end
   end
 
@@ -84,7 +84,7 @@ class SquareController < ApplicationController
       end
     end
   
-    redirect_to inventory_items_path, notice: "Inventory synced from Square, #{counter} items synced"
+    redirect_to inventory_items_path, notice: t('notifications.inventory_synced', size: counter)
   end
 
   def sync_inventory

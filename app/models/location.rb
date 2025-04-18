@@ -14,7 +14,7 @@ class Location < ApplicationRecord
     return unless account.locations.count >= 
     Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]
 
-    errors.add(:base, "You have reached the maximum limit of 
-    #{Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]} locations for your plan.")
+    errors.add(:base, t('notifications.location_limit_warning', 
+    limit: Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]))
   end
 end

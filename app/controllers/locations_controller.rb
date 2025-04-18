@@ -27,7 +27,7 @@ class LocationsController < ApplicationController
   def create
     @location = Location.new(location_params.merge(account_id: Current.account.id))
     if @location.save
-      redirect_to @location, notice: 'Location was successfully created.'
+      redirect_to @location, notice: t('notifications.location_created')
     else
       render :new, status: :unprocessable_entity
     end
@@ -42,7 +42,7 @@ class LocationsController < ApplicationController
 
   def update
     if @location.update(location_params)
-      redirect_to @location, notice: 'Location was successfully updated.'
+      redirect_to @location, notice: t('notifications.location_updated')
     else
       render :edit, status: :unprocessable_entity
     end
@@ -50,7 +50,7 @@ class LocationsController < ApplicationController
 
   def destroy
     @location.destroy
-    redirect_to locations_path, notice: 'Location was successfully deleted.'
+    redirect_to locations_path, notice: t('notifications.location_deleted')
   end
 
   def inventory
@@ -61,7 +61,7 @@ class LocationsController < ApplicationController
     InventoryItem.find_by(location_id: params[:location_id], product_id: params[:product_id])
     .update(quantity: params[:quantity])
 
-    redirect_back fallback_location: '/', notice: "Inventory updated successfully."
+    redirect_back fallback_location: '/', notice: t('notifications.inventory_updated')
   end
 
   # In your LocationsController

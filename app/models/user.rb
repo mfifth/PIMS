@@ -14,14 +14,14 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   validates :email_address, 
-  presence: { message: "Email can't be blank" },
+  presence: { message: t('notifications.blank_email') },
   uniqueness: { 
     case_sensitive: false,
-    message: 'is already registered. Please sign in or try forgot password.'
+    message: t('notifications.user_already_registered')
   },
   format: {
     with: URI::MailTo::EMAIL_REGEXP,
-    message: 'Please enter a valid email address'
+    message: t('notifications.email_warning')
   }
   
   normalizes :email_address, with: ->(e) { e.strip.downcase }
@@ -87,15 +87,14 @@ class User < ApplicationRecord
         metadata: { account_id: account.id }
       )
 
-    Notification.create(message: 'Congratulations on settings up your account! 
-    Make sure your email and phone are correct so you can get notifications directly to you.', 
+    Notification.create(message: t('notifications.congrats_message'), 
     notification_type: "notice", account_id: account.id)
   end
 
   def user_limit_not_exceeded
     return unless account
     if account.users.count >= USER_PLAN_LIMITS[account.subscription.plan]
-      errors.add(:base, "You have reached the maximum limit of #{USER_PLAN_LIMITS[account.subscription.plan]} users.")
+      errors.add(:base, t('notifications.user_limit', limit: USER_PLAN_LIMITS[account.subscription.plan]))
     end
   end
 end
