@@ -2,68 +2,69 @@
   <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
     <div class="p-8">
       <div class="text-center mb-8">
-        <h1 class="text-2xl font-bold text-gray-900">Quick Update</h1>
+        <h1 class="text-2xl font-bold text-gray-900"><%= t("quick_update.title") %></h1>
       </div>
 
       <%= form_with url: update_inventory_path, method: :post, data: { turbo: false }, local: true, class: "space-y-6" do |form| %>
         <!-- Location Selection -->
         <div class="space-y-2">
-          <%= form.label :location_id, "Location", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :location_id, t("quick_update.location.label"), class: "block text-sm font-medium text-gray-700" %>
           <div class="relative">
             <%= form.collection_select :location_id, 
                   Location.where(account_id: Current.account.id), :id, :name, 
-                  { prompt: "Select location" }, 
+                  { prompt: t("quick_update.location.prompt") }, 
                   class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
           </div>
         </div>
 
-        <!-- Product Selection (Dynamically loaded) -->
+        <!-- Product Selection -->
         <div id="product-selection" class="hidden space-y-2">
-          <%= form.label :product_id, "Product", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :product_id, t("quick_update.product.label"), class: "block text-sm font-medium text-gray-700" %>
           <div class="relative">
             <%= form.collection_select :product_id, [], :id, :name, 
-                  { prompt: "Select product" }, 
+                  { prompt: t("quick_update.product.prompt") }, 
                   class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
           </div>
         </div>
 
-        <!-- Quantity Field -->
+        <!-- Quantity -->
         <div id="quantity-field" class="hidden space-y-2">
-          <%= form.label :quantity, "Quantity", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :quantity, t("quick_update.quantity.label"), class: "block text-sm font-medium text-gray-700" %>
           <%= form.number_field :quantity, min: 0, required: true, 
                 class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", 
-                placeholder: "Enter quantity" %>
+                placeholder: t("quick_update.quantity.placeholder") %>
         </div>
 
-        <!-- Batch Selection -->
+        <!-- Batch -->
         <div id="batch-selection" class="hidden space-y-2">
-          <%= form.label :batch_id, "Batch (Optional)", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :batch_id, t("quick_update.batch.label"), class: "block text-sm font-medium text-gray-700" %>
           <div class="relative">
             <%= form.collection_select :batch_id, Current.account.batches, :id, :batch_info, 
-                  { include_blank: "No batch" }, 
+                  { include_blank: t("quick_update.batch.none") }, 
                   class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
           </div>
         </div>
 
-        <!-- Category Selection -->
+        <!-- Category -->
         <div id="category-selection" class="hidden space-y-2">
-          <%= form.label :category_id, "Category (Optional)", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :category_id, t("quick_update.category.label"), class: "block text-sm font-medium text-gray-700" %>
           <div class="relative">
             <%= form.collection_select :category_id, Current.account.categories, :id, :name, 
-                  { include_blank: "No category" }, 
+                  { include_blank: t("quick_update.category.none") }, 
                   class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
           </div>
         </div>
 
-        <!-- Submit Button -->
+        <!-- Submit -->
         <div id='submit-btn' class='hidden pt-4'>
-          <%= form.submit "Update Inventory", 
+          <%= form.submit t("quick_update.submit"), 
                 class: "bg-green w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-md font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
         </div>
       <% end %>
     </div>
   </div>
 </div>
+
 
 <script>
   document.addEventListener('turbo:load', function() {

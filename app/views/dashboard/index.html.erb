@@ -1,11 +1,11 @@
 <div class="p-8 bg-gray-100 min-h-screen" data-controller="dashboard">
-  <h1 class="text-6xl font-bold text-gray-800 mb-6">Dashboard</h1>
+  <h1 class="text-6xl font-bold text-gray-800 mb-6"><%= t("sidebar.dashboard") %></h1>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
     <!-- Batches Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Batches</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.batches') %></h2>
       <p class="text-4xl font-bold text-blue-600"><%= @batches.total_count %></p>
     
       <div id="batches-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
@@ -26,7 +26,7 @@
   
     <!-- Locations Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Locations</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.locations') %></h2>
       <p class="text-4xl font-bold text-green-600"><%= @locations.total_count %></p>
 
       <div id="locations-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
@@ -47,7 +47,7 @@
 
     <!-- Products Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4">Products</h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.products') %></h2>
       <p class="text-4xl font-bold text-purple-600"><%= @products.total_count %></p>
 
       <div id="products-scroll-container" class="mt-6 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">

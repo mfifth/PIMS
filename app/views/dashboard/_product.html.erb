@@ -5,13 +5,12 @@
     <% if product.batch&.expiration_date.present? %>
       <% expiration_date = product.batch.expiration_date %>
       <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
-  
-      <span class="<%= color_class %> text-sm">EXP: <%= expiration_date %></span>
+      <span class="<%= color_class %> text-sm"><%= t("products.expiration", date: expiration_date) %></span>
     <% end %>
   </div>
 
   <% product.locations.each do |location| %>
-    <p class="text-gray-500 text-xs">Qty: <%= location.inventory_items.detect { |i| i.product_id == product.id }&.quantity %></p>
-    <p class="text-gray-500 text-xs">Location: <%= location.name %></p>
+    <p class="text-gray-500 text-xs"><%= t("products.qty", count: location.inventory_items.detect { |i| i.product_id == product.id }&.quantity) %></p>
+    <p class="text-gray-500 text-xs"><%= t("products.location", name: location.name) %></p>
   <% end %>
 </li>

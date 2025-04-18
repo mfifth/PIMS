@@ -5,7 +5,7 @@
     </a>
 
     <% if location.square_location_id %>
-      <span class="badge-success">Synced</span>
+      <span class="badge-success"><%= t("locations.synced") %></span>
     <% end %>
   </div>
 
@@ -16,13 +16,11 @@
     <% total_value = all_items.sum { |item| item.quantity * (item.product.price || 0) } %>
 
     <p class="text-md text-gray-500">
-      <%= perishable_count + non_perishable_count %> items
+      <%= t("locations.items_count", count: perishable_count + non_perishable_count) %>
     </p>
     <p class="text-md text-gray-500">
-      Total value: $<%= number_with_precision(total_value, precision: 2) %>
+      <%= t("locations.total_value", value: number_with_precision(total_value, precision: 2)) %>
     </p>
-
-    <br>
 
     <% if @low_stock_items[location.id].to_i > 0 %>
       <div class="mt-3 p-3 bg-red-50 rounded-lg flex items-center">
@@ -30,13 +28,13 @@
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
         </svg>
         <span class="text-red-700 font-medium">
-          <%= @low_stock_items[location.id] %> items need restocking
+          <%= t("locations.low_stock_alert", count: @low_stock_items[location.id]) %>
         </span>
       </div>
     <% end %>
 
     <p class="text-xs text-gray-400 mt-2">
-      Updated <%= time_ago_in_words(location.updated_at) %> ago
+      <%= t("locations.updated", time: time_ago_in_words(location.updated_at)) %>
     </p>
   </div>
 </li>

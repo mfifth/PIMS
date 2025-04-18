@@ -3,8 +3,8 @@
     <%= batch.batch_number %>
   </a>
   <p class="text-gray-500 text-xs">
-    <strong>MFG:</strong> <%= batch.manufactured_date || 'N/A' %><br>
-    <strong>EXP:</strong> <%= batch.expiration_date || 'N/A' %><br>
-    <strong>Products:</strong> <%= batch.products.count %>
+    <strong><%= t("batches.mfg") %>:</strong> <%= batch.manufactured_date || t("batches.na") %><br>
+    <strong><%= t("batches.exp") %>:</strong> <%= batch.expiration_date || t("batches.na") %><br>
+    <strong><%= t("batches.products") %>:</strong> <%= batch.products.count %>
   </p>
 </li>

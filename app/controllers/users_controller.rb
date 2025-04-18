@@ -62,7 +62,8 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to settings_user_path(Current.user), notice: 'Settings updated successfully.' }
+      format.html { redirect_to settings_user_path(Current.user), 
+      notice: 'Settings updated successfully.' }
       format.turbo_stream
     end
   end
@@ -72,7 +73,8 @@ class UsersController < ApplicationController
     Notification.create(message: 'This is a test for text', notification_type: "Alert")
 
     respond_to do |format|
-      format.html { redirect_to settings_user_path(Current.user), notice: 'Settings updated successfully.' }
+      format.html { redirect_to settings_user_path(Current.user), 
+      notice: 'Settings updated successfully.' }
       format.turbo_stream
     end
   end
@@ -80,15 +82,17 @@ class UsersController < ApplicationController
   private
 
   def check_limit
-    return if Current.user.blank? #If the user is not signed in yet, first time don't check limits.
+    return if Current.user.blank?
     unless Current.account.can_create_user?
-      redirect_to settings_user_path(Current.user), alert: "You’ve reached your limit. Upgrade to add more users."
+      redirect_to settings_user_path(Current.user), 
+      alert: "You’ve reached your limit. Upgrade to add more users."
       return
     end
   end
 
   # Strong parameters to permit user inputs
   def user_params
-    params.require(:user).permit(:name, :phone, :email_address, :password, :password_confirmation, :invitation_token)
+    params.require(:user).permit(:name, :phone, :email_address, 
+    :password, :password_confirmation, :invitation_token, :locale)
   end  
 end

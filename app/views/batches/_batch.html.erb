@@ -7,32 +7,31 @@
           <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
         </svg>
         <% if batch.expiration_date && (days_remaining = (batch.expiration_date - Date.today).to_i) <= batch.notification_days_before_expiration %>
-          Expires in <%= days_remaining %> days
+          <%= t('batches.expires_in', count: days_remaining) %>
         <% else %>
-          Alerts <%= batch.notification_days_before_expiration %> days before expiry
+          <%= t('batches.alerts_before_expiry', count: batch.notification_days_before_expiration) %>
         <% end %>
       </span>
     <% end %>
   </div>
 
   <div class="mt-2 space-y-1">
-    <p class="text-gray-600"><strong>Manufactured Date:</strong> <%= batch.manufactured_date || 'N/A' %></p>
-    <p class="text-gray-600"><strong>Expiration Date:</strong> <%= batch.expiration_date || 'N/A' %></p>
+    <p class="text-gray-600"><strong><%= t('batches.manufactured_date') %>:</strong> <%= batch.manufactured_date || t('batches.na') %></p>
+    <p class="text-gray-600"><strong><%= t('batches.expiration_date') %>:</strong> <%= batch.expiration_date || t('batches.na') %></p>
   </div>
 
   <div class="mt-4">
-    <strong class="text-gray-700">Products:</strong>
+    <strong class="text-gray-700"><%= t('batches.products') %>:</strong>
     <% batch.products.where(account_id: Current.account.id).each do |product| %>
       <div class="mt-2 pl-2 border-l-2 border-gray-200">
         <p class="text-gray-700 font-semibold"><%= product.name %></p>
 
-        <% # Grouping inventory items by location_id and summing quantities %>
         <% grouped_inventory = product.inventory_items.includes(:location).group_by(&:location_id) %>
         <ul class="ml-4 text-gray-600">
           <% grouped_inventory.each do |location_id, inventory_items| %>
             <% location = inventory_items.first.location %>
             <li class="mt-1">
-              <strong><%= location&.name || 'No Location' %>:</strong> <%= inventory_items.sum(&:quantity) %> items
+              <strong><%= location&.name || t('batches.no_location') %>:</strong> <%= inventory_items.sum(&:quantity) %> <%= t('batches.items') %>
             </li>
           <% end %>
         </ul>
@@ -41,8 +40,8 @@
   </div>
 
   <div class="mt-4 space-x-2">
-    <%= link_to 'Show', batch_path(batch), data: { turbo_frame: 'main' }, class: "text-blue-500 hover:underline" %>
-    <%= link_to 'Edit', edit_batch_path(batch), data: { turbo_frame: 'main' }, class: "text-yellow-500 hover:underline" %>
-    <%= link_to 'Delete', batch, data: { turbo_method: :delete, turbo_frame: "batch_#{batch.id}", turbo_confirm: 'Are you sure?' }, class: "text-red-500 hover:underline" %>
+    <%= link_to t('actions.show'), batch_path(batch), data: { turbo_frame: 'main' }, class: "text-blue-500 hover:underline" %>
+    <%= link_to t('actions.edit'), edit_batch_path(batch), data: { turbo_frame: 'main' }, class: "text-yellow-500 hover:underline" %>
+    <%= link_to t('actions.delete'), batch, data: { turbo_method: :delete, turbo_frame: "batch_#{batch.id}", turbo_confirm: t('confirmations.delete_batch') }, class: "text-red-500 hover:underline" %>
   </div>
 </div>

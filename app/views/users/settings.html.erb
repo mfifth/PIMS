@@ -1,5 +1,5 @@
 <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-xl border border-gray-300">
-  <h1 class="text-2xl font-semibold mb-6 text-gray-800">Account Settings</h1>
+  <h1 class="text-2xl font-semibold mb-6 text-gray-800"><%= t("account_settings.title") %></h1>
 
   <%= render 'subscription_display', account: Current.account %>
 
@@ -10,77 +10,77 @@
   <% if square_connected? %>
     <div class="mt-6 mb-4 p-4 border border-green-300 bg-green-50 rounded-md">
       <p class="text-green-700 font-semibold flex items-center">
-        ✅ Square account connected
+        ✅ <%= t("account_settings.square.connected") %>
       </p>
 
       <div class="mt-4 flex gap-4">
-        <%= button_to "Sync Locations", square_sync_locations_path, method: :post,
+        <%= button_to t("account_settings.square.sync_locations"), square_sync_locations_path, method: :post,
           class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
-          data: { disable_with: "Syncing..." } %>
+          data: { disable_with: t("account_settings.square.syncing") } %>
 
-        <%= button_to "Sync Inventory", square_sync_products_path, method: :post,
+        <%= button_to t("account_settings.square.sync_inventory"), square_sync_products_path, method: :post,
           class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
-          data: { disable_with: "Syncing..." } %>
+          data: { disable_with: t("account_settings.square.syncing") } %>
       </div>
     </div>
   <% elsif ['plus', 'premium'].include?(Current.account.subscription.plan) %>
-    <%= button_to "Connect with Square", "/square/oauth/start", method: :get,
+    <%= button_to t("account_settings.square.connect"), "/square/oauth/start", method: :get,
       class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
-      data: { disable_with: "Connecting..." } %>
+      data: { disable_with: t("account_settings.square.connecting") } %>
   <% end %>
 
   <% unless Current.account.users.size + @invitations.size >= user_limit(Current.account) %>
-    <!-- Invite a User -->
     <div class="max-w-2xl mx-auto mt-10 border-t">
-      <h2 class="text-lg font-semibold mb-4 text-gray-800">Invite a User to Your Account</h2>
+      <h2 class="text-lg font-semibold mb-4 text-gray-800"><%= t("account_settings.invite.title") %></h2>
 
       <%= form_with model: Invitation.new, method: :post, local: true, class: "space-y-6 bg-white p-6 shadow-sm rounded-xl border border-gray-200" do |form| %>
         <div>
-          <%= form.label :email, "User Email", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= form.label :email, t("account_settings.invite.label"), class: "block text-sm font-medium text-gray-700 mb-1" %>
           <%= form.email_field :email, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500" %>
         </div>
 
         <div class="flex justify-end">
-          <%= form.submit "Send Invite", class: "bg-blue bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition", disabled: @invitations.size >= user_limit(Current.account) %>
+          <%= form.submit t("account_settings.invite.submit"), class: "bg-blue bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition", disabled: @invitations.size >= user_limit(Current.account) %>
         </div>
       <% end %>
     </div>
   <% end %>
 
-    <!-- Invited Users List -->
-    <div class="max-w-2xl mx-auto mt-16">
-      <h2 class="text-lg font-semibold mb-4 text-gray-800">Invited Users</h2>
+  <div class="max-w-2xl mx-auto mt-16">
+    <h2 class="text-lg font-semibold mb-4 text-gray-800"><%= t("account_settings.invited_users.title") %></h2>
 
-      <% if @invitations.any? %>
-        <table class="w-full table-auto border-collapse">
-          <thead>
-            <tr class="text-left">
-              <th class="px-4 py-2 border-b font-semibold text-gray-700">Email</th>
-              <th class="px-4 py-2 border-b font-semibold text-gray-700">Status</th>
+    <% if @invitations.any? %>
+      <table class="w-full table-auto border-collapse">
+        <thead>
+          <tr class="text-left">
+            <th class="px-4 py-2 border-b font-semibold text-gray-700"><%= t("account_settings.invited_users.email") %></th>
+            <th class="px-4 py-2 border-b font-semibold text-gray-700"><%= t("account_settings.invited_users.status") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @invitations.each do |invitation| %>
+            <tr id="invitation_<%= invitation.id %>" class="hover:bg-gray-100">
+              <td class="px-4 py-2 border-b text-gray-700"><%= invitation.email %></td>
+              <td class="px-4 py-2 border-b text-gray-700">
+                <% if invitation.confirmed_at %>
+                  <span class="text-green-500 font-semibold"><%= t("account_settings.invited_users.accepted") %></span>
+                <% else %>
+                  <span class="text-red-500 font-semibold"><%= t("account_settings.invited_users.pending") %></span>
+                <% end %>
+              </td>
+              <td class="px-4 py-2 border-b text-gray-700">
+                <% unless Current.user.email_address == invitation.email %>
+                  <%= link_to t("account_settings.invited_users.delete"), invitation_path(invitation),
+                      data: { turbo_confirm: t("account_settings.invited_users.confirm_delete"), turbo_method: :delete },
+                      class: "text-red-500 hover:text-red-700" %>
+                <% end %>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            <% @invitations.each do |invitation| %>
-              <tr id="invitation_<%= invitation.id %>" class="hover:bg-gray-100">
-                <td class="px-4 py-2 border-b text-gray-700"><%= invitation.email %></td>
-                <td class="px-4 py-2 border-b text-gray-700">
-                  <% if invitation.confirmed_at %>
-                    <span class="text-green-500 font-semibold">Accepted</span>
-                  <% else %>
-                    <span class="text-red-500 font-semibold">Pending</span>
-                  <% end %>
-                </td>
-                <td class="px-4 py-2 border-b text-gray-700">
-                  <% unless Current.user.email_address == invitation.email %>
-                    <%= link_to 'Delete', invitation_path(invitation), data: { turbo_confirm: 'Are you sure you want to remove this user from your account?', turbo_method: :delete }, class: "text-red-500 hover:text-red-700" %>
-                  <% end %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      <% else %>
-        <p class="text-gray-500">No users have been invited yet.</p>
-      <% end %>
-    </div>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-gray-500"><%= t("account_settings.invited_users.none") %></p>
+    <% end %>
+  </div>
 </div>
