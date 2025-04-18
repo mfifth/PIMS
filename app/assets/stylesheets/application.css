@@ -23,19 +23,24 @@
 */
 
 /* Custom scrollbar for the cards */
+/* Custom scrollbar for category containers */
+/* Ensure the scroll container has content that overflows */
 .scroll-container {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e0 #f1f1f1;
+  scrollbar-color: #cbd5e0 #f1f5f9;
+  overflow-y: auto; /* Ensure this is set */
 }
 
+/* WebKit browsers (Chrome, Safari) */
 .scroll-container::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 .scroll-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: #f1f5f9;
   border-radius: 3px;
+  margin: 2px;
 }
 
 .scroll-container::-webkit-scrollbar-thumb {
@@ -45,6 +50,12 @@
 
 .scroll-container::-webkit-scrollbar-thumb:hover {
   background-color: #a0aec0;
+}
+
+/* Firefox */
+.scroll-container {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e0 #f1f5f9;
 }
 
 .btn-primary {

@@ -1,0 +1,12 @@
+<div id="category-<%= category.id %>-<%= location.id %>" 
+class="flex justify-between text-xs p-1.5 bg-gray-50 rounded hover:bg-gray-100 transition">
+  <span class="truncate"><%= category.category_name %></span>
+  <div class="flex space-x-2">
+    <span class="text-gray-600 whitespace-nowrap">
+      <%= category.total_quantity.to_i %> items
+    </span>
+    <span class="text-green-700 font-medium whitespace-nowrap">
+      <%= number_to_currency(category.total_value) %>
+    </span>
+  </div>
+</div>

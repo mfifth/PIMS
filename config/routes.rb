@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   resources :suppliers
   resources :locations do
     get 'inventory_data', to: 'locations#inventory_data'
+    member do
+      get 'categories'
+    end
   end
 
   resources :batches

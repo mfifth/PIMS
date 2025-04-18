@@ -1,5 +1,4 @@
 <turbo-frame id='main' class="block">
-  <!-- Header Section -->
   <div class="flex justify-between items-start mb-8">
     <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Locations</h1>
     <%= link_to new_location_path, 
@@ -9,25 +8,25 @@
     <% end %>
   </div>
 
-  <!-- Locations Grid -->
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- Locations Grid - Made cards smaller -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
     <% @locations.each do |location| %>
-      <div style='padding: 10px;' class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col h-full">
-        <!-- Card Header -->
-        <div class="p-5 pb-4 border-b border-gray-100">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col h-full">
+        <!-- Card Header - Compact -->
+        <div class="p-4 border-b border-gray-100">
           <div class="flex justify-between items-start gap-2">
-            <h2 class="text-xl font-semibold text-gray-800 truncate"><%= location.name %></h2>
+            <h2 class="text-lg font-semibold text-gray-800 truncate"><%= location.name %></h2>
             
             <% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
               <% if location.square_location_id.present? %>
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                   <svg class="-ml-0.5 mr-1 h-3 w-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                   </svg>
-                  Synced
+                  Square Synced
                 </span>
               <% else %>
-                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                   <svg class="-ml-0.5 mr-1 h-3 w-3 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                     <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                   </svg>
@@ -37,35 +36,35 @@
             <% end %>
           </div>
           
-          <div class="mt-3 flex items-center text-gray-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div class="mt-2 flex items-center text-gray-600 text-sm">
+            <svg style='width: 20px;' xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <span class="text-sm"><%= [location.city, location.state].compact.join(', ') %></span>
+            <span><%= [location.city, location.state].compact.join(', ') %></span>
           </div>
         </div>
 
-        <!-- Card Body -->
-        <div class="p-5 space-y-6 flex-grow">
-          <!-- Inventory Summary Section -->
-          <div class="space-y-4">
-            <h3 class="font-medium text-gray-800 flex items-center">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <!-- Card Body - Compact -->
+        <div class="p-4 space-y-4 flex-grow">
+          <!-- Inventory Summary Section - Compact -->
+          <div class="space-y-2">
+            <h3 class="font-medium text-gray-800 text-sm flex items-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
               </svg>
-              Inventory Summary
+              Inventory
             </h3>
             
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <div class="bg-blue-50 p-3 rounded-lg space-y-1.5">
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-blue-50 p-2 rounded space-y-0.5">
                 <p class="text-blue-800 font-medium">Perishable</p>
                 <p class="text-gray-700">
                   <%= location.inventory_items.joins(:product).where(products: { perishable: true }).sum(:quantity) %> items
                 </p>
               </div>
               
-              <div class="bg-green-50 p-3 rounded-lg space-y-1.5">
+              <div class="bg-green-50 p-2 rounded space-y-0.5">
                 <p class="text-green-800 font-medium">Non-Perishable</p>
                 <p class="text-gray-700">
                   <%= location.inventory_items.joins(:product).where(products: { perishable: false }).sum(:quantity) %> items
@@ -74,50 +73,52 @@
             </div>
           </div>
 
-          <!-- Categories Section -->
-          <% categories_summary = location.inventory_items
-                                     .joins(product: :category)
-                                     .group('categories.name')
-                                     .select(
-                                       'categories.name as category_name',
-                                       'SUM(inventory_items.quantity) as total_quantity',
-                                       'SUM(inventory_items.quantity * products.price) as total_value'
-                                     )
-                                     .order('total_value DESC') %>
-          <% if categories_summary.any? %>
-            <div class="space-y-3">
-              <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h4>
-              <div class="space-y-3">
-                <% categories_summary.each do |category| %>
-                  <div class="flex justify-between text-sm p-2.5 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                      <span>
-                        <%= category.category_name %>
-                      </span>
-                      <span class="text-gray-600 whitespace-nowrap">
-                      <%= category.total_quantity.to_i %> items
-                      </span>
-                      <span class="text-green-700 font-medium whitespace-nowrap">
-                        <%= number_to_currency(category.total_value) %>
-                      </span>
-                  </div>
+          <div class="space-y-2">
+            <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Categories</h4>
+            <div class="relative h-[200px]">
+              <div id="location-<%= location.id %>-categories" class="absolute inset-0 overflow-y-auto scroll-container"
+                data-controller="category"
+                data-category-url-value="<%= categories_location_path(location) %>"
+                data-category-load-more-distance-value="5">
+
+                <% location.inventory_items
+                          .joins(product: :category)
+                          .group('categories.name')
+                          .select(
+                            'categories.name as category_name',
+                            'SUM(inventory_items.quantity) as total_quantity',
+                            'SUM(inventory_items.quantity * products.price) as total_value'
+                          )
+                          .order('total_value DESC')
+                          .limit(10)
+                          .each do |category| %>
+                  <%= render 'categories/category', category: category, location: location %>
                 <% end %>
+                
+                <div id="location-<%= location.id %>-categories-loader" data-category-target="loader" 
+                  class="hidden py-2 flex justify-center">
+                  <svg class="animate-spin h-4 w-4 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                </div>
               </div>
             </div>
-          <% end %>
+          </div>
 
-          <!-- Expiring Soon Section -->
+          <!-- Expiring Soon Section - Compact -->
           <% expiring_items = location.inventory_items.joins(product: :batch)
                                      .where("batches.expiration_date <= ?", 1.week.from_now)
                                      .order("batches.expiration_date ASC")
-                                     .limit(3) %>
+                                     .limit(2) %>
           <% if expiring_items.any? %>
-            <div class="space-y-3">
-              <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Expiring Soon</h4>
-              <ul class="space-y-2.5">
+            <div class="space-y-1.5">
+              <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">Expiring</h4>
+              <ul class="space-y-1">
                 <% expiring_items.each do |item| %>
-                  <li class="flex justify-between items-center text-sm py-1">
-                    <span class="truncate pr-2"><%= item.product.name %></span>
-                    <span class="text-red-600 whitespace-nowrap bg-red-50 px-2 py-1 rounded-full text-xs">
+                  <li class="flex justify-between items-center text-xs py-0.5">
+                    <span class="truncate pr-1"><%= item.product.name %></span>
+                    <span class="text-red-600 whitespace-nowrap bg-red-50 px-1.5 py-0.5 rounded-full">
                       <%= item.product.batch.expiration_date.strftime("%b %d") %>
                     </span>
                   </li>
@@ -127,25 +128,25 @@
           <% end %>
         </div>
 
-        <!-- Card Footer -->
-        <div class="bg-gray-50 px-5 py-4 flex justify-between space-x-4 border-t border-gray-100">
-          <%= link_to location, class: "text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1", data: { turbo_frame: 'main' } do %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <!-- Card Footer - Compact -->
+        <div class="bg-gray-50 px-4 py-3 flex justify-between border-t border-gray-100">
+          <%= link_to location, class: "text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1", data: { turbo_frame: 'main' } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
             </svg>
             <span>View</span>
           <% end %>
           
-          <%= link_to edit_location_path(location), class: "text-sm text-yellow-600 hover:text-yellow-800 font-medium flex items-center space-x-1", data: { turbo_frame: 'main' } do %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <%= link_to edit_location_path(location), class: "text-xs text-yellow-600 hover:text-yellow-800 font-medium flex items-center space-x-1", data: { turbo_frame: 'main' } do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
             <span>Edit</span>
           <% end %>
           
-          <%= link_to location, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-sm text-red-600 hover:text-red-800 font-medium flex items-center space-x-1" do %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <%= link_to location, method: :delete, data: { confirm: 'Are you sure?' }, class: "text-xs text-red-600 hover:text-red-800 font-medium flex items-center space-x-1" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
             <span>Delete</span>
