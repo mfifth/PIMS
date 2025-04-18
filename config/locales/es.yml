@@ -129,7 +129,7 @@ es:
     delete_category: "Eliminar Categoría"
     confirm_remove_category: "¿Está seguro de que desea eliminar esta categoría?"
     confirm_delete_category_from_all: "¿Está seguro de que desea eliminar esta categoría de todos los productos?"
-    expiration: "FEC CAD: %{date}"
+    expiration: "F.venc: %{date}"
     qty: "Cantidad: %{count}"
     location_with_name: "Ubicación: %{name}"
     index:

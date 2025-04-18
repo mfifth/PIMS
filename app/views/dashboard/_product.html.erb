@@ -3,15 +3,14 @@
     <a href="<%= product_path(product) %>" class="text-gray-800 font-medium hover:underline">
       <%= product.name %>
     </a>
-    
-    <% if product.batch&.expiration_date.present? %>
-      <% expiration_date = product.batch.expiration_date %>
-      <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
-      <span class="<%= color_class %> text-sm"><%= t("products.expiration", date: expiration_date) %></span>
-    <% end %>
   </div>
 
   <% product.locations.each do |location| %>
+    <% if product.batch&.expiration_date.present? %>
+      <% expiration_date = product.batch.expiration_date %>
+      <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
+      <span class="<%= color_class %> text-xs"><%= t("products.expiration", date: expiration_date) %></span>
+    <% end %>
     <p class="text-gray-500 text-xs"><%= t("products.qty", count: location.inventory_items.detect { |i| i.product_id == product.id }&.quantity) %></p>
     <p class="text-gray-500 text-xs"><%= t("products.location_with_name", name: location.name) %></p>
   <% end %>

@@ -3,17 +3,22 @@ class DashboardController < ApplicationController
     load_batches if should_load?('batches')
     load_locations if should_load?('locations')
     load_products if should_load?('products')
-
-    @low_stock_items = Current.account.locations.joins(inventory_items: :product)
-    .where('inventory_items.quantity < inventory_items.low_threshold')
-    .group('locations.id')
-    .count
-
+  
+    @low_stock_items = {}
+  
+    Current.account.locations.includes(inventory_items: :product).find_each do |location|
+      low_items = location.inventory_items.select do |item|
+        item.quantity < (item.low_threshold || 0)
+      end
+  
+      @low_stock_items[location.id] = low_items if low_items.any?
+    end
+  
     respond_to do |format|
       format.html
       format.turbo_stream
     end
-  end
+  end  
 
   private
 
