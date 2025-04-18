@@ -66,10 +66,12 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('turbo:load', function() {
     const locationSelect = document.querySelector('[name="location_id"]');
     const productSelect = document.querySelector('[name="product_id"]');
     
+    if (!locationSelect || !productSelect) return;
+
     // Enhanced select styling handler
     function enhanceSelect(selectElement) {
       selectElement.addEventListener('focus', () => {
@@ -107,11 +109,10 @@
               option.textContent = product.name;
               option.dataset.quantity = product.quantity;
               option.dataset.batchId = product.batch_id;
-              option.dataset.categoryId = product.category_id; // 👈 new
+              option.dataset.categoryId = product.category_id;
               productSelect.appendChild(option);
             });
 
-            
             productSelect.disabled = false;
           })
           .catch(() => {
@@ -132,34 +133,20 @@
       const productId = this.value;
 
       if (productId) {
-        // Show all dependent fields
         ['quantity-field', 'batch-selection', 'category-selection', 'submit-btn'].forEach(id => {
           document.getElementById(id).classList.remove('hidden');
           document.getElementById(id).classList.add('block');
         });
 
-        // Pre-populate quantity
         const quantityField = document.querySelector('[name="quantity"]');
         quantityField.value = selectedOption.dataset.quantity || 0;
 
-        // Pre-select batch if exists
         const batchSelect = document.querySelector('[name="batch_id"]');
-        if (selectedOption.dataset.batchId) {
-          batchSelect.value = selectedOption.dataset.batchId;
-        } else {
-          batchSelect.value = '';
-        }
+        batchSelect.value = selectedOption.dataset.batchId || '';
 
-        // Pre-select category if exists
         const categorySelect = document.querySelector('[name="category_id"]');
-        if (selectedOption.dataset.categoryId) {
-          categorySelect.value = selectedOption.dataset.categoryId;
-        } else {
-          categorySelect.value = '';
-        }
-
+        categorySelect.value = selectedOption.dataset.categoryId || '';
       } else {
-        // Hide dependent fields if no product selected
         ['quantity-field', 'batch-selection', 'category-selection', 'submit-btn'].forEach(id => {
           document.getElementById(id).classList.add('hidden');
           document.getElementById(id).classList.remove('block');
