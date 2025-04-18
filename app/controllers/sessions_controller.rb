@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
 
   def create
     user = User.authenticate_by(params.permit(:email_address, :password))
-    msg = user.confirmed_at.present? ? "Try another email address or password." : "Please confirm your email before logging in."
+    msg = user&.confirmed_at ? "Try another email address or password." : "Please confirm your email before logging in."
 
     if user && user.confirmed_at.present?
       start_new_session_for user
