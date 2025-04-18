@@ -1,6 +1,8 @@
 <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
   <div class="flex justify-between">
-    <span class="text-gray-800 font-medium"><%= product.name %></span>
+    <a href="<%= product_path(product) %>" class="text-gray-800 font-medium hover:underline">
+      <%= product.name %>
+    </a>
     
     <% if product.batch&.expiration_date.present? %>
       <% expiration_date = product.batch.expiration_date %>
