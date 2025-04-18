@@ -57,7 +57,7 @@ class LocationsController < ApplicationController
   end
 
   def update_inventory
-    Product.find(params[:product_id]).update(batch_id: params[:batch_id])
+    Product.find(params[:product_id]).update(batch_id: params[:batch_id], category_id: params[:category_id])
     InventoryItem.find_by(location_id: params[:location_id], product_id: params[:product_id])
     .update(quantity: params[:quantity])
 
@@ -79,6 +79,7 @@ class LocationsController < ApplicationController
           id: product.id,
           name: product.name,
           quantity: inventory_item&.quantity || 0,
+          category_id: product.category_id,
           batch_id: product.batch_id
         }
       end

@@ -1,98 +1,171 @@
-<div class="flex flex-col items-center min-h-screen bg-gray-100 p-6">
-  <h1 class="text-3xl font-semibold text-gray-900 mb-6 text-center">Quick Update</h1>
+<div class="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden">
+    <div class="p-8">
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-gray-900">Quick Update</h1>
+      </div>
 
-  <%= form_with url: update_inventory_path, method: :post, local: true, class: "bg-white p-8 rounded-lg shadow-lg space-y-6 w-full max-w-lg" do |form| %>
-    
-    <!-- Location Selection -->
-    <div>
-      <%= form.label :location_id, "Select Location", class: "text-sm font-medium text-gray-800" %>
-      <%= form.collection_select :location_id, Location.where(account_id: Current.account.id), :id, :name, 
-          prompt: "Select a location", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
+      <%= form_with url: update_inventory_path, method: :post, data: { turbo: false }, local: true, class: "space-y-6" do |form| %>
+        <!-- Location Selection -->
+        <div class="space-y-2">
+          <%= form.label :location_id, "Location", class: "block text-sm font-medium text-gray-700" %>
+          <div class="relative">
+            <%= form.collection_select :location_id, 
+                  Location.where(account_id: Current.account.id), :id, :name, 
+                  { prompt: "Select location" }, 
+                  class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <!-- Product Selection (Dynamically loaded) -->
+        <div id="product-selection" class="hidden space-y-2">
+          <%= form.label :product_id, "Product", class: "block text-sm font-medium text-gray-700" %>
+          <div class="relative">
+            <%= form.collection_select :product_id, [], :id, :name, 
+                  { prompt: "Select product" }, 
+                  class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <!-- Quantity Field -->
+        <div id="quantity-field" class="hidden space-y-2">
+          <%= form.label :quantity, "Quantity", class: "block text-sm font-medium text-gray-700" %>
+          <%= form.number_field :quantity, min: 0, required: true, 
+                class: "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm", 
+                placeholder: "Enter quantity" %>
+        </div>
+
+        <!-- Batch Selection -->
+        <div id="batch-selection" class="hidden space-y-2">
+          <%= form.label :batch_id, "Batch (Optional)", class: "block text-sm font-medium text-gray-700" %>
+          <div class="relative">
+            <%= form.collection_select :batch_id, Current.account.batches, :id, :batch_info, 
+                  { include_blank: "No batch" }, 
+                  class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <!-- Category Selection -->
+        <div id="category-selection" class="hidden space-y-2">
+          <%= form.label :category_id, "Category (Optional)", class: "block text-sm font-medium text-gray-700" %>
+          <div class="relative">
+            <%= form.collection_select :category_id, Current.account.categories, :id, :name, 
+                  { include_blank: "No category" }, 
+                  class: "block w-full pl-3 pr-10 py-3 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md" %>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div id='submit-btn' class='hidden pt-4'>
+          <%= form.submit "Update Inventory", 
+                class: "bg-green w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-md font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+        </div>
+      <% end %>
     </div>
-
-    <!-- Product Selection (Dynamically loaded) -->
-    <div id="product-selection" style="display: none;">
-      <%= form.label :product_id, "Select Product", class: "text-sm font-medium text-gray-800" %>
-      <%= form.collection_select :product_id, [], :id, :name, 
-          prompt: "Select a product", class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
-    </div>
-
-    <!-- Quantity Field -->
-    <div id="quantity-field" style="display: none;">
-      <%= form.label :quantity, "Quantity", class: "text-sm font-medium text-gray-800" %>
-      <%= form.number_field :quantity, min: 0, required: true, class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500", placeholder: "Enter quantity" %>
-    </div>
-
-    <!-- Batch Selection -->
-    <div id="batch-selection" style="display: none;">
-      <%= form.label :batch_id, "Select Existing Batch", class: "text-sm font-medium text-gray-800" %>
-      <%= form.collection_select :batch_id, Current.account.batches, :id, :batch_info, { include_blank: "N/A" }, 
-          class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
-    </div>
-
-    <!-- Submit Button -->
-    <div id='submit-btn' style='display: none;' class="mt-6 text-center">
-      <%= form.submit "Update Inventory", class: "w-full bg-blue bg-blue-600 text-white px-4 py-3 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500" %>
-    </div>
-
-  <% end %>
+  </div>
 </div>
 
 <script>
-  document.querySelector('[name="location_id"]').addEventListener('change', function() {
-    const locationId = this.value;
-
-    if (locationId) {
-      document.getElementById("product-selection").style.display = "block";
-
-      fetch(`/locations/${locationId}/inventory_data`)
-        .then(response => response.json())
-        .then(data => {
-          const productSelect = document.querySelector('[name="product_id"]');
-          productSelect.innerHTML = "<option value=''>Select a product</option>";
-          
-          data.products.forEach(product => {
-            const option = document.createElement("option");
-            option.value = product.id;
-            option.textContent = product.name;
-            // Store inventory data as data attributes
-            option.dataset.quantity = product.quantity;
-            option.dataset.batchId = product.batch_id;
-            productSelect.appendChild(option);
-          });
-        });
-    } else {
-      document.getElementById("product-selection").style.display = "none";
-      document.getElementById("quantity-field").style.display = "none";
-      document.getElementById("batch-selection").style.display = "none";
-      document.getElementById("submit-btn").style.display = "none";
-    }
-  });
-
-  document.querySelector('[name="product_id"]').addEventListener('change', function() {
-    const selectedOption = this.options[this.selectedIndex];
-    const productId = this.value;
+  document.addEventListener('DOMContentLoaded', function() {
+    const locationSelect = document.querySelector('[name="location_id"]');
+    const productSelect = document.querySelector('[name="product_id"]');
     
-    if (productId) {
-      document.getElementById("quantity-field").style.display = "block";
-      document.getElementById("batch-selection").style.display = "block";
-      document.getElementById("submit-btn").style.display = "block";
-      
-      // Pre-populate quantity
-      const quantityField = document.querySelector('[name="quantity"]');
-      quantityField.value = selectedOption.dataset.quantity || 0;
-      
-      // Pre-select batch if exists
-      const batchSelect = document.querySelector('[name="batch_id"]');
-      if (selectedOption.dataset.batchId) {
-        batchSelect.value = selectedOption.dataset.batchId;
-      } else {
-        batchSelect.value = "";
-      }
-    } else {
-      document.getElementById("quantity-field").style.display = "none";
-      document.getElementById("batch-selection").style.display = "none";
-      document.getElementById("submit-btn").style.display = "none";
+    // Enhanced select styling handler
+    function enhanceSelect(selectElement) {
+      selectElement.addEventListener('focus', () => {
+        selectElement.parentNode.classList.add('ring-2', 'ring-blue-500');
+      });
+      selectElement.addEventListener('blur', () => {
+        selectElement.parentNode.classList.remove('ring-2', 'ring-blue-500');
+      });
     }
+
+    enhanceSelect(locationSelect);
+    enhanceSelect(productSelect);
+
+    // Location change handler
+    locationSelect.addEventListener('change', function() {
+      const locationId = this.value;
+      const productSection = document.getElementById("product-selection");
+
+      if (locationId) {
+        productSection.classList.remove('hidden');
+        productSection.classList.add('block');
+
+        // Show loading state
+        productSelect.innerHTML = '<option value="">Loading products...</option>';
+        productSelect.disabled = true;
+
+        fetch(`/locations/${locationId}/inventory_data`)
+          .then(response => response.json())
+          .then(data => {
+            productSelect.innerHTML = "<option value=''>Select a product</option>";
+            
+            data.products.forEach(product => {
+              const option = document.createElement("option");
+              option.value = product.id;
+              option.textContent = product.name;
+              option.dataset.quantity = product.quantity;
+              option.dataset.batchId = product.batch_id;
+              option.dataset.categoryId = product.category_id; // 👈 new
+              productSelect.appendChild(option);
+            });
+
+            
+            productSelect.disabled = false;
+          })
+          .catch(() => {
+            productSelect.innerHTML = "<option value=''>Error loading products</option>";
+          });
+      } else {
+        // Hide all dependent fields if no location selected
+        ['product-selection', 'quantity-field', 'batch-selection', 'category-selection', 'submit-btn'].forEach(id => {
+          document.getElementById(id).classList.add('hidden');
+          document.getElementById(id).classList.remove('block');
+        });
+      }
+    });
+
+    // Product change handler
+    productSelect.addEventListener('change', function() {
+      const selectedOption = this.options[this.selectedIndex];
+      const productId = this.value;
+
+      if (productId) {
+        // Show all dependent fields
+        ['quantity-field', 'batch-selection', 'category-selection', 'submit-btn'].forEach(id => {
+          document.getElementById(id).classList.remove('hidden');
+          document.getElementById(id).classList.add('block');
+        });
+
+        // Pre-populate quantity
+        const quantityField = document.querySelector('[name="quantity"]');
+        quantityField.value = selectedOption.dataset.quantity || 0;
+
+        // Pre-select batch if exists
+        const batchSelect = document.querySelector('[name="batch_id"]');
+        if (selectedOption.dataset.batchId) {
+          batchSelect.value = selectedOption.dataset.batchId;
+        } else {
+          batchSelect.value = '';
+        }
+
+        // Pre-select category if exists
+        const categorySelect = document.querySelector('[name="category_id"]');
+        if (selectedOption.dataset.categoryId) {
+          categorySelect.value = selectedOption.dataset.categoryId;
+        } else {
+          categorySelect.value = '';
+        }
+
+      } else {
+        // Hide dependent fields if no product selected
+        ['quantity-field', 'batch-selection', 'category-selection', 'submit-btn'].forEach(id => {
+          document.getElementById(id).classList.add('hidden');
+          document.getElementById(id).classList.remove('block');
+        });
+      }
+    });
+
   });
 </script>
