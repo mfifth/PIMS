@@ -1,5 +1,3 @@
-require 'square'
-
 class SquareController < ApplicationController
   skip_before_action :verify_authenticity_token
 
@@ -16,10 +14,12 @@ class SquareController < ApplicationController
     result = exchange_code_for_token(params[:code])
     if result.success?
       access_token = result.data.access_token
+      refresh_token = result.data.refresh_token
       merchant_id = result.data.merchant_id
 
       Current.account.update(
         square_access_token: access_token,
+        square_refresh_token: refresh_token,
         square_merchant_id: merchant_id
       )
 
@@ -30,10 +30,12 @@ class SquareController < ApplicationController
   end
 
   def sync_locations
-    client = Square::Client.new(
-      access_token: Current.account.square_access_token,
-      environment: Rails.env.production? ? 'production' : 'sandbox'
-    )
+    client = create_square_client(Current.account.square_access_token)
+
+    if token_expired?(Current.account.square_access_token)
+      refresh_square_token
+      client = create_square_client(Current.account.square_access_token)
+    end
 
     response = client.locations.list_locations
     if response.success?
@@ -49,11 +51,13 @@ class SquareController < ApplicationController
   end
 
   def sync_products
-    client = Square::Client.new(
-      access_token: Current.account.square_access_token,
-      environment: Rails.env.production? ? 'production' : 'sandbox'
-    )
+    client = create_square_client(Current.account.square_access_token)
   
+    if token_expired?(Current.account.square_access_token)
+      refresh_square_token
+      client = create_square_client(Current.account.square_access_token)
+    end
+
     Current.account.locations.where.not(square_location_id: nil).each do |location|
       next unless location
   
@@ -69,7 +73,7 @@ class SquareController < ApplicationController
           product = Product.find_or_initialize_by!(sku: count.catalog_object_id)
           product.name = count.catalog_object_name
           product.save!
-  
+
           inv_item = InventoryItem.find_or_initialize_by(
             product: product,
             location: location
@@ -80,30 +84,13 @@ class SquareController < ApplicationController
           counter += 1
         end
       else
-        Rails.logger.error("Square inventory sync failed for location #{sl.square_id}: #{response.errors}")
+        Rails.logger.error("Square inventory sync failed for location #{location.square_location_id}: #{response.errors}")
       end
     end
-  
+
     redirect_to inventory_items_path, notice: t('notifications.inventory_synced', size: counter)
   end
 
-  def sync_inventory
-    payload = request.body.read
-    signature = request.headers['X-Square-Signature']
-
-    if verify_square_signature(payload, signature)
-      event = JSON.parse(payload)
-
-      if event['type'] == 'inventory.count.updated'
-        handle_inventory_update(event['data'])
-      end
-
-      render json: { status: 'success' }, status: :ok
-    else
-      render json: { error: 'Invalid signature' }, status: :unauthorized
-    end
-  end
-  
   private
 
   def oauth_authorize_url
@@ -128,16 +115,48 @@ class SquareController < ApplicationController
     )
   end
 
-  def verify_square_signature(payload, signature)
-    secret = ENV['SQUARE_WEBHOOK_SECRET']
-    string_to_sign = request.url + payload
-  
-    expected_signature = Base64.strict_encode64(
-      OpenSSL::HMAC.digest('sha1', secret, string_to_sign)
+  def create_square_client(access_token)
+    Square::Client.new(
+      access_token: access_token,
+      environment: Rails.env.production? ? 'production' : 'sandbox'
     )
-  
-    ActiveSupport::SecurityUtils.secure_compare(expected_signature, signature)
-  end  
+  end
+
+  def refresh_square_token
+    client = Square::Client.new(
+      environment: Rails.env.production? ? 'production' : 'sandbox'
+    )
+
+    result = client.oauth.obtain_token(
+      body: {
+        client_id: ENV['SQUARE_APPLICATION_ID'],
+        client_secret: ENV['SQUARE_SECRET'],
+        refresh_token: Current.account.square_refresh_token,
+        grant_type: "refresh_token"
+      }
+    )
+
+    if result.success?
+      Current.account.update(
+        square_access_token: result.data.access_token,
+        square_refresh_token: result.data.refresh_token
+      )
+    else
+      Rails.logger.error("Failed to refresh Square token: #{result.errors}")
+    end
+  end
+
+  def token_expired?(access_token)
+    client = create_square_client(access_token)
+    
+    response = client.locations.list_locations
+
+    if response.error && response.error[:category] == 'AUTHENTICATION_ERROR'
+      return true
+    end
+
+    false
+  end
 
   def handle_inventory_update(data)
     counts = data.dig("object", "inventory_counts") || []
