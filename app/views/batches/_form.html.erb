@@ -44,7 +44,7 @@
     <!-- Product Selection -->
     <div>
       <%= form.label :product_ids, "Select Products", class: "block text-sm font-medium text-gray-700" %>
-      <%= form.collection_select :product_ids, Current.account.products.perishable, :id, :name, {}, { multiple: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" } %>
+      <%= form.collection_select :product_ids, Current.account.products, :id, :name, {}, { multiple: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" } %>
     </div>
 
     <!-- Form Actions -->

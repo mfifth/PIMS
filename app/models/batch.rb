@@ -13,5 +13,4 @@ class Batch < ApplicationRecord
   end
 
   scope :not_expired, -> { where('expiration_date >= ?', Date.today) }
-
 end

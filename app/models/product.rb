@@ -17,11 +17,17 @@ class Product < ApplicationRecord
 
   scope :perishable, -> { where(perishable: true) }
 
+  before_save :update_perishable_status, if: :will_save_change_to_batch_id?
+
   private
 
   def product_limit_not_exceeded
     if account.products.count >= Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]
       errors.add(:base, "You have reached the maximum limit of #{Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]} products.")
     end
+  end
+
+  def update_perishable_status
+    self.perishable = batch.present?
   end
 end
