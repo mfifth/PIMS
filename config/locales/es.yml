@@ -341,3 +341,4 @@ es:
       label: "Categoría (opcional)"
       none: "Sin categoría"
     submit: "Actualizar Inventario"
+  welcome: 'Bienvenido'

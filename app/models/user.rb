@@ -14,14 +14,14 @@ class User < ApplicationRecord
   has_many :sessions, dependent: :destroy
 
   validates :email_address, 
-  presence: { message: t('notifications.blank_email') },
+  presence: { message: I18n.t('notifications.blank_email') },
   uniqueness: { 
     case_sensitive: false,
-    message: t('notifications.user_already_registered')
+    message: I18n.t('notifications.user_already_registered')
   },
   format: {
     with: URI::MailTo::EMAIL_REGEXP,
-    message: t('notifications.email_warning')
+    message: I18n.t('notifications.email_warning')
   }
   
   normalizes :email_address, with: ->(e) { e.strip.downcase }
