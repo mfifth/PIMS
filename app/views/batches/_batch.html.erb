@@ -22,7 +22,7 @@
 
   <div class="mt-4">
     <% products = batch.products.where(account_id: Current.account.id) %>
-    <strong class="text-gray-700 text-sm"><%= t('batches.products', count: products.size) %>:</strong>
+    <strong class="text-gray-700 text-sm"><%= t('batches.products_with_count', count: products.size) %>:</strong>
     <% products.each do |product| %>
       <div class="mt-2 pl-2 border-l-2 border-gray-200">
         <p class="text-gray-700 font-semibold text-sm"><%= product.name %></p>
