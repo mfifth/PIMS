@@ -43,7 +43,7 @@ es:
     alerts_before_expiry: "Avisos %{count} días antes del vencimiento"
     manufactured_date: "Fecha de fabricación"
     expiration_date: "Fecha de vencimiento"
-    products: "Productos"
+    products: "%{count} productos"
     items: "artículos"
     no_location: "Sin ubicación"
     na: "N/D"

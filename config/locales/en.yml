@@ -43,7 +43,7 @@ en:
     alerts_before_expiry: "Alerts %{count} days before expiry"
     manufactured_date: "Manufactured Date"
     expiration_date: "Expiration Date"
-    products: "Products"
+    products: "%{count} products"
     items: "items"
     no_location: "No Location"
     na: "N/A"
