@@ -8,11 +8,9 @@
     <% end %>
   </div>
 
-  <!-- Locations Grid - Made cards smaller -->
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
     <% @locations.each do |location| %>
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col h-full">
-        <!-- Card Header - Compact -->
         <div class="p-4 border-b border-gray-100">
           <div class="flex justify-between items-start gap-2">
             <h2 class="text-lg font-semibold text-gray-800 truncate"><%= location.name %></h2>

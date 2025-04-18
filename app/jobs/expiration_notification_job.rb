@@ -23,7 +23,7 @@ class ExpirationNotificationJob < ApplicationJob
             # Assuming an account has many users, we will send the email to each user individually
             account.users.each do |user|
               NotificationMailer.upcoming_expiration_date(user, batch).deliver_later if user.email_notification
-              NotificationService.send_sms(user.phone, text) if user.text_notification
+              NotificationService.send_sms(user.phone, text) if user.text_notification && user.phone
             end
           end
         end
