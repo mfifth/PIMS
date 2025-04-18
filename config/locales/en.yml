@@ -12,6 +12,28 @@ en:
     update_button: "Update Settings"
     test_email: "Test Email"
     test_text: "Test Text"
+  account_settings:
+    title: "Account Settings"
+    square:
+      connected: "Square account connected"
+      sync_locations: "Sync locations"
+      sync_inventory: "Sync inventory"
+      syncing: "Syncing..."
+      connect: "Connect with Square"
+      connecting: "Connecting..."
+    invite:
+      title: "Invite a user to your account"
+      label: "User's email"
+      submit: "Send invitation"
+    invited_users:
+      title: "Invited users"
+      email: "Email"
+      status: "Status"
+      accepted: "Accepted"
+      pending: "Pending"
+      delete: "Delete"
+      confirm_delete: "Are you sure you want to remove this user from your account?"
+      none: "No users have been invited yet."
   languages:
     english: "English"
     spanish: "Español"
