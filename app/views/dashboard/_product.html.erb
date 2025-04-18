@@ -11,6 +11,6 @@
 
   <% product.locations.each do |location| %>
     <p class="text-gray-500 text-xs"><%= t("products.qty", count: location.inventory_items.detect { |i| i.product_id == product.id }&.quantity) %></p>
-    <p class="text-gray-500 text-xs"><%= t("products.location", name: location.name) %></p>
+    <p class="text-gray-500 text-xs"><%= t("products.location_with_name", name: location.name) %></p>
   <% end %>
 </li>

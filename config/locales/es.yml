@@ -130,7 +130,7 @@ es:
     confirm_delete_category_from_all: "¿Está seguro de que desea eliminar esta categoría de todos los productos?"
     expiration: "FEC CAD: %{date}"
     qty: "Cantidad: %{count}"
-    location: "Ubicación: %{name}"
+    location_with_name: "Ubicación: %{name}"
     index:
       title: "Productos"
       new_product: "Nuevo producto"
@@ -244,6 +244,7 @@ es:
       total_inventory_value: "Valor Total del Inventario"
       edit_location: "Editar Ubicación"
       back_to_locations: "Volver a Ubicaciones"
+      updated: 'Actualizado hace %{time}'
   account_settings:
     title: "Configuración de la cuenta"
     square:
@@ -342,3 +343,14 @@ es:
       none: "Sin categoría"
     submit: "Actualizar Inventario"
   welcome: 'Bienvenido'
+  quick_update: "Actualizar Rapido"
+  quick_update: "Actualización rápida"
+  select_location: "Ubicación"
+  select_location_prompt: "Selecciona una ubicación"
+  select_product: "Producto"
+  select_product_prompt: "Selecciona un producto"
+  quantity: "Cantidad"
+  batch_label: "Selecciona un lote (opcional)"
+  n_a: "N/A"
+  category_label: "Selecciona una categoría (opcional)"
+  submit: "Enviar"
