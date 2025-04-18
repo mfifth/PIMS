@@ -133,8 +133,10 @@ class ProductsController < ApplicationController
   end
 
   def update_inventory_item
-    InventoryItem.find_or_create_by(location_id: inventory_item_params[:location_id], product_id: @product.id)
-                 .update!(inventory_item_params)
+    InventoryItem.find_or_create_by(location_id: inventory_item_params[:location_id], 
+    product_id: @product.id).update!(inventory_item_params)
+
+    Location.find(inventory_item_params[:location_id]).update(updated_at: Time.current)
   end
 
   def assign_or_create_batch
@@ -168,5 +170,7 @@ class ProductsController < ApplicationController
       quantity: inventory_item_params[:quantity],
       daily_usage: inventory_item_params[:daily_usage]
       )
+
+    Location.find(inventory_item_params[:location_id]).update(updated_at: Time.current)
   end
 end

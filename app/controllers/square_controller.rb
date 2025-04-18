@@ -150,6 +150,8 @@ class SquareController < ApplicationController
       inv_item = InventoryItem.find_or_initialize_by(product: product, location: location)
       inv_item.quantity = count["quantity"].to_i
       inv_item.save!
+      
+      location.update(updated_at: Time.current)
     end
   end
 end

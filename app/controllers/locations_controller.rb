@@ -7,6 +7,12 @@ class LocationsController < ApplicationController
 
   def show
     @inventory_items = @location.inventory_items
+                  .includes(product: [:category, :batch])
+                  .order('products.name ASC')
+
+    if params[:perishable].present?
+      @inventory_items = @inventory_items.where(products: { perishable: params[:perishable] == 'true' })
+    end
 
     respond_to do |format|
       format.html

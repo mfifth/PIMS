@@ -4,6 +4,11 @@ class DashboardController < ApplicationController
     load_locations if should_load?('locations')
     load_products if should_load?('products')
 
+    @low_stock_items = Current.account.locations.joins(inventory_items: :product)
+    .where('inventory_items.quantity < inventory_items.low_threshold')
+    .group('locations.id')
+    .count
+
     respond_to do |format|
       format.html
       format.turbo_stream
