@@ -208,6 +208,9 @@ en:
     updated: "Updated %{time} ago"
     new: "New Location"
     inventory_title: "Inventory"
+    left: 'left'
+    csv_import_notice: "Import started - you'll receive a notification when complete"
+    csv_file_warning: "Please select a CSV file"
     perishable:
       title: "Perishable"
       items: "%{count} items"

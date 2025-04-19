@@ -198,6 +198,9 @@ es:
     synced: "Sincronizado con Square"
     not_synced: "No Sincronizado"
     inventory_title: "Inventario"
+    left: 'restantes'
+    csv_import_notice: "Importación iniciada - recibirás una notificación cuando se complete"
+    csv_file_warning: "Por favor selecciona un archivo CSV"
     perishable:
       title: "Perecedero"
       items: "%{count} artículos"

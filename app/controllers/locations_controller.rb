@@ -133,14 +133,12 @@ class LocationsController < ApplicationController
       file_path = Rails.root.join('tmp', "import_#{Time.now.to_i}.csv")
       FileUtils.mv(tempfile.path, file_path)
 
-      CsvImportJob.perform_later(file_path.to_s, Current.user.id, @location.id)
-      
-      flash[:notice] = "Import started! The data will be processed shortly."
+      CsvImportJob.perform_later(file_path.to_s, Current.user.id, @location.id)      
     else
-      flash[:alert] = "Please select a CSV file"
+      flash[:alert] = t('locations.csv_file_warning')
     end
 
-    redirect_to @location, notice: "Import started - you'll receive a notification when complete"
+    redirect_to @location, notice: t('locations.csv_import_notice')
   end
 
   def sample_csv
