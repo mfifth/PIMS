@@ -8,6 +8,11 @@ class LocationsController < ApplicationController
   end
 
   def show
+    @active_filters = {
+      perishable: params[:perishable],
+      low_stock: params[:low_stock]
+    }
+
     @inventory_items = @location.inventory_items
                   .includes(product: [:category, :batch])
                   .order('products.name ASC')

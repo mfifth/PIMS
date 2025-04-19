@@ -72,6 +72,14 @@
   @apply bg-gray-100 text-gray-800;
 }
 
+.filter-link {
+  @apply px-3 py-1 rounded-lg transition;
+}
+
+.filter-link--active {
+  @apply bg-gray-200;
+}
+
 /* For the category items */
 .category-item {
   transition: background-color 0.2s ease;
