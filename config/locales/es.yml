@@ -183,7 +183,7 @@ es:
     non_perishable_items: "Artículos No Perecederos"
     items: "artículos"
     categories: "Categorías"
-    expiring: "Próximos a Caducar"
+    expiring_soon: "Expira pronto"
     view: "Ver Ubicación"
     edit: "Editar Ubicación"
     delete: "Eliminar Ubicación"
@@ -250,6 +250,9 @@ es:
       edit_location: "Editar Ubicación"
       back_to_locations: "Volver a Ubicaciones"
       updated: 'Actualizado hace %{time}'
+      import_products: "Importar productos"
+      export_products: "Exportar productos"
+      download_sample: "Descargar ejemplo"
   account_settings:
     title: "Configuración de la cuenta"
     square:

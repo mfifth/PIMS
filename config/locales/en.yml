@@ -260,6 +260,9 @@ en:
       edit_location: "Edit Location"
       back_to_locations: "Back to Locations"
       updated: "Updated %{time} ago"
+      import_products: Import Products
+      export_products: Export Products
+      download_sample: "Download Sample"
   notifications:
     batch_updated: "The batch was successfully updated."
     batch_created: "The batch was successfully created."
