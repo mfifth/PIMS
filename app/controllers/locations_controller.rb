@@ -144,7 +144,7 @@ class LocationsController < ApplicationController
         csv << [
           product.name,
           product.sku,
-          product.category.name,
+          product.category&.name || 'N/A',
           item.quantity,
           item.low_threshold,
           product.price,
