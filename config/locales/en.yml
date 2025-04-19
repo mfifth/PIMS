@@ -196,7 +196,7 @@ en:
     non_perishable_items: "Non-Perishable"
     items: "items"
     categories: "Categories"
-    expiring: "Expiring Soon"
+    expiring_soon: "Expiring Soon"
     view: "View"
     edit: "Edit"
     delete: "Delete"

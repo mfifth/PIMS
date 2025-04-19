@@ -120,10 +120,6 @@ class ProductsController < ApplicationController
     params.require(:product).permit(:name, :sku, :category_name, :category_id, :description, :price, :perishable, :supplier_id, :user_id, :account_id, :batch_id)
   end
 
-  def batch_params
-    params.require(:product).permit(:batch_number, :manufactured_date, :expiration_date) if params[:product][:perishable] == '1'
-  end
-
   def inventory_item_params
     params.require(:product).permit(:quantity, :location_id, :daily_usage, :low_threshold)
   end
@@ -140,11 +136,18 @@ class ProductsController < ApplicationController
   end
 
   def assign_or_create_batch
+    return unless !!params[:product][:perishable]
+
     if params[:product][:batch_id].present?
       @product.batch_id = params[:product][:batch_id]
     else
-      batch = Batch.create!(batch_params.merge(account_id: Current.account.id, 
-      notification_days_before_expiration: params[:product][:notification_days_before_expiration]))
+      batch = Batch.create!(
+        account_id: Current.account.id,
+        batch_number: params[:product][:batch_number],
+        manufactured_date: params[:product][:manufactured_date],
+        expiration_date: params[:product][:expiration_date],
+        notification_days_before_expiration: params[:product][:notification_days_before_expiration]
+      )
       @product.batch = batch
       @product.save
     end

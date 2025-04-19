@@ -14,7 +14,6 @@ class Product < ApplicationRecord
   validates :name, presence: true
   validates :sku, presence: true, uniqueness: true
   validates :perishable, inclusion: { in: [true, false] }
-  validates :price, numericality: { greater_than: 0 }
   validate :product_limit_not_exceeded, on: :create
 
   scope :perishable, -> { where(perishable: true) }
