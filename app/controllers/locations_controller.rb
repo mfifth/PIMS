@@ -134,7 +134,7 @@ class LocationsController < ApplicationController
 
   def generate_csv(items)
     CSV.generate(headers: true) do |csv|
-      csv << ['Product Name', 'SKU', 'Quantity', 'Low Threshold', 'Unit Price', 
+      csv << ['Product Name', 'SKU', 'Category', 'Quantity', 'Low Threshold', 'Unit Price', 
               'Total Value', 'Perishable', 'Batch Number', 'Expiration Date']
 
       items.each do |item|
@@ -144,6 +144,7 @@ class LocationsController < ApplicationController
         csv << [
           product.name,
           product.sku,
+          product.category.name,
           item.quantity,
           item.low_threshold,
           product.price,
