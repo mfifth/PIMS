@@ -134,14 +134,23 @@ class LocationsController < ApplicationController
 
   def generate_csv(items)
     CSV.generate(headers: true) do |csv|
-      csv << ['Product Name', 'Quantity', 'Low Threshold', 'Unit Price', 'Total Value']
+      csv << ['Product Name', 'SKU', 'Quantity', 'Low Threshold', 'Unit Price', 
+              'Total Value', 'Perishable', 'Batch Number', 'Expiration Date']
+
       items.each do |item|
+        product = item.product
+        batch = product.batch
+
         csv << [
-          item.product.name,
+          product.name,
+          product.sku,
           item.quantity,
           item.low_threshold,
-          item.product.price,
-          item.quantity * item.product.price
+          product.price,
+          item.quantity * product.price,
+          product.perishable? ? 'Yes' : 'No',
+          product.perishable? ? (batch&.batch_number || 'N/A') : 'N/A',
+          product.perishable? ? (batch&.expiration_date&.strftime("%Y-%m-%d") || 'Not set') : 'N/A'
         ]
       end
     end
