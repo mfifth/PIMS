@@ -357,3 +357,4 @@ es:
   category_label: "Selecciona una categoría (opcional)"
   submit: "Enviar"
   cancel: "Cancelar"
+  confirm_delete_location: "¿Estás seguro de que deseas eliminar esta ubicación?"
