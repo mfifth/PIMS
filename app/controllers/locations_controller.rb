@@ -1,7 +1,8 @@
 require 'csv'
 
 class LocationsController < ApplicationController
-  before_action :set_location, only: %i[show edit update destroy]
+  before_action :set_location, only: %i[show edit update destroy import_products]
+  before_action :verify_file_type, only: [:import_products]
 
   def index
     @locations = Current.account.locations.includes(:inventory_items)
@@ -21,7 +22,6 @@ class LocationsController < ApplicationController
       @inventory_items = @inventory_items.where(products: { perishable: params[:perishable] })
     end
   
-    # Handle low stock filter
     if params[:low_stock] == 'true'
       @inventory_items = @inventory_items.where('inventory_items.quantity <= inventory_items.low_threshold')
     end
@@ -30,7 +30,7 @@ class LocationsController < ApplicationController
       format.html
       format.turbo_stream
       format.csv do
-        headers['Content-Disposition'] = "attachment; filename=inventory_#{@location.name.parameterize}_#{Date.today}.csv"
+        headers['Content-Disposition'] = "attachment; filename=inventory_#{@location.name.parameterize}_#{Time.current}.csv"
         headers['Content-Type'] ||= 'text/csv'
         render plain: generate_csv(@inventory_items)
       end
@@ -127,7 +127,41 @@ class LocationsController < ApplicationController
     end
   end
 
+  def import_products
+    if params[:file].present?
+      tempfile = params[:file].tempfile
+      file_path = Rails.root.join('tmp', "import_#{Time.now.to_i}.csv")
+      FileUtils.mv(tempfile.path, file_path)
+
+      CsvImportJob.perform_later(file_path.to_s, Current.user.id, @location.id)
+      
+      flash[:notice] = "Import started! The data will be processed shortly."
+    else
+      flash[:alert] = "Please select a CSV file"
+    end
+
+    redirect_to @location, notice: "Import started - you'll receive a notification when complete"
+  end
+
+  def sample_csv
+    sample_data = "sku,name,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days\n" +
+                  "ABC123,Sample Product 1,19.99,100,Electronics,true,BATCH001,2025-12-31,10,7\n" +
+                  "DEF456,Sample Product 2,29.99,50,Clothing,false,,,20,\n" +
+                  "GHI789,Sample Product 3,9.99,200,Food,true,BATCH002,2024-06-30,30,14"
+  
+    send_data sample_data, 
+              filename: "sample_products.csv",
+              type: "text/csv",
+              disposition: "attachment"
+  end
+
   private
+
+  def verify_file_type
+    return if params[:file].content_type == 'text/csv'
+  
+    redirect_to @location, alert: "Only CSV files are allowed"
+  end
 
   def set_location
     @location = Location.find(params[:id])

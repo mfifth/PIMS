@@ -1,9 +1,12 @@
-<%= link_to "Export to CSV", 
-	location_path(@location, format: :csv), 
-	data: { 
-		controller: "export",
-		export_target: "exportButton",
-		action: "turbo:load->export#updateExportUrl"
-	},
-	class: "relative top-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition z-50",
-	style: "float: right;" %>
+<%= link_to location_path(@location, format: :csv), 
+		data: { 
+			controller: "export",
+			export_target: "exportButton",
+			action: "turbo:load->export#updateExportUrl"
+		},
+		id: 'export-btn', style: 'margin-top: 10px; display: inline-block; width: auto; padding: 8px 17px;',
+		class: "px-2 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg 
+					transition grid items-center justify-center whitespace-nowrap
+					xs:w-auto" do %>
+	<%= t("locations.show.export_products") %>
+<% end %>

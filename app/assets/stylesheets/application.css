@@ -1458,3 +1458,18 @@ video {
 .bg-green {
   background-color: seagreen;
 }
+
+@media (max-width: 640px) {
+  .flex-header-group {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .button-group {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  #export-btn {
+    margin-top: 10px;
+  }
+}

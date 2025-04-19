@@ -9,5 +9,5 @@ class Account < ApplicationRecord
   has_many :invitations, dependent: :destroy
   has_one :subscription, dependent: :destroy
 
-  encrypts :square_access_token
+  encrypts :square_access_token, :square_refresh_token
 end

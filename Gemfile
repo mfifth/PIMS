@@ -23,6 +23,7 @@ gem 'kaminari'
 
 gem 'hotwire-rails'
 
+gem 'good_job'
 
 gem 'whenever'
 

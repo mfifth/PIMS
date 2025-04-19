@@ -1,31 +1,45 @@
+require 'jwt'
+require 'square'
+
 class SquareController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  skip_before_action :verify_authenticity_token, only: [:callback]
+
+  before_action do
+    response.headers['X-Frame-Options'] = 'DENY'
+  end
 
   def start
-    redirect_to oauth_authorize_url
+    state = SecureRandom.hex(24)
+    session[:square_oauth_state] = state
+    redirect_to oauth_authorize_url(state: state), allow_other_host: true
   end
 
   def callback
-    if params[:error]
-      redirect_to root_path, alert: "Authorization failed: #{params[:error_description] || params[:error] || 'Unknown error'}"
+    unless params[:code].present?
+      redirect_to root_path, alert: "Missing authorization code"
       return
     end
 
-    result = exchange_code_for_token(params[:code])
-    if result.success?
-      access_token = result.data.access_token
-      refresh_token = result.data.refresh_token
-      merchant_id = result.data.merchant_id
-
-      Current.account.update(
-        square_access_token: access_token,
-        square_refresh_token: refresh_token,
-        square_merchant_id: merchant_id
-      )
-
-      redirect_to dashboard_path, notice: t('notifications.square_account_connected')
-    else
-      redirect_to root_path, alert: t('notifications.oauth_failed')
+    begin
+      result = exchange_code_for_token(params[:code])
+      if result.success?
+        access_token = result.data.access_token
+        refresh_token = result.data.refresh_token
+        merchant_id = result.data.merchant_id
+  
+        Current.account.update(
+          square_access_token: access_token,
+          square_refresh_token: refresh_token,
+          square_merchant_id: merchant_id
+        )
+  
+        redirect_to dashboard_path, notice: t('notifications.square_account_connected')
+      else
+        redirect_to root_path, alert: t('notifications.oauth_failed')
+      end
+    rescue Square::ApiError => e
+      Rails.logger.error("Square OAuth failed: #{e.message}")
+      redirect_to root_path, alert: "Square connection failed"
     end
   end
 
@@ -51,6 +65,7 @@ class SquareController < ApplicationController
   end
 
   def sync_products
+    counter = 0
     client = create_square_client(Current.account.square_access_token)
   
     if token_expired?(Current.account.square_access_token)
@@ -58,7 +73,7 @@ class SquareController < ApplicationController
       client = create_square_client(Current.account.square_access_token)
     end
 
-    Current.account.locations.where.not(square_location_id: nil).each do |location|
+    Current.account.locations.where.not(square_location_id: nil).find_each do |location|
       next unless location
   
       response = client.inventory.list_inventory_counts(
@@ -67,21 +82,23 @@ class SquareController < ApplicationController
       )
   
       if response.success?
-        counter = 0
-
-        response.data.counts.each do |count|
-          product = Product.find_or_initialize_by!(sku: count.catalog_object_id)
-          product.name = count.catalog_object_name
-          product.save!
-
-          inv_item = InventoryItem.find_or_initialize_by(
-            product: product,
-            location: location
-          )
-
-          inv_item.quantity = count.quantity.to_i
-          inv_item.save!
-          counter += 1
+        ActiveRecord::Base.transaction do
+          response.data.counts.each do |count|
+            Product.upsert(
+              { sku: count.catalog_object_id, name: count.catalog_object_name },
+              unique_by: :sku
+            )
+            
+            InventoryItem.upsert(
+              {
+                product_id: Product.find_by(sku: count.catalog_object_id).id,
+                location_id: location.id,
+                quantity: count.quantity.to_i,
+                updated_at: Time.current
+              },
+              unique_by: [:product_id, :location_id]
+            )
+          end
         end
       else
         Rails.logger.error("Square inventory sync failed for location #{location.square_location_id}: #{response.errors}")
@@ -93,11 +110,12 @@ class SquareController < ApplicationController
 
   private
 
-  def oauth_authorize_url
-    client_id = ENV['SQUARE_APPLICATION_ID']
-    redirect_uri = square_oauth_callback_url
-
-    "https://connect.squareup.com/oauth2/authorize?client_id=#{client_id}&scope=ITEMS_READ+INVENTORY_READ+MERCHANT_PROFILE_READ&session=false&redirect_uri=#{CGI.escape(redirect_uri)}"
+  def oauth_authorize_url(state)
+    "https://connect.squareup.com/oauth2/authorize?
+    client_id=#{ENV['SQUARE_APPLICATION_ID']}
+    &scope=ITEMS_READ+INVENTORY_READ
+    &state=#{state}
+    &redirect_uri=#{CGI.escape(square_oauth_callback_url)}"
   end
 
   def exchange_code_for_token(code)
@@ -147,15 +165,14 @@ class SquareController < ApplicationController
   end
 
   def token_expired?(access_token)
-    client = create_square_client(access_token)
+    return true if access_token.blank?
     
-    response = client.locations.list_locations
-
-    if response.error && response.error[:category] == 'AUTHENTICATION_ERROR'
-      return true
+    begin
+      decoded = JWT.decode(access_token, nil, false)
+      (Time.at(decoded.first['exp']) - 300) < Time.now
+    rescue JWT::DecodeError
+      true
     end
-
-    false
   end
 
   def handle_inventory_update(data)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_18_211610) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_19_202600) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -104,7 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_18_211610) do
   create_table "notifications", force: :cascade do |t|
     t.string "message"
     t.string "notification_type"
-    t.boolean "read"
+    t.boolean "read", default: false
     t.integer "account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

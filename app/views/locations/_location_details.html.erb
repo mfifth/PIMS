@@ -1,14 +1,63 @@
 <turbo-frame id='main'>
   <div class="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow-md relative">
-    <%= render 'export_button', params: params, location: @location %>
+    <div class="flex justify-between items-end mb-6">
+      <!-- Left Side - Location Info -->
+      <div class="flex-1">
+        <h1 class="text-3xl font-bold text-gray-800"><%= @location.name %></h1>
+        <div class="text-gray-700 space-y-1 mt-2">
+          <p><strong class="font-semibold"><%= t("locations.show.address") %>:</strong> <%= @location.address %></p>
+          <p><strong class="font-semibold"><%= t("locations.show.city") %>:</strong> <%= @location.city %></p>
+        </div>
+      </div>
 
-    <!-- Location Header -->
-    <h1 class="text-3xl font-bold text-gray-800 mb-4"><%= @location.name %></h1>
+      <!-- Right Side - Buttons -->
+      <div>
+        <!-- Import Button -->
+        <%= form_with url: import_products_location_path(@location), 
+              method: :post, 
+              class: "flex",
+              data: { 
+                turbo: false,
+                controller: "file",
+                action: "change->file#submit" 
+              } do |f| %>
+          <div class="relative">
+            <%= f.file_field :file, 
+                            accept: ".csv", 
+                            class: "hidden", 
+                            id: "csv-upload-#{@location.id}",
+                            data: { file_target: "input" } %>
+            <label for="csv-upload-<%= @location.id %>" 
+                  class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 
+                        rounded-lg transition flex items-center cursor-pointer
+                        whitespace-nowrap"
+                  data-file-target="label">
+              <span data-file-target="text">
+                <%= t("locations.show.import_products") %>
+              </span>
+              <span class="ml-2 hidden" data-file-target="spinner">
+                <!-- SVG Spinner -->
+                <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+              </span>
+            </label>
+          </div>
+        <% end %>
 
-    <!-- Address Details -->
-    <div class="text-gray-700 space-y-2 mb-6">
-      <p><strong class="font-semibold"><%= t("locations.show.address") %>:</strong> <%= @location.address %></p>
-      <p><strong class="font-semibold"><%= t("locations.show.city") %>:</strong> <%= @location.city %></p>
+        <%= render 'export_button' %>
+
+        <%= link_to sample_csv_location_path(@location), 
+                    class: "text-blue-600 hover:text-blue-800 text-sm flex items-center",
+                    style: 'margin-top: 10px;',
+                    download: "sample_products.csv" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          <%= t("locations.show.download_sample") %>
+        <% end %>
+      </div>
     </div>
 
     <hr class="border-gray-300 mb-6">
@@ -74,7 +123,7 @@
                 <!-- Category and Perishable Badge -->
                 <div class="mt-2 flex items-center space-x-3">
                   <% if product.category.present? %>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                    <span style='background-color: azure!important;' class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-azure text-gray-800">
                       <%= product.category.name&.capitalize %>
                     </span>
                   <% end %>

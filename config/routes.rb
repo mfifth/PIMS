@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     get 'inventory_data', to: 'locations#inventory_data'
     member do
       get 'categories'
+      post :import_products
+      get :sample_csv
     end
   end
 
