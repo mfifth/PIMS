@@ -13,6 +13,7 @@ export default class extends Controller {
     document.removeEventListener('turbo:load', this.updateExportUrl.bind(this))
   }
 
+  // export_controller.js
   updateExportUrl() {
     if (!this.hasExportButtonTarget) return
     
@@ -24,6 +25,9 @@ export default class extends Controller {
     }
     if (currentUrl.searchParams.has('low_stock')) {
       exportUrl.searchParams.set('low_stock', currentUrl.searchParams.get('low_stock'))
+    }
+    if (currentUrl.searchParams.has('expiring')) {
+      exportUrl.searchParams.set('expiring', currentUrl.searchParams.get('expiring'))
     }
     
     this.exportButtonTarget.href = exportUrl.toString()

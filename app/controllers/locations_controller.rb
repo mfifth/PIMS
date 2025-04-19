@@ -25,6 +25,13 @@ class LocationsController < ApplicationController
     if params[:low_stock] == 'true'
       @inventory_items = @inventory_items.where('inventory_items.quantity <= inventory_items.low_threshold')
     end
+
+    if params[:expiring] == 'true'
+      @inventory_items = @inventory_items.joins(product: :batch)
+                                         .where("batches.expiration_date BETWEEN ? AND ?", 
+                                          Date.current, 
+                                          1.week.from_now.to_date)
+    end
   
     respond_to do |format|
       format.html

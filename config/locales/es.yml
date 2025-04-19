@@ -229,12 +229,13 @@ es:
     show:
       address: "Dirección"
       city: "Ciudad"
-      inventory_items: "Artículos en Inventario"
+      inventory: "Artículos en Inventario"
       filters:
         all: "Todos"
         perishable: "Perecedero"
         non_perishable: "No Perecedero"
         low_stock: "Bajo stock"
+        expiring: "Por caducar"
       low_stock: "Bajo stock (límite: %{threshold})"
       quantity: "Cantidad"
       perishable: "Perecedero"

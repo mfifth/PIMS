@@ -239,12 +239,13 @@ en:
     show:
       address: "Address"
       city: "City"
-      inventory_items: "Inventory Items"
+      inventory: "Inventory"
       filters:
         all: "All"
         perishable: "Perishable"
         non_perishable: "Non-Perishable"
         low_stock: "Low Stock"
+        expiring: "Expiring"
       low_stock: "Stock alert (below %{threshold})"
       quantity: "Quantity"
       perishable: "Perishable"
