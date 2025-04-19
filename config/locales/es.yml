@@ -231,6 +231,7 @@ es:
         all: "Todos"
         perishable: "Perecedero"
         non_perishable: "No Perecedero"
+        low_stock: "Bajo stock"
       low_stock: "Bajo stock (límite: %{threshold})"
       quantity: "Cantidad"
       perishable: "Perecedero"

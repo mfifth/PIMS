@@ -1,3 +1,5 @@
+require 'csv'
+
 class LocationsController < ApplicationController
   before_action :set_location, only: %i[show edit update destroy]
 
@@ -9,15 +11,25 @@ class LocationsController < ApplicationController
     @inventory_items = @location.inventory_items
                   .includes(product: [:category, :batch])
                   .order('products.name ASC')
-
+  
     if params[:perishable].present?
-      @inventory_items = @inventory_items.where(products: { perishable: params[:perishable] == 'true' })
+      @inventory_items = @inventory_items.where(products: { perishable: params[:perishable] })
     end
-
+  
+    # Handle low stock filter
+    if params[:low_stock] == 'true'
+      @inventory_items = @inventory_items.where('inventory_items.quantity <= inventory_items.low_threshold')
+    end
+  
     respond_to do |format|
       format.html
       format.turbo_stream
-    end 
+      format.csv do
+        headers['Content-Disposition'] = "attachment; filename=inventory_#{@location.name.parameterize}_#{Date.today}.csv"
+        headers['Content-Type'] ||= 'text/csv'
+        render plain: generate_csv(@inventory_items)
+      end
+    end
   end
 
   def new
@@ -118,5 +130,20 @@ class LocationsController < ApplicationController
 
   def location_params
     params.require(:location).permit(:name, :address, :city, :state, :zip_code, :country)
+  end
+
+  def generate_csv(items)
+    CSV.generate(headers: true) do |csv|
+      csv << ['Product Name', 'Quantity', 'Low Threshold', 'Unit Price', 'Total Value']
+      items.each do |item|
+        csv << [
+          item.product.name,
+          item.quantity,
+          item.low_threshold,
+          item.product.price,
+          item.quantity * item.product.price
+        ]
+      end
+    end
   end
 end
