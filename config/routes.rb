@@ -89,7 +89,7 @@ Rails.application.routes.draw do
   get  '/clover/oauth/callback', to: 'clover#callback'
 
   post "/clover/webhook", to: "clover#webhook"
-  post "/clover/sync_data", to: "clover#sync_data", as: :sync_clover_data
+  post "/clover/sync_data", to: "clover#sync_data", as: :clover_sync_data
 
   # Defines the root path route ("/")
   root "dashboard#index"
