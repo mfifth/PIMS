@@ -16,11 +16,7 @@
       </p>
 
       <div class="mt-4 flex flex-wrap gap-4">
-        <%= button_to t("account_settings.square.sync_locations"), square_sync_locations_path, method: :post,
-          class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
-          data: { disable_with: t("account_settings.square.syncing") } %>
-
-        <%= button_to t("account_settings.square.sync_products"), square_sync_data_path, method: :post,
+        <%= button_to t("account_settings.square.sync_data"), square_sync_data_path, method: :post,
           class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
           data: { disable_with: t("account_settings.square.syncing") } %>
       </div>
@@ -30,6 +26,8 @@
       class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
       data: { disable_with: t("account_settings.square.connecting", turbo: false) } %>
   <% end %>
+
+  <br>
 
   <% if clover_connected? %>
     <div class="mt-6 mb-4 p-4 border border-green-300 bg-green-50 rounded-md">
@@ -45,7 +43,7 @@
     </div>
   <% elsif ['plus', 'premium'].include?(Current.account.subscription.plan) %>
     <%= button_to t("account_settings.clover.connect"), "/clover/oauth/start", method: :get,
-      class: "bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700",
+      class: "bg-blue text-white px-4 py-2 rounded hover:bg-green-700",
       data: { disable_with: t("account_settings.clover.connecting", turbo: false) } %>
   <% end %>
 

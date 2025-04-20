@@ -16,10 +16,15 @@ en:
     title: "Account Settings"
     square:
       connected: "Square account connected"
-      sync_locations: "Sync locations"
-      sync_inventory: "Sync inventory"
+      sync_data: "Sync Data"
       syncing: "Syncing..."
       connect: "Connect with Square"
+      connecting: "Connecting..."
+    clover:
+      connected: "Clover account connected"
+      sync_data: "Sync Data"
+      syncing: "Syncing..."
+      connect: "Connect with Clover"
       connecting: "Connecting..."
     invite:
       title: "Invite a user to your account"

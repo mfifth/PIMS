@@ -20,6 +20,7 @@
         <li><%= link_to t("sidebar.batches"), batches_path, class: sidebar_link_class(batches_path) %></li>
         <li><%= link_to t("sidebar.quick_update"), "/inventory", class: sidebar_link_class("/inventory") %></li>
 
+        <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.personal") %></span>
         <li>
           <%= link_to notifications_path, class: "#{sidebar_link_class(notifications_path)} justify-between" do %>
             <span><%= t("sidebar.notifications") %></span>
