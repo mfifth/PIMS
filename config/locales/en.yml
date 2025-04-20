@@ -313,6 +313,7 @@ en:
     batch_expiry: "Batch %{batch_number} with %{product_count} products will expire soon (%{expiration_date})."
     title: "Notifications"
     mark_all_as_read: "Mark all as read."
+    ago: "%{time} ago"
   items: "items"
   quick_update: "Quick Update"
   select_location: Location
