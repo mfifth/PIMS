@@ -117,9 +117,9 @@ class LocationsController < ApplicationController
     
     @categories = @location.inventory_items
                       .joins(product: :category)
-                      .group('categories.id', 'categories.name') # Add categories.id to group
+                      .group('categories.id', 'categories.name')
                       .select(
-                        'categories.id as category_id', # Include ID in select
+                        'categories.id as category_id',
                         'categories.name as category_name',
                         'SUM(inventory_items.quantity) as total_quantity',
                         'SUM(inventory_items.quantity * products.price) as total_value'
@@ -152,7 +152,7 @@ class LocationsController < ApplicationController
     sample_data = "sku,name,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days\n" +
                   "ABC123,Sample Product 1,19.99,100,Electronics,true,BATCH001,2025-12-31,10,7\n" +
                   "DEF456,Sample Product 2,29.99,50,Clothing,false,,,20,\n" +
-                  "GHI789,Sample Product 3,9.99,200,Food,true,BATCH002,2024-06-30,30,14"
+                  "GHI789,Sample Product 3,9.99,200,Food,true,BATCH002,2026-06-30,30,14"
   
     send_data sample_data, 
               filename: "sample_products.csv",
