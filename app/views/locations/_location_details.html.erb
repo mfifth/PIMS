@@ -72,27 +72,27 @@
           <%= link_to t("locations.show.filters.all"), 
                       location_path(@location), 
                       class: filter_link_class(nil, nil),
-                      data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
 
           <%= link_to t("locations.show.filters.perishable"), 
                       location_path(@location, perishable: true), 
                       class: filter_link_class(:perishable, true),
-                      data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
 
           <%= link_to t("locations.show.filters.non_perishable"), 
                       location_path(@location, perishable: false), 
                       class: filter_link_class(:perishable, false),
-                      data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
 
           <%= link_to t("locations.show.filters.low_stock"), 
                       location_path(@location, low_stock: true), 
                       class: filter_link_class(:low_stock, true),
-                      data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
 
           <%= link_to t("locations.show.filters.expiring"), 
               location_path(@location, expiring: true), 
               class: filter_link_class(:expiring, true),
-              data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+              data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
         </div>
       </div>
     <% end %>
