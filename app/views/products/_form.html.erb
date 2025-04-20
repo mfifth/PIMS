@@ -41,8 +41,8 @@
           <% if @product.category.present? %>
             <div class="mt-2 flex justify-center items-center">
               <%= turbo_frame_tag "category-remove" do %>
-                <%= link_to t('products.remove_category'), remove_category_product_path(@product), data: { turbo_method: :delete, turbo_frame: "category_select_#{form.object.id}", turbo_confirm: t('confirmations.remove_category') }, class: "text-red-500 text-md mx-[10px] my-0", style: "margin: 0px 10px;" %>
-                <%= link_to t('products.delete_category'), delete_category_product_path(@product), data: { turbo_method: :delete, turbo_confirm: t('confirmations.delete_category_from_all') }, class: "text-red-500 text-md mx-[10px] my-0", style: "margin: 0px 10px;" %>
+                <%= link_to t('products.remove_category'), remove_category_product_path(@product), data: { turbo_method: :delete, turbo_frame: "category_select_#{form.object.id}", turbo_confirm: t('products.confirm_remove_category') }, class: "text-red-500 text-md mx-[10px] my-0", style: "margin: 0px 10px;" %>
+                <%= link_to t('products.delete_category'), delete_category_product_path(@product), data: { turbo_method: :delete, turbo_confirm: t('products.confirm_delete_category_from_all') }, class: "text-red-500 text-md mx-[10px] my-0", style: "margin: 0px 10px;" %>
               <% end %>
             </div>
           <% end %>

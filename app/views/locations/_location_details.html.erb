@@ -3,7 +3,7 @@
     <div class="flex justify-between items-end mb-6">
       <!-- Left Side - Location Info -->
       <div class="flex-1">
-        <h1 class="text-3xl font-bold text-gray-800"><%= @location.name %></h1>
+        <h1 class="text-xl font-bold text-gray-800"><%= @location.name %></h1>
         <div class="text-gray-700 space-y-1 mt-2">
           <p><strong class="font-semibold"><%= t("locations.show.address") %>:</strong> <%= @location.address %></p>
           <p><strong class="font-semibold"><%= t("locations.show.city") %>:</strong> <%= @location.city %></p>
@@ -88,7 +88,7 @@
                       location_path(@location, low_stock: true), 
                       class: filter_link_class(:low_stock, true),
                       data: { turbo_action: 'advance', turbo_frame: 'main' } %>
-                      
+
           <%= link_to t("locations.show.filters.expiring"), 
               location_path(@location, expiring: true), 
               class: filter_link_class(:expiring, true),
@@ -107,7 +107,7 @@
             <% days_until_expiry = product.batch ? (product.batch.expiration_date - Date.today).to_i : nil %>
             <% expiring_soon = expiration_notification && days_until_expiry && days_until_expiry <= product.batch.notification_days_before_expiration %>
 
-            <%= link_to product_path(item), class: "block hover:no-underline", data: { turbo_frame: '_top' } do %>
+            <%= link_to product_path(product), class: "block hover:no-underline", data: { turbo_frame: '_top' } do %>
               <div class="bg-gray-50 p-6 rounded-lg shadow hover:shadow-lg transition-all <%= is_low_stock ? 'border-l-4 border-red-500' : '' %>">
                 <!-- Product Header with Stock Alert -->
                 <div class="flex justify-between items-start">

@@ -18,9 +18,8 @@ class ProductsController < ApplicationController
     end
   end
 
-  # GET /products/:id
   def show
-    @batches = Batch.where(id: @product.batch_id) # Fetch the associated batch
+    @batches = Batch.where(id: @product.batch_id)
     @inventory_items = InventoryItem.where(product_id: @product.id)
     @locations = Location.includes(:inventory_items).where(inventory_items: { product_id: @product.id })
 
@@ -30,7 +29,6 @@ class ProductsController < ApplicationController
     end
   end
 
-  # GET /products/new
   def new
     @product = Product.new
 
@@ -40,7 +38,6 @@ class ProductsController < ApplicationController
     end
   end
 
-  # GET /products/:id/edit
   def edit
     respond_to do |format|
       format.html
@@ -48,7 +45,6 @@ class ProductsController < ApplicationController
     end
   end
 
-  # POST /products
   def create
     @product = Product.new(product_params.merge(account_id: Current.account.id))
 
@@ -65,7 +61,6 @@ class ProductsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /products/:id
   def update
     if @product.update(product_params)
       assign_or_create_category
@@ -76,8 +71,6 @@ class ProductsController < ApplicationController
       render :edit
     end
   end
-
-  # DELETE /products/:id
 
   def destroy
     @product = Product.find(params[:id])
