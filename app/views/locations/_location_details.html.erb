@@ -62,43 +62,40 @@
 
     <hr class="border-gray-300 mb-6">
 
-    <!-- Inventory Section -->
-    <% if @inventory_items.any? %>
-      <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
-        <h2 class="text-2xl font-semibold text-gray-800"><%= t("locations.show.inventory") %></h2>
-
-        <!-- Filter Toggles -->
-        <div class="flex flex-wrap gap-2 mt-4 md:mt-0 md:space-x-2">
-          <%= link_to t("locations.show.filters.all"), 
-                      location_path(@location), 
-                      class: filter_link_class(nil, nil),
-                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
-
-          <%= link_to t("locations.show.filters.perishable"), 
-                      location_path(@location, perishable: true), 
-                      class: filter_link_class(:perishable, true),
-                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
-
-          <%= link_to t("locations.show.filters.non_perishable"), 
-                      location_path(@location, perishable: false), 
-                      class: filter_link_class(:perishable, false),
-                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
-
-          <%= link_to t("locations.show.filters.low_stock"), 
-                      location_path(@location, low_stock: true), 
-                      class: filter_link_class(:low_stock, true),
-                      data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
-
-          <%= link_to t("locations.show.filters.expiring"), 
-              location_path(@location, expiring: true), 
-              class: filter_link_class(:expiring, true),
-              data: { turbo_action: 'advance', turbo_frame: 'inventory-items' } %>
-        </div>
-      </div>
-    <% end %>
-
     <turbo-frame id='inventory-items'>
       <div class="space-y-6">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
+          <h2 class="text-2xl font-semibold text-gray-800"><%= t("locations.show.inventory") %></h2>
+
+          <!-- Filter Toggles -->
+          <div class="flex flex-wrap gap-2 mt-4 md:mt-0 md:space-x-2">
+            <%= link_to t("locations.show.filters.all"), 
+                        location_path(@location), 
+                        class: filter_link_class(nil, nil),
+                        data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+
+            <%= link_to t("locations.show.filters.perishable"), 
+                        location_path(@location, perishable: true), 
+                        class: filter_link_class(:perishable, true),
+                        data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+
+            <%= link_to t("locations.show.filters.non_perishable"), 
+                        location_path(@location, perishable: false), 
+                        class: filter_link_class(:perishable, false),
+                        data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+
+            <%= link_to t("locations.show.filters.low_stock"), 
+                        location_path(@location, low_stock: true), 
+                        class: filter_link_class(:low_stock, true),
+                        data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+
+            <%= link_to t("locations.show.filters.expiring"), 
+                location_path(@location, expiring: true), 
+                class: filter_link_class(:expiring, true),
+                data: { turbo_action: 'advance', turbo_frame: 'main' } %>
+          </div>
+        </div>
+        
         <% total_inventory_value = 0 %>
         <% @inventory_items.group_by(&:product).each do |product, items| %>
           <% items.each do |item| %>
