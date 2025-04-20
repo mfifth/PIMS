@@ -14,7 +14,7 @@ class SquareInventorySyncJob < ApplicationJob
 			quantity    = count["quantity"].to_i
 
 			product  = account.products.find_by(sku: sku)
-			location = account.locations.find_by(square_location_id: location_id)
+			location = account.locations.find_by(location_uid: location_id)
 			next unless product && location
 
 			inventory_item = InventoryItem.find_or_initialize_by(product: product, location: location)

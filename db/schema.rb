@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_20_061209) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_20_202311) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -97,7 +97,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_20_061209) do
     t.integer "user_id"
     t.integer "account_id"
     t.integer "inventory_items_id"
-    t.string "square_location_id"
+    t.string "location_uid"
     t.index ["account_id"], name: "index_locations_on_account_id"
     t.index ["inventory_items_id"], name: "index_locations_on_inventory_items_id"
     t.index ["user_id"], name: "index_locations_on_user_id"

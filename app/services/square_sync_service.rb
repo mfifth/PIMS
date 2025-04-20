@@ -12,7 +12,7 @@ class SquareSyncService
 		return unless response.success?
 	
 		response.data.locations.each do |sq_loc|
-			location = @account.locations.find_or_initialize_by(square_location_id: sq_loc.id)
+			location = @account.locations.find_or_initialize_by(location_uid: sq_loc.id)
 			location.name = sq_loc.name
 			location.save!
 	
@@ -26,7 +26,7 @@ class SquareSyncService
 
   def sync_location_inventory(location)
     response = @client.inventory.list_inventory_counts(
-      location_ids: [location.square_location_id],
+      location_ids: [location.location_uid],
       catalog_object_types: 'ITEM'
     )
 

@@ -1459,6 +1459,10 @@ video {
   background-color: seagreen;
 }
 
+.bg-light-gray {
+  background-color: #e5e5e5!important;
+}
+
 @media (max-width: 640px) {
   .flex-header-group {
     flex-direction: column;

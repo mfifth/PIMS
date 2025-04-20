@@ -14,16 +14,14 @@
       <ul class="mt-4 space-y-1">
         <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.admin") %></span>
 
-        <li><%= link_to t("sidebar.dashboard"), "/", class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to t("sidebar.locations"), locations_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to t("sidebar.products"), products_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to t("sidebar.batches"), batches_path, class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-        <li><%= link_to t("sidebar.quick_update"), "/inventory", class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
-
-        <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.personal") %></span>
+        <li><%= link_to t("sidebar.dashboard"), "/", class: sidebar_link_class(root_path) %></li>
+        <li><%= link_to t("sidebar.locations"), locations_path, class: sidebar_link_class(locations_path) %></li>
+        <li><%= link_to t("sidebar.products"), products_path, class: sidebar_link_class(products_path) %></li>
+        <li><%= link_to t("sidebar.batches"), batches_path, class: sidebar_link_class(batches_path) %></li>
+        <li><%= link_to t("sidebar.quick_update"), "/inventory", class: sidebar_link_class("/inventory") %></li>
 
         <li>
-          <%= link_to notifications_path, class: "flex items-center justify-between font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" do %>
+          <%= link_to notifications_path, class: "#{sidebar_link_class(notifications_path)} justify-between" do %>
             <span><%= t("sidebar.notifications") %></span>
             <span class="px-2 py-0.5 text-xs font-medium rounded-full <%= Current.account.notifications.unread.size > 5 ? 'text-red-600 bg-red-200' : 'text-white bg-green' %>">
               <%= Current.account.notifications.unread.size %>
@@ -31,7 +29,7 @@
           <% end %>
         </li>
 
-        <li><%= link_to t("sidebar.settings"), settings_user_path(Current.user), class: "flex items-center font-semibold py-2 px-4 hover:bg-ivory hover:text-white rounded-md" %></li>
+        <li><%= link_to t("sidebar.settings"), settings_user_path(Current.user), class: sidebar_link_class(settings_user_path(Current.user)) %></li>
       </ul>
     </div>
 

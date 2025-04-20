@@ -83,7 +83,7 @@ Rails.application.routes.draw do
   get  "/square/oauth/callback", to: "square#callback"
 
   post "/square/sync_data", to: "square#sync_data", as: :square_sync_data
-  post '/square/webhook', to: 'square#sync_inventory'
+  post '/square/webhook', to: 'square#webhook'
 
   get  '/clover/oauth/start',    to: 'clover#start'
   get  '/clover/oauth/callback', to: 'clover#callback'

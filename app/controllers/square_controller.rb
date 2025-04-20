@@ -56,8 +56,6 @@ class SquareController < ApplicationController
     head :ok
   end
   
-  private
-
   def sync_data
     SquareSyncService.new(Current.account).sync_all
     redirect_to products_path, notice: "Products successfully synced from Square."

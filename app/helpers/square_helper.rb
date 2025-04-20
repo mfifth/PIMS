@@ -12,7 +12,7 @@ module SquareHelper
 			product = account.products.find_by(sku: product_sku)
 			next unless product
 	
-			location = account.locations.find_by(square_location_id: data["location_id"])
+			location = account.locations.find_by(location_uid: data["location_id"])
 	
 			next unless location
 	

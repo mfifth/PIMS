@@ -11,7 +11,7 @@ class CloverSyncService
 				location_data = stock["location"]
 				next unless location_data
 	
-				location = account.locations.find_or_create_by!(name: location_data["name"])
+				location = account.locations.find_or_create_by!(name: location_data["name"], location_uid: location_data['id'])
 				inventory_item = location.inventory_items.find_or_initialize_by(product: product)
 				inventory_item.quantity = stock["quantity"].to_i
 				inventory_item.save!
