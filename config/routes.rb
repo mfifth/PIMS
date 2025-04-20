@@ -67,10 +67,10 @@ Rails.application.routes.draw do
   get 'inventory', to: 'locations#inventory'
   post 'update_inventory', to: 'locations#update_inventory'
 
+  get 'inventory_items/lookup', to: 'inventory_items#lookup'
+
   get 'subscriptions/success', to: 'subscriptions#success'
   get 'subscriptions/cancel', to: 'subscriptions#cancel'
-
-  get 'inventory_items/lookup', to: 'inventory_items#lookup'
 
   get '/confirm_email/:token', to: 'confirmations#show', as: 'confirm_email'
   get '/invitations/:token/confirm', to: 'invitations#confirm', as: 'confirm_invitation'
@@ -81,10 +81,15 @@ Rails.application.routes.draw do
 
   get  "/square/oauth/start",    to: "square#start"
   get  "/square/oauth/callback", to: "square#callback"
-  post "/square/sync_locations", to: "square#sync_locations", as: :square_sync_locations
-  post "/square/sync_products", to: "square#sync_products", as: :square_sync_products
 
+  post "/square/sync_data", to: "square#sync_data", as: :square_sync_data
   post '/square/webhook', to: 'square#sync_inventory'
+
+  get  '/clover/oauth/start',    to: 'clover#start'
+  get  '/clover/oauth/callback', to: 'clover#callback'
+
+  post "/clover/webhook", to: "clover#webhook"
+  post "/clover/sync_data", to: "clover#sync_data", as: :sync_clover_data
 
   # Defines the root path route ("/")
   root "dashboard#index"

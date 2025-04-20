@@ -17,6 +17,8 @@ gem "jbuilder"
 
 gem 'graphql'
 
+gem 'faraday'
+
 gem 'twilio-ruby'
 
 gem 'kaminari'

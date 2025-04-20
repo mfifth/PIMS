@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_19_202600) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_20_061209) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -22,6 +22,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_202600) do
     t.text "square_access_token"
     t.string "square_merchant_id"
     t.string "square_refresh_token"
+    t.string "clover_access_token"
+    t.string "clover_merchant_id"
     t.index ["locations_id"], name: "index_accounts_on_locations_id"
     t.index ["products_id"], name: "index_accounts_on_products_id"
     t.index ["suppliers_id"], name: "index_accounts_on_suppliers_id"
@@ -85,7 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_19_202600) do
 
   create_table "locations", force: :cascade do |t|
     t.string "name", null: false
-    t.string "address", null: false
+    t.string "address"
     t.string "city"
     t.string "state"
     t.string "zip_code"

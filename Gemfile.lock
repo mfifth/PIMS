@@ -446,6 +446,7 @@ DEPENDENCIES
   capybara
   debug
   dotenv
+  faraday
   good_job
   graphiql-rails
   graphql
