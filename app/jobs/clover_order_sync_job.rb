@@ -6,10 +6,10 @@ class CloverOrderSyncJob < ApplicationJob
     order = fetch_order(account, order_id)
 
     line_items = order["lineItems"] || []
-    location_name = order.dig("device", "location", "name")
+    location_id = order.dig('device', 'location', 'id')
     return if location_name.blank?
 
-    location = account.locations.find_by(name: location_name)
+    location = account.locations.find_by(location_uid: location_id)
     return unless location
 
     line_items.each do |line|
