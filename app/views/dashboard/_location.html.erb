@@ -94,7 +94,7 @@
 
         <ul class="space-y-2">
           <% @recipes.each do |recipe| %>
-            <% quantity, expiration = recipe.max_quantity_and_expiration(location) %>
+            <% quantity, expiration = max_quantity_and_expiration(location, recipe) %>
             <% next if quantity.zero? %>
             <li class="text-sm">
               <div class="flex justify-between items-baseline">

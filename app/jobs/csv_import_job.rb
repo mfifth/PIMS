@@ -47,6 +47,7 @@ class CsvImportJob < ApplicationJob
   def find_or_initialize_product(row)
     product = Product.find_or_initialize_by(
       sku: row['sku'],
+      unit_type: row['unit_type'],
       account: @user.account
     )
     

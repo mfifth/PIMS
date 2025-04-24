@@ -149,10 +149,10 @@ class LocationsController < ApplicationController
   end
 
   def sample_csv
-    sample_data = "sku,name,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days\n" +
-                  "ABC123,Sample Product 1,19.99,100,Electronics,true,BATCH001,2025-12-31,10,7\n" +
-                  "DEF456,Sample Product 2,29.99,50,Clothing,false,,,20,\n" +
-                  "GHI789,Sample Product 3,9.99,200,Food,true,BATCH002,2026-06-30,30,14"
+    sample_data = "sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days\n" +
+                  "ABC123,Sample Product 1,units,19.99,100,Electronics,true,BATCH001,2025-12-31,10,7\n" +
+                  "DEF456,Sample Product 2,pounds,29.99,50,Clothing,false,,,20,\n" +
+                  "GHI789,Sample Product 3,ounces,9.99,200,Food,true,BATCH002,2026-06-30,30,14"
   
     send_data sample_data, 
               filename: "sample_products.csv",

@@ -130,7 +130,7 @@
           </div>
 
           <div>
-            <%= form.label :unit_type, t('products.unit_type'), class: "block text-sm font-medium text-gray-700" %>
+            <%= form.label :unit_type, t('products.unit_type_title'), class: "block text-sm font-medium text-gray-700" %>
             <%= form.select :unit_type, 
                 Product::VALID_UNITS.map { |u| [u.humanize, u] },
                 { selected: @product.unit_type.presence || 'units', include_blank: false },

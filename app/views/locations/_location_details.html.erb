@@ -95,7 +95,7 @@
                 data: { turbo_action: 'advance', turbo_frame: 'main' } %>
           </div>
         </div>
-        
+
         <% total_inventory_value = 0 %>
         <% @inventory_items.group_by(&:product).each do |product, items| %>
           <% items.each do |item| %>
@@ -110,7 +110,7 @@
                 <div class="flex justify-between items-start">
                   <div>
                     <span class="font-semibold text-lg"><%= product.name %></span>
-                    <h5 class="text-sm text-gray-500"><%= product.sku %></h2>
+                    <h5 class="text-sm text-gray-500"><%= product.sku %></h5>
                     <% if is_low_stock %>
                       <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                         <svg class="mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
@@ -122,6 +122,13 @@
                   </div>
                   <span class="text-gray-600 text-sm"><%= t("locations.show.quantity") %>: <%= item.quantity %></span>
                 </div>
+
+                <!-- Unit Type Display -->
+                <% if product.unit_type.present? %>
+                  <div class="mt-2">
+                    <span class="text-sm text-gray-600"><%= t("locations.show.unit_type") %>: <%= product.unit_type %></span>
+                  </div>
+                <% end %>
 
                 <!-- Category and Perishable Badge -->
                 <div class="mt-2 flex items-center space-x-3">
@@ -176,20 +183,8 @@
             <% end %>
           <% end %>
         <% end %>
-      </turbo-frame>
-
-      <!-- Total Inventory Value -->
-      <% if @inventory_items.any? %>
-        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
-          <div class="flex justify-between items-center">
-            <span class="font-medium text-blue-800"><%= t("locations.show.total_inventory_value") %></span>
-            <span class="text-xl font-bold text-blue-600">
-              <%= number_to_currency(total_inventory_value) %>
-            </span>
-          </div>
-        </div>
-      <% end %>
-    </div>
+      </div>
+    </turbo-frame>
 
     <!-- Action Buttons -->
     <div class="mt-8 flex space-x-4">

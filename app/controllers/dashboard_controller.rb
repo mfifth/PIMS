@@ -15,7 +15,7 @@ class DashboardController < ApplicationController
     end
 
     @current_location = session[:current_location_id] && Current.account.locations.find_by(id: session[:current_location_id]) || Current.account.locations.first
-    @recipes = Current.account.recipes
+    @recipes = Current.account.recipes.includes(:recipe_items)
   
     respond_to do |format|
       format.html

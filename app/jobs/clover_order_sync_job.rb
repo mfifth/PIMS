@@ -21,7 +21,7 @@ class CloverOrderSyncJob < ApplicationJob
         recipe = account.recipes.find_by(uid: item_id)
         
         if recipe
-          process_recipe_order(account, recipe, quantity, location)
+          RecipeOrderProcessorService.new(account, location).process_recipe(recipe, quantity)
         else
           process_product_order(account, item_id, quantity, location)
         end
@@ -33,21 +33,6 @@ class CloverOrderSyncJob < ApplicationJob
   end
 
   private
-
-  def process_recipe_order(account, recipe, quantity, location)
-    recipe.recipe_items.each do |recipe_item|
-      product = recipe_item.product
-      next unless product
-      
-      quantity_to_deduct = recipe_item.converted_quantity * quantity
-      
-      inventory_item = location.inventory_items.find_or_initialize_by(product: product)
-      inventory_item.quantity -= quantity_to_deduct
-      inventory_item.save!
-      
-      Rails.logger.info("Deducted #{quantity_to_deduct} #{product.unit_type} of #{product.name} for recipe #{recipe.name}")
-    end
-  end
 
   def process_product_order(account, item_id, quantity, location)
     product = account.products.find_by(sku: item_id)

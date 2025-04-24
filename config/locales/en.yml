@@ -158,6 +158,8 @@ en:
     expiration: "EXP: %{date}"
     qty: "Qty: %{count}"
     location_with_name: "Location: %{name}"
+    unit_type: "Unit Type: %{type}"
+    unit_type_title: "Unit Type"
     index:
       title: "Products"
       new_product: "New Product"

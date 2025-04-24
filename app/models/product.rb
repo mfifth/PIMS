@@ -13,7 +13,7 @@ class Product < ApplicationRecord
   has_many :recipe_items, dependent: :destroy
 
   validates :name, presence: true
-  validates :sku, presence: true, uniqueness: { scope: :account_id }
+  validates :sku, presence: true, uniqueness: { scope: [:account_id] }
   validates :perishable, inclusion: { in: [true, false] }
   validate :product_limit_not_exceeded, on: :create
 

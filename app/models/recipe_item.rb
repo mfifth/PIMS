@@ -90,7 +90,6 @@ class RecipeItem < ApplicationRecord
   end
 
   def round_for_unit(quantity, unit)
-    # More precision for smaller units
     case unit
     when 'grams', 'liters' then quantity.round(4)
     when 'ounces', 'pounds', 'gallons' then quantity.round(2)
