@@ -6,13 +6,14 @@ export default class extends Controller {
   static values = { unitMap: Object }
 
   connect() {
+    const rawMap = this.element.dataset.unitMap
+    this.unitMap = rawMap ? JSON.parse(rawMap) : {}
     this.search = debounce(this._search.bind(this), 300)
   }
 
   _search() {
     const query = this.searchInputTarget.value.trim()
   
-    // ✅ Only skip search if query is too short
     if (query.length < 2) {
       this.clearResults()
       return
@@ -71,8 +72,8 @@ export default class extends Controller {
       productIdInput.value = productId
     }
 
-    if (unitSelectElement && this.unitMapValue[productId]) {
-      const options = this.unitMapValue[productId]
+    if (unitSelectElement && unitType && this.unitMapValue[unitType]) {
+      const options = this.unitMapValue[unitType]
       unitSelectElement.innerHTML = options
         .map(unit => `<option value="${unit}">${unit.charAt(0).toUpperCase() + unit.slice(1)}</option>`)
         .join('')

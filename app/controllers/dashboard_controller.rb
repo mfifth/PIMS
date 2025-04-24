@@ -13,12 +13,23 @@ class DashboardController < ApplicationController
   
       @low_stock_items[location.id] = low_items if low_items.any?
     end
+
+    @current_location = session[:current_location_id] && Current.account.locations.find_by(id: session[:current_location_id]) || Current.account.locations.first
+    @recipes = Current.account.recipes
   
     respond_to do |format|
       format.html
       format.turbo_stream
     end
   end  
+
+  def switch_location
+    locations = Current.account.locations.to_a
+    current_index = locations.index { |loc| loc.id == session[:current_location_id] } || 0
+    next_location = locations.rotate(current_index + 1).first
+    session[:current_location_id] = next_location.id
+    redirect_to dashboard_path, status: :see_other
+  end
 
   private
 
