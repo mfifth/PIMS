@@ -10,9 +10,18 @@ class CsvImportJob < ApplicationJob
     @file_path = file_path
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
-        
+    @failed_products = []
+
     process_csv(file_path)
-    notify_user("CSV import completed successfully!", :notice)
+    
+    if @failed_products.any?
+      notify_user("CSV import completed with errors. Some products failed to import.", :alert)
+      @failed_products.each do |failed_product|
+        notify_user("Failed to import product: #{failed_product[:name]} - Errors: #{failed_product[:errors]}", :alert)
+      end
+    else
+      notify_user("CSV import completed successfully!", :notice)
+    end
   ensure
     cleanup_files
   end
@@ -21,8 +30,17 @@ class CsvImportJob < ApplicationJob
 
   def process_csv(file_path)
     CSV.foreach(file_path, headers: true) do |row|
-      ActiveRecord::Base.transaction do
-        import_row(row.to_h)
+      begin
+        ActiveRecord::Base.transaction do
+          import_row(row.to_h)
+        end
+      rescue ActiveRecord::RecordInvalid => e
+        # Capture errors and continue processing other records
+        @failed_products << { name: row['name'], errors: e.record.errors.full_messages.join(", ") }
+      rescue StandardError => e
+        # Catch unexpected errors and log them
+        Rails.logger.error "Unexpected error with row #{row['sku']}: #{e.message}"
+        @failed_products << { name: row['name'], errors: "Unexpected error: #{e.message}" }
       end
     end
   end
