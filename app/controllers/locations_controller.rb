@@ -149,16 +149,25 @@ class LocationsController < ApplicationController
   end
 
   def sample_csv
-    sample_data = "sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days\n" +
-                  "ABC123,Sample Product 1,units,19.99,100,Electronics,true,BATCH001,2025-12-31,10,7\n" +
-                  "DEF456,Sample Product 2,pounds,29.99,50,Clothing,false,,,20,\n" +
-                  "GHI789,Sample Product 3,ounces,9.99,200,Food,true,BATCH002,2026-06-30,30,14"
+    sample_data = <<~CSV
+      sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days
+      BAK123,All-Purpose Flour,pounds,3.49,250,Baking,true,FLR001,2025-11-15,50,10
+      BVR456,Orange Juice,liters,4.99,120,Beverages,true,OJU023,2025-08-01,30,7
+      CLS789,Cotton T-Shirt,units,12.99,500,Clothing,false,,,,20,
+      ELC321,Wireless Mouse,units,24.95,80,Electronics,false,,,,10,
+      FRT654,Fresh Strawberries,ounces,5.50,180,Fruit,true,STRW789,2025-04-30,40,5
+      HHS987,Liquid Hand Soap,ounces,2.99,300,Health,false,,,,25,
+      MTD258,Ground Beef,pounds,6.99,75,Meat,true,GBF456,2025-05-05,20,3
+      SEA369,Canned Tuna,units,1.29,400,Seafood,true,TUN789,2027-02-01,60,15
+      VEG147,Organic Carrots,pounds,2.29,200,Vegetables,true,CRT321,2025-05-10,30,5
+      SNK753,Granola Bars,units,0.99,10,Snacks,false,,,,5,3
+    CSV
   
-    send_data sample_data, 
+    send_data sample_data,
               filename: "sample_products.csv",
               type: "text/csv",
               disposition: "attachment"
-  end
+  end  
 
   private
 

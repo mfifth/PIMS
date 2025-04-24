@@ -22,13 +22,19 @@ class RecipesController < ApplicationController
 
   def create
     @recipe = Current.account.recipes.new(recipe_params)
-    @recipe.uid = SecureRandom.uuid
-
+  
     respond_to do |format|
       if @recipe.save
         format.turbo_stream
       else
-        render :new, status: :unprocessable_entity
+        format.html { render :new, status: :unprocessable_entity }
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            "main",
+            partial: "form",
+            locals: { recipe: @recipe, form_title: "New Recipe", submit_text: "Create Recipe", show_delete: false }
+          )
+        end
       end
     end
   end
@@ -84,7 +90,7 @@ class RecipesController < ApplicationController
   end
 
   def recipe_params
-    params.require(:recipe).permit(:name, 
+    params.require(:recipe).permit(:name, :uid,
     recipe_items_attributes: [:id, :product_id, :quantity, :unit, :_destroy])
   end
 end

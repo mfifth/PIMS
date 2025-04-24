@@ -5,11 +5,22 @@
         <h1 class="text-2xl font-bold"><%= form_title %></h1>
       </div>
 
+      <% if recipe.errors.any? %>
+        <div class="bg-red-50 text-red-600 p-4 rounded-lg mb-6">
+          <h2 class="font-bold mb-2"><%= pluralize(recipe.errors.count, "error") %> prohibited this recipe from being saved:</h2>
+          <ul class="list-disc pl-5">
+            <% recipe.errors.each do |error| %>
+              <li><%= error.full_message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
       <div class="bg-white rounded-lg shadow p-6">
         <div class="space-y-6">
           <div class="mb-4">
             <%= form.label :name, t("recipes.form.name_label"), class: "block font-semibold text-gray-700" %>
-            <%= form.text_field :name, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
+            <%= form.text_field :name, autocomplete: "off", required: true, class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
 
             <%= form.label :uid, t("recipes.form.uid_label"), class: "block font-semibold text-gray-700 mt-4" %>
             <%= form.text_field :uid, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
