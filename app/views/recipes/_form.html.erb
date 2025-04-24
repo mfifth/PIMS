@@ -60,7 +60,11 @@
                     <!-- Product name will be inserted here by JavaScript -->
                   </div>
 
-                  <%= item_form.number_field :quantity, step: 0.1, min: 0.1, class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500" %>
+                  <%= item_form.number_field :quantity, 
+                      step: (item_form.object.unit == "units" ? 1 : 0.1), 
+                      min: 1, 
+                      class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
+                      data: { unitType: item_form.object.unit } %>
 
                   <%= item_form.select :unit, RecipeItem.unit_options, {}, 
                         class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",

@@ -21,7 +21,7 @@ class CloverOrderSyncJob < ApplicationJob
         recipe = account.recipes.find_by(uid: item_id)
         
         if recipe
-          RecipeOrderProcessorService.new(account, location).process_recipe(recipe, quantity)
+          RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity)
         else
           process_product_order(account, item_id, quantity, location)
         end

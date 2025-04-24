@@ -11,6 +11,7 @@ export default class extends Controller {
     this.search = debounce(this._search.bind(this), 300)
   }
 
+  // Search for products
   _search() {
     const query = this.searchInputTarget.value.trim()
   
@@ -49,6 +50,7 @@ export default class extends Controller {
       })
   }  
 
+  // Handle selection of a product to add to the recipe
   selectProduct(event) {
     event.preventDefault()
     const productId = event.currentTarget.dataset.productId
@@ -64,6 +66,7 @@ export default class extends Controller {
     const unitInputElement = newItem.querySelector('[data-recipe-items-target="unitInput"]')
     const unitSelectElement = newItem.querySelector('select[name*="[unit]"]')
     const productIdInput = newItem.querySelector('input[name*="product_id"]')
+    const quantityInputElement = newItem.querySelector('input[name*="quantity"]')
 
     if (productNameElement && unitDisplayElement && unitInputElement && productIdInput) {
       productNameElement.textContent = productName
@@ -79,15 +82,22 @@ export default class extends Controller {
         .join('')
     }
 
+    // Ensure quantity field step is 1 for "units"
+    if (unitType === "units" && quantityInputElement) {
+      quantityInputElement.setAttribute('step', '1');
+    }
+
     this.clearSearch()
   }
 
+  // Add an empty ingredient item to the form
   add(event) {
     event.preventDefault()
     const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime())
     this.itemsTarget.insertAdjacentHTML("beforeend", content)
   }
 
+  // Remove an ingredient item from the form
   remove(event) {
     event.preventDefault()
     const item = event.target.closest(".ingredient-item")
@@ -99,11 +109,23 @@ export default class extends Controller {
     }
   }
 
+  // Validate quantity input to ensure it's a whole number if the unit is "units"
+  validateQuantity(event) {
+    const quantityInput = event.target
+    const quantityValue = parseFloat(quantityInput.value)
+
+    if (quantityInput.dataset.unitType === "units" && quantityValue % 1 !== 0) {
+      quantityInput.value = Math.floor(quantityValue) // Round down to nearest whole number
+    }
+  }
+
+  // Clear the search input and results
   clearSearch() {
     this.searchInputTarget.value = ""
     this.clearResults()
   }
 
+  // Clear the search results
   clearResults() {
     if (this.hasSearchResultsTarget) {
       this.searchResultsTarget.innerHTML = ""

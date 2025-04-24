@@ -82,7 +82,6 @@ RSpec.describe SquareHelper, type: :helper do
       end
 
       before do
-        # Recipe with incompatible units (volume vs weight)
         create(:recipe_item, 
           recipe: recipe, 
           product: create(:product, account: account, sku: 'prod789', unit_type: 'liters'), 
