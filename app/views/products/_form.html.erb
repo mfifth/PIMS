@@ -128,6 +128,16 @@
             <%= form.label :low_threshold, t('products.low_stock_alert'), class: "block text-sm font-medium text-gray-700" %>
             <%= form.number_field :low_threshold, class: "w-full px-4 py-2 border rounded-lg", data: { lookup_target: "lowThreshold" } %>
           </div>
+
+          <div>
+            <%= form.label :unit_type, t('products.unit_type'), class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :unit_type, 
+                Product::VALID_UNITS.map { |u| [u.humanize, u] },
+                { selected: @product.unit_type.presence || 'units', include_blank: false },
+                { class: "w-full px-4 py-2 border rounded-lg",
+                  data: { lookup_target: "unitType" },
+                  prompt: false } %>
+          </div>
         </div>
       </div>
 

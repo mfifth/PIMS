@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  get "recipes/index"
+  get "recipes/new"
+  get "recipes/create"
+  get "recipes/edit"
+  get "recipes/update"
+  get "recipes/destroy"
   if Rails.env.development?
     # mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "/graphql"
   end
@@ -39,6 +45,13 @@ Rails.application.routes.draw do
       delete :delete_category
     end
   end
+
+  resources :recipes do
+    resources :recipe_items, only: [:create, :update, :destroy]
+    collection do
+      get :product_search
+    end
+  end  
 
   resources :notifications, only: [:index] do
     member do

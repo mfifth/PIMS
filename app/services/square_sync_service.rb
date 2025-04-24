@@ -10,6 +10,13 @@ class SquareSyncService
   end
 
   def sync_all
+    sync_locations_and_inventory
+    sync_menu_items
+  rescue => e
+    Rails.logger.error("Failed to sync Square data: #{e.message}")
+  end
+
+  def sync_locations_and_inventory
     response = client.locations.list_locations
     return unless response.success?
 
@@ -20,8 +27,23 @@ class SquareSyncService
 
       sync_location_inventory(location)
     end
+  end
+
+  def sync_menu_items
+    response = client.catalog.list_catalog(types: 'ITEM')
+    return unless response.success?
+
+    ActiveRecord::Base.transaction do
+      response.data.objects.each do |item|
+        next unless item.type == 'ITEM'
+
+        recipe = account.recipes.find_or_initialize_by(uid: item.id)
+        recipe.name = item.item_data.name
+        recipe.save!
+      end
+    end
   rescue => e
-    Rails.logger.error("Failed to sync Square locations and inventory: #{e.message}")
+    Rails.logger.error("Failed to sync Square menu items: #{e.message}")
   end
 
   private

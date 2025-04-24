@@ -77,17 +77,19 @@ class User < ApplicationRecord
         metadata: { user_id: id, account_id: account.id, app: "PIMS" },
         name: name
       }
+    
+    unless Rails.env.development?
+      customer = Stripe::Customer.create(customer_params)
+      account.update(stripe_customer_id: customer['id'])
+        
+      Stripe::Subscription.create(
+          customer: customer['id'],
+          items: [{ price: ENV['STRIPE_FREE_SUBSCRIPTION_PRICE_ID'] }],
+          metadata: { account_id: account.id }
+        )
+    end
 
-    customer = Stripe::Customer.create(customer_params)
-    account.update(stripe_customer_id: customer['id'])
-
-    Stripe::Subscription.create(
-        customer: customer['id'],
-        items: [{ price: ENV['STRIPE_FREE_SUBSCRIPTION_PRICE_ID'] }],
-        metadata: { account_id: account.id }
-      )
-
-    Notification.create(message: t('notifications.congrats_message'), 
+    Notification.create(message: I18n.t('notifications.congrats_message'), 
     notification_type: "notice", account_id: account.id)
   end
 

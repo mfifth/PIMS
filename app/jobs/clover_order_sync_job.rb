@@ -2,31 +2,63 @@ class CloverOrderSyncJob < ApplicationJob
   queue_as :default
 
   def perform(account_id, order_id)
-    account = Account.includes(:products, locations: :inventory_items).find(account_id)
+    account = Account.includes(:products, :recipes, locations: :inventory_items).find(account_id)
     order = fetch_order(account, order_id)
 
     line_items = order["lineItems"] || []
     location_id = order.dig('device', 'location', 'id')
-    return if location_name.blank?
+    return if location_id.blank?
 
     location = account.locations.find_by(location_uid: location_id)
     return unless location
 
-    line_items.each do |line|
-      item_id  = line.dig("item", "id")
-      quantity = line["quantity"].to_i
-      next if item_id.blank? || quantity <= 0
-      
-      product = account.products.find_by(sku: item_id)
-      next unless product
-
-      inventory_item = location.inventory_items.find_by(product: product)
-      inventory_item.quantity = inventory_item.quantity - quantity
-      inventory_item.save
+    ActiveRecord::Base.transaction do
+      line_items.each do |line|
+        item_id  = line.dig("item", "id")
+        quantity = line["quantity"].to_i
+        next if item_id.blank? || quantity <= 0
+        
+        recipe = account.recipes.find_by(uid: item_id)
+        
+        if recipe
+          process_recipe_order(account, recipe, quantity, location)
+        else
+          process_product_order(account, item_id, quantity, location)
+        end
+      end
     end
+  rescue => e
+    Rails.logger.error("Failed to process Clover order #{order_id}: #{e.message}")
+    raise e # Re-raise to retry the job if configured
   end
 
   private
+
+  def process_recipe_order(account, recipe, quantity, location)
+    recipe.recipe_items.each do |recipe_item|
+      product = recipe_item.product
+      next unless product
+      
+      quantity_to_deduct = recipe_item.converted_quantity * quantity
+      
+      inventory_item = location.inventory_items.find_or_initialize_by(product: product)
+      inventory_item.quantity -= quantity_to_deduct
+      inventory_item.save!
+      
+      Rails.logger.info("Deducted #{quantity_to_deduct} #{product.unit_type} of #{product.name} for recipe #{recipe.name}")
+    end
+  end
+
+  def process_product_order(account, item_id, quantity, location)
+    product = account.products.find_by(sku: item_id)
+    return unless product
+
+    inventory_item = location.inventory_items.find_or_initialize_by(product: product)
+    inventory_item.quantity -= quantity
+    inventory_item.save!
+    
+    Rails.logger.info("Deducted #{quantity} #{product.unit_type} of #{product.name}")
+  end
 
   def fetch_order(account, order_id)
     url = "https://api.clover.com/v3/merchants/#{account.clover_merchant_id}/orders/#{order_id}?expand=lineItems&expand=device"

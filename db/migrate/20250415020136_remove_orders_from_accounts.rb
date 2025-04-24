@@ -1,5 +1,7 @@
 class RemoveOrdersFromAccounts < ActiveRecord::Migration[8.0]
-  def change
-    drop_table :orders, force: :cascade
+  if ActiveRecord::Base.connection.table_exists? 'orders'
+    def change
+      drop_table :orders, force: :cascade
+    end
   end
 end

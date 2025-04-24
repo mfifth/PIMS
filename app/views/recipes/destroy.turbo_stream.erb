@@ -1,0 +1,9 @@
+<%= turbo_stream.remove @recipe %>
+<% if Current.account.recipes.empty? %>
+  <%= turbo_stream.update "recipes-container" do %>
+    <div class="bg-white rounded-lg shadow p-6 text-center">
+      <p class="text-gray-500 mb-4">You have not created any recipes yet</p>
+      <%= link_to "Create your first recipe", new_recipe_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md inline-block" %>
+    </div>
+  <% end %>
+<% end %>
