@@ -4,22 +4,26 @@ module DashboardHelper
     expirations = []
   
     recipe.recipe_items.includes(product: :batch).each do |item|
-      inventory_items = location.inventory_items
-                                 .includes(product: :batch)
-                                 .where(product: item.product)
+      product = item.product
   
-      next if inventory_items.empty?
+      # Find all inventory items for this product at the location
+      inventory_items = location.inventory_items.where(product: product)
   
-      target_unit = item.product.unit_type
-      recipe_quantity = item.converted_quantity(target_unit)
+      # If the product isn't present in this location's inventory, the recipe can't be made
+      return [0, nil] if inventory_items.blank?
   
       total_quantity = inventory_items.sum(&:quantity)
-      available = total_quantity / recipe_quantity
-      quantities << available.floor
+      recipe_quantity = item.converted_quantity(product.unit_type)
   
-      if item.product.perishable?
-        soonest_expiration = inventory_items.map { |inv| inv.product.batch&.expiration_date }.compact.min
-        expirations << soonest_expiration if soonest_expiration
+      return [0, nil] if total_quantity < recipe_quantity
+  
+      quantities << (total_quantity / recipe_quantity).floor
+  
+      if product.perishable?
+        expiration = product.batch&.expiration_date
+        return [0, nil] unless expiration
+  
+        expirations << expiration
       end
     end
   

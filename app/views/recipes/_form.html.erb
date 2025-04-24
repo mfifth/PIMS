@@ -1,83 +1,83 @@
-<%= form_with model: recipe, local: true, data: { controller: "recipe-items", "recipe-items-unit-map-value": RecipeItem.unit_compatibility_map.to_json } do |form| %>
-  <div class="max-w-4xl mx-auto">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold"><%= form_title %></h1>
-      <%= link_to "Back to Recipes", recipes_path, class: "text-blue-500 hover:text-blue-700" %>
-    </div>
+<turbo-frame id='main'>
+  <%= form_with model: recipe, local: true, data: { controller: "recipe-items", "recipe-items-unit-map-value": RecipeItem.unit_compatibility_map.to_json } do |form| %>
+    <div class="max-w-4xl mx-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold"><%= form_title %></h1>
+      </div>
 
-    <div class="bg-white rounded-lg shadow p-6">
-      <div class="space-y-6">
-        <div class="mb-4">
-          <%= form.label :name, "Recipe Name", class: "block font-semibold text-gray-700" %>
-          <%= form.text_field :name, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="space-y-6">
+          <div class="mb-4">
+            <%= form.label :name, t("recipes.form.name_label"), class: "block font-semibold text-gray-700" %>
+            <%= form.text_field :name, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
 
-          <%= form.label :uid, "Recipe ID", class: "block font-semibold text-gray-700" %>
-          <%= form.text_field :uid, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
-        </div>
-
-        <div class="mb-4 relative">
-          <label for="product-search" class="block font-semibold text-gray-700">Search Products</label>
-          <input
-            id="product-search"
-            type="text"
-            placeholder="Type to search..."
-            class="w-full border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
-            data-action="input->recipe-items#_search"
-            data-recipe-items-target="searchInput"
-            autocomplete="off"
-          />
-          <div 
-            id="product_search_results" 
-            data-recipe-items-target="searchResults"
-            class="hidden absolute left-0 right-0 mt-1 bg-white border rounded shadow-lg z-50 max-h-60 overflow-y-auto"
-          ></div>
-        </div>
-
-        <div>
-          <h2 class="text-lg font-semibold text-gray-900 mb-3">Ingredients</h2>
-
-          <div data-recipe-items-target="items" class="space-y-3">
-            <%= form.fields_for :recipe_items do |item_form| %>
-              <%= render "recipe_item_fields", f: item_form %>
-            <% end %>
+            <%= form.label :uid, t("recipes.form.uid_label"), class: "block font-semibold text-gray-700 mt-4" %>
+            <%= form.text_field :uid, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
           </div>
 
-          <template data-recipe-items-target="template">
-            <%= form.fields_for :recipe_items, RecipeItem.new, child_index: "NEW_RECORD" do |item_form| %>
-              <div class="ingredient-item mb-4 flex items-center gap-4 bg-white p-3 rounded-lg shadow-sm border" data-new-record="true">
-                <div class="product-name w-1/2 px-3 py-2 font-medium" data-recipe-items-target="productName">
-                  <!-- Product name will be inserted here by JavaScript -->
+          <div class="mb-4 relative">
+            <label for="product-search" class="block font-semibold text-gray-700"><%= t("recipes.form.search_label") %></label>
+            <input
+              id="product-search"
+              type="text"
+              placeholder="<%= t("recipes.form.search_placeholder") %>"
+              class="w-full border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500"
+              data-action="input->recipe-items#_search"
+              data-recipe-items-target="searchInput"
+              autocomplete="off"
+            />
+            <div 
+              id="product_search_results" 
+              data-recipe-items-target="searchResults"
+              class="hidden absolute left-0 right-0 mt-1 bg-white border rounded shadow-lg z-50 max-h-60 overflow-y-auto"
+            ></div>
+          </div>
+
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("recipes.form.ingredients_heading") %></h2>
+
+            <div data-recipe-items-target="items" class="space-y-3">
+              <%= form.fields_for :recipe_items do |item_form| %>
+                <%= render "recipe_item_fields", f: item_form %>
+              <% end %>
+            </div>
+
+            <template data-recipe-items-target="template">
+              <%= form.fields_for :recipe_items, RecipeItem.new, child_index: "NEW_RECORD" do |item_form| %>
+                <div class="ingredient-item mb-4 flex items-center gap-4 bg-white p-3 rounded-lg shadow-sm border" data-new-record="true">
+                  <div class="product-name w-1/2 px-3 py-2 font-medium" data-recipe-items-target="productName">
+                    <!-- Product name will be inserted here by JavaScript -->
+                  </div>
+
+                  <%= item_form.number_field :quantity, step: 0.1, min: 0.1, class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500" %>
+
+                  <%= item_form.select :unit, RecipeItem.unit_options, {}, 
+                        class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
+                        data: { recipe_items_target: "unitInput" } %>
+
+                  <span class="hidden" data-recipe-items-target="unitDisplay"></span>
+
+                  <%= item_form.hidden_field :product_id %>
+                  <%= link_to t("recipes.form.remove_button"), "#", class: "text-red-600 hover:text-red-800 text-sm", data: { action: "click->recipe-items#remove" } %>
                 </div>
-                
-                <%= item_form.number_field :quantity, step: 0.1, min: 0.1, class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500" %>
+              <% end %>
+            </template>
+          </div>
 
-                <%= item_form.select :unit, RecipeItem.unit_options, {}, 
-                      class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
-                      data: { recipe_items_target: "unitInput" } %>
-
-                <span class="hidden" data-recipe-items-target="unitDisplay"></span>
-
-                <%= item_form.hidden_field :product_id %>
-                <%= link_to "Remove", "#", class: "text-red-600 hover:text-red-800 text-sm", data: { action: "click->recipe-items#remove" } %>
-              </div>
+          <div class="flex justify-between pt-4 border-t border-gray-200">
+            <% if local_assigns[:show_delete] %>
+              <%= link_to t("recipes.form.delete_button"), recipe_path(recipe), 
+                          data: { turbo_confirm: t("recipes.form.delete_confirm"), turbo_method: :delete }, 
+                          class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
             <% end %>
-          </template>
-        </div>
 
-        <div class="flex justify-between pt-4 border-t border-gray-200">
-          <% if local_assigns[:show_delete] %>
-            <%= link_to "Delete Recipe", recipe_path(recipe), 
-                        method: :delete, 
-                        data: { confirm: "Are you sure you want to delete this recipe?" }, 
-                        class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500" %>
-          <% end %>
-          
-          <div class="<%= local_assigns[:show_delete] ? 'space-x-3' : 'ml-auto' %>">
-            <%= link_to "Cancel", recipes_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
-            <%= form.submit submit_text, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+            <div class="ml-auto">
+              <%= link_to t("recipes.form.cancel"), recipes_path, class: "inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+              <%= form.submit submit_text, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" %>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</turbo-frame>

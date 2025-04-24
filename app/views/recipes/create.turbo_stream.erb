@@ -1,0 +1,6 @@
+<%= turbo_stream.append "flash" do %>
+  <%= render "shared/flash", notice: "Recipe created successfully." %>
+<% end %>
+<%= turbo_stream.replace "main" do %>
+  <%= render "recipe_index", recipes: Current.account.recipes.order(created_at: :desc) %>
+<% end %>

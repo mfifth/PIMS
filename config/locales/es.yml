@@ -23,6 +23,7 @@ es:
     products: "Productos"
     batches: "Lotes"
     quick_update: "Actualización Rápida"
+    recipes: 'Recetas'
     personal: "Personal"
     notifications: "Notificaciones"
     settings: "Configuraciones"
@@ -92,6 +93,32 @@ es:
       cancel: "Cancelar"
     confirmations:
       delete_batch: "¿Estás seguro de que deseas eliminar este lote?"
+  recipes:
+    index:
+      title: "Recetas"
+      new_recipe: "Nueva Receta"
+      search_placeholder: "Buscar por nombre o ID de receta"
+      no_match: "No se encontraron recetas que coincidan con \"%{query}\""
+      no_recipes: "Aún no has creado ninguna receta"
+      create_first: "Crear tu primera receta"
+      recipe_id: "ID: %{id}"
+      edit: "Editar"
+      ingredients: "Ingredientes"
+      updated_ago: "Actualizado hace %{time}"
+    form:
+      name_label: "Nombre de la receta"
+      uid_label: "ID de la receta"
+      search_label: "Buscar productos"
+      search_placeholder: "Escribe para buscar..."
+      ingredients_heading: "Ingredientes"
+      remove_button: "Eliminar"
+      delete_button: "Eliminar receta"
+      delete_confirm: "¿Estás seguro de que deseas eliminar esta receta?"
+      cancel: "Cancelar"
+      submit: "Guardar receta"
+    available_recipes: "Recetas que puedes preparar"
+    can_make: "disponibles"
+    until: "Disponible hasta"
   products:
     sku: "SKU"
     category: "Categoría"

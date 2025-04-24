@@ -24,10 +24,12 @@ class RecipesController < ApplicationController
     @recipe = Current.account.recipes.new(recipe_params)
     @recipe.uid = SecureRandom.uuid
 
-    if @recipe.save
-      redirect_to recipes_path, notice: "Recipe created successfully."
-    else
-      render :new, status: :unprocessable_entity
+    respond_to do |format|
+      if @recipe.save
+        format.turbo_stream
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 
