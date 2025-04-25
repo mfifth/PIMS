@@ -55,7 +55,7 @@ class CsvImportJob < ApplicationJob
     )
     
     if row_data['batch_number'].present?
-      product.batch = handle_batch(product, row_data)
+      product.batch_id = handle_batch(product, row_data)
     end
 
     product.save!
@@ -83,12 +83,16 @@ class CsvImportJob < ApplicationJob
   end
 
   def handle_batch(product, row)
-    product.build_batch(
-      account: product.account,
-      batch_number: row['batch_number'],
-      expiration_date: row['expiration_date'],
-      notification_days_before_expiration: row['notification_days'] || 0
+    batch = Batch.find_or_initialize_by(
+      account_id: product.account.id,
+      batch_number: row['batch_number']
     )
+
+    batch.manufactured_date = row['manufactured_date']
+    batch.expiration_date = row['expiration_date']
+    batch.notification_days_before_expiration = row['notification_days'] || 0
+    batch.save!
+    batch.id
   end
 
   def notify_user(message, type = :notice)
