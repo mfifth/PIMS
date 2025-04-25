@@ -149,6 +149,8 @@ class LocationsController < ApplicationController
   end
 
   def sample_csv
+    expiring_date = (Time.current + 5.days).strftime("%Y-%m-%d")
+
     sample_data = <<~CSV
       sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days,manufactured_date
       BAK123,All-Purpose Flour,pounds,3.49,250,Baking,true,FLR001,2025-11-15,50,10,2025-05-15
@@ -161,7 +163,8 @@ class LocationsController < ApplicationController
       SEA369,Canned Tuna,units,1.29,400,Seafood,true,TUN789,2027-02-01,60,15,2025-02-01
       VEG147,Organic Carrots,pounds,2.29,200,Vegetables,true,CRT321,2025-05-10,30,5,2025-04-25
       SNK753,Granola Bars,units,0.99,10,Snacks,false,,,,5,3,2024-12-15
-
+      LTH111,Low Stock Sugar,pounds,1.99,3,Baking,true,SGR123,2025-12-01,10,7,2025-04-20
+      EXP999,Expiring Cheese,pounds,4.49,50,Dairy,true,CHS999,#{expiring_date},20,5,2025-04-10
     CSV
   
     send_data sample_data,
