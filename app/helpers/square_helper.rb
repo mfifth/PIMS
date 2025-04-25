@@ -15,7 +15,6 @@ module SquareHelper
         location = account.locations.find_by(location_uid: data["location_id"])
         next unless location
 
-        # Use the RecipeOrderProcessor service
         RecipeOrderProcessor.new(location).process_recipe(recipe, quantity_sold)
       else
         product = account.products.find_by(sku: catalog_object_id)
@@ -32,7 +31,7 @@ module SquareHelper
   end
 
   def update_inventory_item(product, location, quantity_change)
-    inventory_item = InventoryItem.find_or_initialize_by(product: product, location: location)
+    inventory_item = InventoryItem.find_by(product: product, location: location)
     inventory_item.quantity += quantity_change
     inventory_item.save!
   end

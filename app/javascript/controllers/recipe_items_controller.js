@@ -16,7 +16,7 @@ export default class extends Controller {
   _search() {
     const query = this.searchInputTarget.value.trim()
   
-    if (query.length < 2) {
+    if (query.length <= 2) {
       this.clearResults()
       return
     }
@@ -89,7 +89,6 @@ export default class extends Controller {
         .join('')
     }
   
-    // Ensure quantity field step is 1 for "units"
     if (unitType === "units" && quantityInputElement) {
       quantityInputElement.setAttribute('step', '1');
     }
@@ -97,14 +96,12 @@ export default class extends Controller {
     this.clearSearch()
   }  
 
-  // Add an empty ingredient item to the form
   add(event) {
     event.preventDefault()
     const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime())
     this.itemsTarget.insertAdjacentHTML("beforeend", content)
   }
 
-  // Remove an ingredient item from the form
   remove(event) {
     event.preventDefault()
     const item = event.target.closest(".ingredient-item")
@@ -115,30 +112,26 @@ export default class extends Controller {
     } else {
       item.querySelector("input[name*='_destroy']").value = "1"
       item.style.display = "none"
-      this.removedIds.push(productId) // Add the removed ID to the removedIds array
+      this.removedIds.push(productId)
     }
   
-    // Ensure the product appears in the search again if removed
     this.clearSearch()
   }  
 
-  // Validate quantity input to ensure it's a whole number if the unit is "units"
   validateQuantity(event) {
     const quantityInput = event.target
     const quantityValue = parseFloat(quantityInput.value)
 
     if (quantityInput.dataset.unitType === "units" && quantityValue % 1 !== 0) {
-      quantityInput.value = Math.floor(quantityValue) // Round down to nearest whole number
+      quantityInput.value = Math.floor(quantityValue)
     }
   }
 
-  // Clear the search input and results
   clearSearch() {
     this.searchInputTarget.value = ""
     this.clearResults()
   }
 
-  // Clear the search results
   clearResults() {
     if (this.hasSearchResultsTarget) {
       this.searchResultsTarget.innerHTML = ""

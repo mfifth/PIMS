@@ -36,9 +36,9 @@ class CloverOrderSyncJob < ApplicationJob
 
   def process_product_order(account, item_id, quantity, location)
     product = account.products.find_by(sku: item_id)
-    return unless product
+    inventory_item = location.inventory_items.find_by(product: product)
+    return unless product && inventory_item
 
-    inventory_item = location.inventory_items.find_or_initialize_by(product: product)
     inventory_item.quantity -= quantity
     inventory_item.save!
     
