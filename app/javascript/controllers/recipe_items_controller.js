@@ -9,6 +9,7 @@ export default class extends Controller {
     const rawMap = this.element.dataset.unitMap
     this.unitMap = rawMap ? JSON.parse(rawMap) : {}
     this.search = debounce(this._search.bind(this), 300)
+    this.removedIds = [] // Track removed items
   }
 
   // Search for products
@@ -25,10 +26,13 @@ export default class extends Controller {
     const selectedIds = Array.from(this.itemsTarget.querySelectorAll('input[name*="[product_id]"]'))
       .map(input => input.value)
       .filter(id => id)
+
+    // Include removed IDs in search to show them again
+    const availableIds = selectedIds.filter(id => !this.removedIds.includes(id))
   
     const params = new URLSearchParams()
     params.append('query', query)
-    selectedIds.forEach(id => params.append('selected_ids[]', id))
+    availableIds.forEach(id => params.append('selected_ids[]', id))
   
     fetch(`/recipes/product_search?${params.toString()}`, {
       headers: { 
@@ -50,16 +54,19 @@ export default class extends Controller {
       })
   }  
 
-  // Handle selection of a product to add to the recipe
   selectProduct(event) {
     event.preventDefault()
     const productId = event.currentTarget.dataset.productId
     const productName = event.currentTarget.dataset.productName
     const unitType = event.currentTarget.dataset.unitType || 'units'
-
+  
+    if (this.removedIds.includes(productId)) {
+      this.removedIds = this.removedIds.filter(id => id !== productId)
+    }
+  
     const content = this.templateTarget.innerHTML.replace(/NEW_RECORD/g, new Date().getTime())
     this.itemsTarget.insertAdjacentHTML("beforeend", content)
-
+  
     const newItem = this.itemsTarget.lastElementChild
     const productNameElement = newItem.querySelector('[data-recipe-items-target="productName"]')
     const unitDisplayElement = newItem.querySelector('[data-recipe-items-target="unitDisplay"]')
@@ -67,28 +74,28 @@ export default class extends Controller {
     const unitSelectElement = newItem.querySelector('select[name*="[unit]"]')
     const productIdInput = newItem.querySelector('input[name*="product_id"]')
     const quantityInputElement = newItem.querySelector('input[name*="quantity"]')
-
+  
     if (productNameElement && unitDisplayElement && unitInputElement && productIdInput) {
       productNameElement.textContent = productName
       unitDisplayElement.textContent = unitType
       unitInputElement.value = unitType
       productIdInput.value = productId
     }
-
+  
     if (unitSelectElement && unitType && this.unitMapValue[unitType]) {
       const options = this.unitMapValue[unitType]
       unitSelectElement.innerHTML = options
         .map(unit => `<option value="${unit}">${unit.charAt(0).toUpperCase() + unit.slice(1)}</option>`)
         .join('')
     }
-
+  
     // Ensure quantity field step is 1 for "units"
     if (unitType === "units" && quantityInputElement) {
       quantityInputElement.setAttribute('step', '1');
     }
-
+  
     this.clearSearch()
-  }
+  }  
 
   // Add an empty ingredient item to the form
   add(event) {
@@ -101,13 +108,19 @@ export default class extends Controller {
   remove(event) {
     event.preventDefault()
     const item = event.target.closest(".ingredient-item")
+    const productId = item.querySelector("input[name*='[product_id]']").value
+  
     if (item.dataset.newRecord === "true") {
       item.remove()
     } else {
       item.querySelector("input[name*='_destroy']").value = "1"
       item.style.display = "none"
+      this.removedIds.push(productId) // Add the removed ID to the removedIds array
     }
-  }
+  
+    // Ensure the product appears in the search again if removed
+    this.clearSearch()
+  }  
 
   // Validate quantity input to ensure it's a whole number if the unit is "units"
   validateQuantity(event) {
