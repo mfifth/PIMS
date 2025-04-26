@@ -33,5 +33,7 @@
   <% end %>
 
   <br>
-  <%= link_to t("subscription.manage_link"), billing_portal_path, target: :_blank, class: "text-blue-600 hover:underline" %>
+  <% if Current.user.admin? %>
+    <%= link_to t("subscription.manage_link"), billing_portal_path, target: :_blank, class: "text-blue-600 hover:underline" %>
+  <% end %>
 </div>
