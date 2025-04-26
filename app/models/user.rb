@@ -57,7 +57,8 @@ class User < ApplicationRecord
     update_columns(
       confirmed_at: Time.current,
       confirmation_token: nil,
-      confirmation_token_expires_at: nil
+      confirmation_token_expires_at: nil,
+      admin: true
     )
   end
 

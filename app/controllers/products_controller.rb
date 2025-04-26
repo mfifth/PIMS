@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: %i[show edit update destroy]
+  before_action :require_admin!, only: [:create, :update, :destroy, :edit]
 
   def index
     if params[:query].present?

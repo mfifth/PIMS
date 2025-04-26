@@ -11,7 +11,7 @@ class ConfirmationsController < ApplicationController
       redirect_to root_path, alert: t('notifications.confirmation_token_expired')
     else
       @user.confirm!
-      start_new_session_for(@user) # Optional: automatically sign in after confirmation
+      start_new_session_for(@user)
       redirect_to dashboard_path, notice: t('notifications.successful_email_confirm')
     end
   end

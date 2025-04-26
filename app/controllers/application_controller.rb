@@ -8,4 +8,10 @@ class ApplicationController < ActionController::Base
   def set_locale
     I18n.locale = Current.user&.locale || I18n.default_locale
   end
+
+  def require_admin!
+    unless Current.user&.admin?
+      redirect_to root_path, alert: t('permission_denied')
+    end
+  end
 end

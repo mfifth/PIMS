@@ -1,5 +1,6 @@
 class RecipesController < ApplicationController
   before_action :set_recipe, only: [:edit, :update, :destroy]
+  before_action :require_admin!
 
   def new
     @recipe = Current.account.recipes.new

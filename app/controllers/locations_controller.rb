@@ -3,6 +3,7 @@ require 'csv'
 class LocationsController < ApplicationController
   before_action :set_location, only: %i[show edit update destroy import_products]
   before_action :verify_file_type, only: [:import_products]
+  before_action :require_admin!, only: [:create, :edit, :update, :new, :destroy, :import_products]
 
   def index
     @locations = Current.account.locations.includes(:inventory_items)

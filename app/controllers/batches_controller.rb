@@ -1,5 +1,6 @@
 class BatchesController < ApplicationController
   before_action :set_batch, only: [:show, :edit, :update, :destroy]
+  before_action :require_admin!, only: [:create, :update, :destroy, :edit, :new]
 
   # GET /batches
   def index

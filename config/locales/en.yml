@@ -30,6 +30,13 @@ en:
       title: "Invite a user to your account"
       label: "User's email"
       submit: "Send invitation"
+      label: "Email address"
+      submit: "Send Invite"
+      role_label: "Select a role"
+      admin_label: "Admin"
+      admin_description: "Admins can manage inventory, recipes, users, and settings."
+      general_label: "General User (Read Only)"
+      general_description: "General users can view inventory (not recipes), and can not make changes."
     invited_users:
       title: "Invited users"
       email: "Email"
@@ -360,3 +367,4 @@ en:
   submit: Submit
   cancel: Cancel
   confirm_delete_location: "Are you sure you want to delete this location?"
+  permission_denied: You do not have permission to perform this action.
