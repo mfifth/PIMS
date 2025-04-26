@@ -27,8 +27,7 @@
                                .where("batches.expiration_date BETWEEN ? AND ?", 
                                       Date.current, 
                                       1.week.from_now.to_date)
-                               .order("batches.expiration_date ASC")
-                               .limit(3) %>
+                               .order("batches.expiration_date ASC") %>
     <% if expiring_items.any? %>
       <div class="mt-3 space-y-1.5">
         <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -80,8 +79,15 @@
       </div>
     <% end %>
 
+    <% 
+      @available_recipes = @recipes.select do |recipe|
+        quantity, = max_quantity_and_expiration(location, recipe)
+        quantity.positive?
+      end
+    %>
+
     <!-- Recipes You Can Make -->
-    <% if @recipes.present? %>
+    <% if @available_recipes.present? %>
       <div class="mt-3 bg-green-50 rounded-md p-3 space-y-2 border border-green-100">
         <div class="flex items-center">
           <svg class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -93,7 +99,7 @@
         </div>
 
         <ul class="space-y-2">
-          <% @recipes.each do |recipe| %>
+          <% @available_recipes.each do |recipe| %>
             <% quantity, expiration = max_quantity_and_expiration(location, recipe) %>
             <% next if quantity.zero? %>
             <li class="text-sm">

@@ -32,7 +32,7 @@
           <% grouped_inventory.each do |location_id, inventory_items| %>
             <% location = inventory_items.first.location %>
             <li class="mt-1">
-              <strong><%= location&.name || t('batches.no_location') %>:</strong> <%= inventory_items.sum(&:quantity) %> <%= t('batches.items') %>
+              <strong><%= location&.name || t('batches.no_location') %>:</strong> <%= inventory_items.sum(&:quantity) %> <%= product.unit_type.pluralize %>
             </li>
           <% end %>
         </ul>
