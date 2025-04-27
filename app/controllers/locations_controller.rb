@@ -153,7 +153,7 @@ class LocationsController < ApplicationController
     expiring_date = (Time.current + 5.days).strftime("%Y-%m-%d")
 
     sample_data = <<~CSV
-      sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_threshold,notification_days,manufactured_date
+      sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_stock_alert,notification_days_before_expiration,manufactured_date
       BAK123,All-Purpose Flour,pounds,3.49,250,Baking,true,FLR001,2025-11-15,50,10,2025-05-15
       BVR456,Orange Juice,gallons,4.99,120,Beverages,true,OJU023,2025-08-01,30,7,2025-05-01
       CLS789,Cotton T-Shirt,units,12.99,500,Clothing,false,,,,20,,2025-03-15
@@ -210,7 +210,7 @@ class LocationsController < ApplicationController
           item.quantity * product.price,
           product.perishable? ? 'Yes' : 'No',
           product.perishable? ? (batch&.batch_number || 'N/A') : 'N/A',
-          product.perishable? ? (batch&.manufactured_date&.strftime("%Y-%m-%d") || 'Not set') : 'N/A'
+          product.perishable? ? (batch&.manufactured_date&.strftime("%Y-%m-%d") || 'Not set') : 'N/A',
           product.perishable? ? (batch&.expiration_date&.strftime("%Y-%m-%d") || 'Not set') : 'N/A'
         ]
       end

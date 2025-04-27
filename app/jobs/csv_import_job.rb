@@ -35,10 +35,8 @@ class CsvImportJob < ApplicationJob
           import_row(row.to_h)
         end
       rescue ActiveRecord::RecordInvalid => e
-        # Capture errors and continue processing other records
         @failed_products << { name: row['name'], errors: e.record.errors.full_messages.join(", ") }
       rescue StandardError => e
-        # Catch unexpected errors and log them
         Rails.logger.error "Unexpected error with row #{row['sku']}: #{e.message}"
         @failed_products << { name: row['name'], errors: "Unexpected error: #{e.message}" }
       end
@@ -65,13 +63,13 @@ class CsvImportJob < ApplicationJob
   def find_or_initialize_product(row)
     product = Product.find_or_initialize_by(
       sku: row['sku'],
-      unit_type: row['unit_type'],
       account: @user.account
     )
     
     product.assign_attributes(
       name: row['name'],
       price: row['price'],
+      unit_type: row['unit_type'],
       perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'])
     )
     
