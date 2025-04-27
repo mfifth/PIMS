@@ -10,13 +10,13 @@ class SquareSyncService
   end
 
   def sync_all
-    sync_locations_and_inventory
+    sync_locations
     sync_menu_items
   rescue => e
     Rails.logger.error("Failed to sync Square data: #{e.message}")
   end
 
-  def sync_locations_and_inventory
+  def sync_locations
     response = client.locations.list_locations
     return unless response.success?
 
@@ -24,9 +24,9 @@ class SquareSyncService
       location = account.locations.find_or_initialize_by(location_uid: sq_loc.id)
       location.name = sq_loc.name
       location.save!
-
-      sync_location_inventory(location)
     end
+  rescue => e
+    Rails.logger.error("Failed to sync Square locations: #{e.message}")
   end
 
   def sync_menu_items
@@ -44,38 +44,5 @@ class SquareSyncService
     end
   rescue => e
     Rails.logger.error("Failed to sync Square menu items: #{e.message}")
-  end
-
-  private
-
-  def sync_location_inventory(location)
-    response = client.inventory.list_inventory_counts(
-      location_ids: [location.location_uid],
-      catalog_object_types: 'ITEM'
-    )
-    return unless response.success?
-
-    ActiveRecord::Base.transaction do
-      response.data.counts.each do |count|
-        sync_product_and_inventory(location, count)
-      end
-    end
-  rescue => e
-    Rails.logger.error("Failed syncing Square inventory for #{location.id}: #{e.message}")
-  end
-
-  def sync_product_and_inventory(location, count)
-    sku      = count.catalog_object_id
-    name     = count.catalog_object_name
-    quantity = count.quantity.to_i
-
-    product = account.products.find_or_initialize_by(sku: sku)
-    product.name = name if product.name.blank?
-    product.save!
-
-    InventoryItem.find_or_initialize_by(product: product, location: location).tap do |item|
-      item.quantity = quantity
-      item.save!
-    end
   end
 end

@@ -216,7 +216,7 @@ en:
       title_new: "New Recipe"
       title_edit: "Edit Recipe"
       name_label: "Recipe Name"
-      uid_label: "Recipe ID"
+      uid_label: Recipe ID (use the same external ID from other platforms to enable real-time syncing)
       search_label: "Search Products"
       search_placeholder: "Type to search..."
       ingredients_heading: "Ingredients"
@@ -342,7 +342,7 @@ en:
     failed_email_test: "Failed to send the test email."
     test_text: "This is a test."
     test_text_notification: "This is a test of text notifications."
-    congrats_message: "Congratulations on setting up your account! Make sure your email and phone number are correct to receive notifications directly."
+    congrats_message: "Congratulations on setting up your account! Once you've added your products, head over to the Recipes tab to link them to recipes. You'll be able to see how many recipes you can make per location and watch your inventory update in real time."
     user_limit: "You have reached the maximum limit of %{limit} users for your subscription."
     user_already_registered: "is already registered. Please log in or try to reset your password."
     blank_email: "Email cannot be blank."
