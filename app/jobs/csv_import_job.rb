@@ -65,11 +65,11 @@ class CsvImportJob < ApplicationJob
       sku: row['sku'],
       account: @user.account
     )
-    
+
     product.assign_attributes(
       name: row['name'],
       price: row['price'],
-      unit_type: row['unit_type'],
+      unit_type: row['unit_type'] || 'units',
       perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'])
     )
     
@@ -88,7 +88,7 @@ class CsvImportJob < ApplicationJob
 
     batch.manufactured_date = row['manufactured_date']
     batch.expiration_date = row['expiration_date']
-    batch.notification_days_before_expiration = row['notification_days'] || 0
+    batch.notification_days_before_expiration = row['notification_days_before_expiration'] || 0
     batch.save!
     batch.id
   end
