@@ -2,7 +2,7 @@ class Subscription < ApplicationRecord
   belongs_to :account
 
   PRODUCT_PLAN_LIMITS = {
-    'free' => 20,
+    'free' => 25,
     'starter' => 50,
     'plus' => 100,
     'premium' => Float::INFINITY

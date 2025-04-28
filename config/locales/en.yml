@@ -126,7 +126,7 @@ en:
   confirmations:
     delete_batch: "Are you sure you want to delete this batch?"
   products:
-    sku: "SKU"
+    sku_title: "SKU"
     category: "Category"
     price: "Price"
     mfg: "MFG"

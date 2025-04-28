@@ -1598,3 +1598,11 @@ video {
 .update-btn:hover {
   text-decoration: underline;
 }
+
+.delete-acc-btn {
+  background-color: red;
+  padding:1 0px;
+  border-radius: 10px;
+  display: block;
+  width: 50vh;
+}

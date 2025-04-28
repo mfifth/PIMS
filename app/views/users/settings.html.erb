@@ -8,6 +8,7 @@
   </turbo-frame>
 
   <br>
+  
   <% if Current.user.admin? %>
     <% if square_connected? %>
       <div class="mt-6 mb-4 p-4 border border-green-300 bg-green-50 rounded-md">
@@ -21,13 +22,12 @@
             data: { disable_with: t("account_settings.square.syncing") } %>
         </div>
       </div>
-    <% elsif ['plus', 'premium'].include?(Current.account.subscription.plan) %>
+    <% else %>
       <%= button_to t("account_settings.square.connect"), "/square/oauth/start", method: :get,
         class: "bg-blue text-white px-4 py-2 rounded hover:bg-indigo-700",
         data: { disable_with: t("account_settings.square.connecting", turbo: false) } %>
     <% end %>
   
-
     <br>
 
     <% if clover_connected? %>
@@ -42,13 +42,22 @@
             data: { disable_with: t("account_settings.clover.syncing") } %>
         </div>
       </div>
-    <% elsif ['plus', 'premium'].include?(Current.account.subscription.plan) %>
+    <% else %>
       <%= button_to t("account_settings.clover.connect"), "/clover/oauth/start", method: :get,
         class: "bg-blue text-white px-4 py-2 rounded hover:bg-green-700",
         data: { disable_with: t("account_settings.clover.connecting", turbo: false) } %>
     <% end %>
   <% end %>
+
   <% if Current.user.admin? %>
     <%= render 'invitation_partial', invitations: @invitations %>
   <% end %>
+
+  <div class="mt-8 text-center">
+    <%= link_to t("account_settings.delete_account"), '/delete_account',
+        data: { turbo_confirm: t("account_settings.confirm_delete"), turbo_method: :delete },
+        class: "text-red-600 hover:text-red-800 underline delete-acc-btn" %>
+  </div>
+
+  </div>
 </div>

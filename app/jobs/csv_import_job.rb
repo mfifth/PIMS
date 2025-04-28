@@ -52,7 +52,7 @@ class CsvImportJob < ApplicationJob
       low_threshold: row_data['low_threshold'].presence || inventory_item.low_threshold
     )
     
-    if row_data['batch_number'].present?
+    if row_data['batch_number'].present? && row['expiration_date'].present?
       product.batch_id = handle_batch(product, row_data)
     end
 
