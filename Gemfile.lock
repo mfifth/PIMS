@@ -136,6 +136,8 @@ GEM
     factory_bot_rails (6.4.4)
       factory_bot (~> 6.5)
       railties (>= 5.0.0)
+    faker (3.5.1)
+      i18n (>= 1.8.11, < 2)
     faraday (2.13.0)
       faraday-net_http (>= 2.0, < 3.5)
       json
@@ -470,6 +472,7 @@ DEPENDENCIES
   debug
   dotenv
   factory_bot_rails
+  faker
   faraday
   good_job
   graphiql-rails
@@ -488,6 +491,7 @@ DEPENDENCIES
   rails (~> 8.0.2)
   rspec-rails (~> 7.0.0)
   rubocop-rails-omakase
+  securerandom
   selenium-webdriver
   sqlite3 (>= 2.1)
   square.rb

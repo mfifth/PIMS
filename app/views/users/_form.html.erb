@@ -61,8 +61,8 @@
     </div>
   <% end %>
 
-  <!-- Submit Button -->
   <br>
+
   <div class="flex">
     <%= form.submit t("settings.update_button"), class: "bg-blue bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition", style: 'padding-left: 2.2rem; padding-right: 2.2rem;' %>
   </div>
@@ -70,20 +70,20 @@
 
 <br>
 
-<% if ['plus', 'premium', 'starter', 'free'].include?(Current.account.subscription.plan) %>
-  <div id='notifications'>
-    <!-- Test Email -->
-    <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
-      <%= submit_tag t("settings.test_email"), class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
-    <% end %>
-<% end %>
+<div id='notifications-section'>
+  <% if ['plus', 'premium', 'starter', 'free'].include?(Current.account.subscription.plan) %>
+      <!-- Test Email -->
+      <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
+        <%= submit_tag t("settings.test_email"), class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
+      <% end %>
+  <% end %>
 
-<% if ['plus', 'premium', 'starter'].include?(Current.account.subscription.plan) %>
-    <!-- Test Text -->
-    <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
-      <%= submit_tag t("settings.test_text"), class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
-    <% end %>
-  </div>
-<% end %>
+  <% if ['plus', 'premium', 'starter'].include?(Current.account.subscription.plan) %>
+      <!-- Test Text -->
+      <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
+        <%= submit_tag t("settings.test_text"), class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
+      <% end %>
+  <% end %>
+</div>
 
 <br>

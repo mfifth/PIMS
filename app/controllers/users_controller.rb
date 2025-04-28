@@ -61,8 +61,6 @@ class UsersController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to settings_user_path(Current.user), 
-      notice: t('notifications.updated_settings') }
       format.turbo_stream
     end
   end
@@ -72,8 +70,6 @@ class UsersController < ApplicationController
     Notification.create(message: t('notifications.test_text_notification'), notification_type: "Alert")
 
     respond_to do |format|
-      format.html { redirect_to settings_user_path(Current.user), 
-      notice: t('notifications.updated_settings')}
       format.turbo_stream
     end
   end
