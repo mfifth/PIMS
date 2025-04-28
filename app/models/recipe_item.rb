@@ -2,7 +2,7 @@ class RecipeItem < ApplicationRecord
   belongs_to :recipe
   belongs_to :product
 
-  VALID_UNITS = %w[grams ounces pounds liters gallons units].freeze
+  VALID_UNITS = %w[grams ounces pounds liters gallons fluid_oz ml units].freeze
   CONVERSION_RATES = {
     'grams' => {
       'grams' => 1,
@@ -21,11 +21,27 @@ class RecipeItem < ApplicationRecord
     },
     'liters' => {
       'liters' => 1,
-      'gallons' => 1.0/3.78541
+      'gallons' => 1.0/3.78541,
+      'fluid_oz' => 33.814,
+      'ml' => 1000
     },
     'gallons' => {
       'liters' => 3.78541,
-      'gallons' => 1
+      'gallons' => 1,
+      'fluid_oz' => 128,
+      'ml' => 3785.41
+    },
+    'fluid_oz' => {
+      'liters' => 0.0295735,
+      'gallons' => 1.0/128,
+      'fluid_oz' => 1,
+      'ml' => 29.5735
+    },
+    'ml' => {
+      'liters' => 0.001,
+      'gallons' => 0.000264172,
+      'fluid_oz' => 0.033814,
+      'ml' => 1
     },
     'units' => {
       'units' => 1
@@ -38,17 +54,26 @@ class RecipeItem < ApplicationRecord
 
   def self.unit_compatibility_map
     {
-      "grams" => %w[grams ounces pounds],
-      "ounces" => %w[grams ounces pounds],
-      "pounds" => %w[grams ounces pounds],
-      "liters" => %w[liters gallons],
-      "gallons" => %w[liters gallons],
-      "units" => %w[units]
+      'units' => ['units'],
+      'grams' => ['grams', 'ounces', 'pounds'],
+      'ounces' => ['grams', 'ounces', 'pounds'],
+      'pounds' => ['grams', 'ounces', 'pounds'],
+      'liters' => ['liters', 'gallons', 'fluid_oz', 'ml'],
+      'gallons' => ['liters', 'gallons', 'fluid_oz', 'ml'],
+      'fluid_oz' => ['liters', 'gallons', 'fluid_oz', 'ml'],
+      'ml' => ['liters', 'gallons', 'fluid_oz', 'ml']
     }
   end
 
   def self.unit_options
-    VALID_UNITS.map { |u| [u.humanize, u] }
+    VALID_UNITS.map do |u| 
+      display_name = case u
+                    when 'fluid_oz' then 'Fluid Oz'
+                    when 'ml' then 'Milliliters'
+                    else u.humanize
+                    end
+      [display_name, u]
+    end
   end
 
   def converted_quantity(target_unit = product.unit_type)
@@ -63,7 +88,14 @@ class RecipeItem < ApplicationRecord
   
     self.class::VALID_UNITS.select do |unit|
       convertible_units?(unit, product.unit_type)
-    end.map { |unit| [unit.humanize, unit] }
+    end.map do |unit| 
+      display_name = case unit
+                    when 'fluid_oz' then 'Fluid Oz'
+                    when 'ml' then 'Milliliters'
+                    else unit.humanize
+                    end
+      [display_name, unit]
+    end
   end
 
   private
@@ -82,7 +114,7 @@ class RecipeItem < ApplicationRecord
   end
 
   def volume_units?(unit)
-    %w[liters gallons].include?(unit)
+    %w[liters gallons fluid_oz ml].include?(unit)
   end
 
   def conversion_rate(from_unit, to_unit)
@@ -91,8 +123,8 @@ class RecipeItem < ApplicationRecord
 
   def round_for_unit(quantity, unit)
     case unit
-    when 'grams', 'liters' then quantity.round(4)
-    when 'ounces', 'pounds', 'gallons' then quantity.round(2)
+    when 'grams', 'liters', 'ml' then quantity.round(4)
+    when 'ounces', 'pounds', 'gallons', 'fluid_oz' then quantity.round(2)
     else quantity.round
     end
   end

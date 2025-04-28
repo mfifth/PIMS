@@ -4,16 +4,16 @@
   </div>
   
   <%= f.number_field :quantity,
-        step: (f.object.unit == "units" ? 1 : 0.1),
-        min: 1,
-        class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
-        data: { unit_type: f.object.unit } %>
+    step: (['units', 'fluid_oz'].include?(f.object.unit) ? 1 : 0.1),
+    min: 1,
+    class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
+    data: { unit_type: f.object.unit } %>
 
   <%= f.select :unit,
-        f.object.compatible_unit_options,
-        {},
-        class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
-        data: { recipe_items_target: "unitInput" } %>
+    f.object.compatible_unit_options,
+    {},
+    class: "w-1/4 border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
+    data: { recipe_items_target: "unitInput" } %>
 
   <%= f.hidden_field :product_id %>
   <%= f.hidden_field :_destroy %>

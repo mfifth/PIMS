@@ -49,7 +49,7 @@
                   <li class="flex items-center gap-4">
                     <span class="w-1/2"><%= item.product.name %></span>
                     <span class="w-1/4"><%= item.quantity %></span>
-                    <span class="w-1/4"><%= item.unit %></span>
+                    <span class="w-1/4"><%= item.unit.humanize %></span>
                   </li>
                 <% end %>
               </ul>

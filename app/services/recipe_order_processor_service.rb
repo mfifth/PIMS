@@ -35,8 +35,10 @@ class RecipeOrderProcessor
       'grams' =>   { 'grams' => 1, 'ounces' => 1.0 / 28.3495, 'pounds' => 1.0 / 453.592 },
       'ounces' =>  { 'grams' => 28.3495, 'ounces' => 1, 'pounds' => 1.0 / 16 },
       'pounds' =>  { 'grams' => 453.592, 'ounces' => 16, 'pounds' => 1 },
-      'liters' =>  { 'liters' => 1, 'gallons' => 1.0 / 3.78541 },
-      'gallons' => { 'liters' => 3.78541, 'gallons' => 1 },
+      'liters' =>  { 'liters' => 1, 'gallons' => 1.0 / 3.78541, 'fluid_oz' => 33.814, 'ml' => 1000 },
+      'gallons' => { 'liters' => 3.78541, 'gallons' => 1, 'fluid_oz' => 128, 'ml' => 3785.41 },
+      'fluid_oz' => { 'liters' => 0.0295735, 'gallons' => 1.0/128, 'fluid_oz' => 1, 'ml' => 29.5735 },
+      'ml' =>      { 'liters' => 0.001, 'gallons' => 0.000264172, 'fluid_oz' => 0.033814, 'ml' => 1 },
       'units' =>   { 'units' => 1 }
     }.dig(from_unit, to_unit) || 1
   end

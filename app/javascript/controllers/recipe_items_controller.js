@@ -85,7 +85,12 @@ export default class extends Controller {
     if (unitSelectElement && unitType && this.unitMapValue[unitType]) {
       const options = this.unitMapValue[unitType]
       unitSelectElement.innerHTML = options
-        .map(unit => `<option value="${unit}">${unit.charAt(0).toUpperCase() + unit.slice(1)}</option>`)
+        .map(unit => {
+          let displayName = unit;
+          if (unit === 'fluid_oz') displayName = 'Fluid Oz';
+          if (unit === 'ml') displayName = 'Milliliters';
+          return `<option value="${unit}">${displayName.charAt(0).toUpperCase() + displayName.slice(1)}</option>`
+        })
         .join('')
     }
   
