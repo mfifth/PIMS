@@ -138,7 +138,7 @@ en:
     edit: "Edit Product"
     general_info: "General Information"
     product_name: "Product Name"
-    sku: "SKU/Barcode"
+    sku: "SKU/Barcode (Use this as a unique external ID)"
     select_existing_category: "Select Existing Category"
     create_new_category: "Or Create New Category"
     price: "Price"

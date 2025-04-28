@@ -72,7 +72,7 @@ class CsvImportJob < ApplicationJob
       unit_type: row['unit_type'] || 'units',
       perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'])
     )
-    
+
     if row['category'].present?
       product.category = @user.account.categories.find_or_create_by(name: row['category'])
     end
