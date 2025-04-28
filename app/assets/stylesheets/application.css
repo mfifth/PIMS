@@ -1601,8 +1601,9 @@ video {
 
 .delete-acc-btn {
   background-color: red;
-  padding:1 0px;
+  padding: 10px;
   border-radius: 10px;
   display: block;
   width: 50vh;
+  text-color: white;
 }

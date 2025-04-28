@@ -53,7 +53,7 @@
     <%= render 'invitation_partial', invitations: @invitations %>
   <% end %>
 
-  <div class="mt-8 text-center">
+  <div class="mt-8 text-center flex justify-center">
     <%= link_to t("account_settings.delete_account"), '/delete_account',
         data: { turbo_confirm: t("account_settings.confirm_delete"), turbo_method: :delete },
         class: "text-red-600 hover:text-red-800 underline delete-acc-btn" %>
