@@ -166,13 +166,15 @@ class LocationsController < ApplicationController
       SNK753,Granola Bars,units,0.99,10,Snacks,false,,,,5,3,2024-12-15
       LTH111,Low Stock Sugar,grams,1.99,60,Baking,true,SGR123,2025-12-01,100,7,2025-04-20
       EXP999,Expiring Cheese,pounds,4.49,50,Dairy,true,CHS999,#{expiring_date},20,5,2025-04-10
+      BTH222,Bath Oil,fluid_oz,7.49,90,Personal Care,false,,,,10,,2025-04-01
+      MED333,Cough Syrup,ml,5.99,150,Medicine,true,CS999,2025-10-20,25,5,2025-04-05
     CSV
   
     send_data sample_data,
               filename: "sample_products.csv",
               type: "text/csv",
               disposition: "attachment"
-  end  
+  end
 
   private
 
