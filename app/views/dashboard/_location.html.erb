@@ -79,15 +79,12 @@
       </div>
     <% end %>
 
-    <% 
-      @available_recipes = @recipes.select do |recipe|
-        quantity, = max_quantity_and_expiration(location, recipe)
-        quantity.positive?
-      end
-    %>
+    <% available_recipes = @recipes.select do |recipe| %>
+      <% quantity, = max_quantity_and_expiration(location, recipe) %>
+      <% quantity.positive? %>
+    <% end %>
 
-    <!-- Recipes You Can Make -->
-    <% if @available_recipes.present? %>
+    <% if available_recipes.any? %>
       <div class="mt-3 bg-green-50 rounded-md p-3 space-y-2 border border-green-100">
         <div class="flex items-center">
           <svg class="h-5 w-5 text-green-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -99,9 +96,8 @@
         </div>
 
         <ul class="space-y-2">
-          <% @available_recipes.each do |recipe| %>
+          <% available_recipes.each do |recipe| %>
             <% quantity, expiration = max_quantity_and_expiration(location, recipe) %>
-            <% next if quantity.zero? %>
             <li class="text-sm">
               <div class="flex justify-between items-baseline">
                 <span class="font-medium text-gray-700"><%= recipe.name %></span>

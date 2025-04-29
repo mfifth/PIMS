@@ -98,8 +98,6 @@ class RecipeItem < ApplicationRecord
     end
   end
 
-  private
-
   def convertible_units?(from_unit, to_unit)
     return true if from_unit == to_unit
     return false if from_unit == 'units' || to_unit == 'units'
@@ -108,6 +106,8 @@ class RecipeItem < ApplicationRecord
     (weight_units?(from_unit) && weight_units?(to_unit)) ||
     (volume_units?(from_unit) && volume_units?(to_unit))
   end
+
+  private
 
   def weight_units?(unit)
     %w[grams ounces pounds].include?(unit)

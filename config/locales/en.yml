@@ -14,6 +14,7 @@ en:
     test_text: "Test Text"
   account_settings:
     title: "Account Settings"
+    delete_account: "Are you sure you want to delete your account?"
     square:
       connected: "Square account connected"
       sync_data: "Sync Data"
