@@ -57,9 +57,9 @@ class SquareController < ApplicationController
   end
 
   def sync_data
-    SquareSyncService.new(Current.account).sync_all
-    redirect_to products_path, notice: "Products successfully synced from Square."
-  end
+    SquareSyncJob.perform_later(Current.account.id)
+    redirect_to root_path, notice: "Square sync started. This may take a few minutes."
+  end  
 
   private
 

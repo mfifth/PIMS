@@ -19,6 +19,10 @@ class CloverSyncService
         end
       end
     end
+
+    unless Notification.exists?(notification_type: "notice", message: I18n.t('notifications.sync_complete'))
+      Notification.create(message: I18n.t('notifications.sync_complete'), notification_type: "notice")
+    end
   end  
 
   private
