@@ -9,3 +9,9 @@ document.addEventListener("turbo:load", function() {
       }, 8000);
     }
 });
+
+document.addEventListener('turbo:load', () => {
+  if (window.history.scrollRestoration) {
+    window.history.scrollRestoration = 'manual'
+  }
+})

@@ -5,9 +5,9 @@
   <% end %>
   <%= turbo_stream.replace "batches-pagination" do %>
     <% if @batches.next_page %>
-      <div data-infinite-scroll-target="pagination" class="hidden" id="batches-pagination">
+      <div class="pagination" id="batches-pagination">
         <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
-                    data: { turbo_frame: "batches_frame" } %>
+                    rel: 'next', data: { turbo_frame: "_top" } %>
       </div>
     <% end %>
   <% end %>
@@ -18,9 +18,9 @@
   <% end %>
   <%= turbo_stream.replace "locations-pagination" do %>
     <% if @locations.next_page %>
-      <div data-infinite-scroll-target="pagination" class="hidden" id="locations-pagination">
+      <div class="pagination" id="locations-pagination">
         <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
-                    data: { turbo_frame: "locations_frame" } %>
+                    rel: 'next', data: { turbo_frame: "_top" } %>
       </div>
     <% end %>
   <% end %>
@@ -31,9 +31,9 @@
   <% end %>
   <%= turbo_stream.replace "products-pagination" do %>
     <% if @products.next_page %>
-      <div data-infinite-scroll-target="pagination" class="hidden" id="products-pagination">
+      <div class="pagination" id="products-pagination">
         <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
-                    data: { turbo_frame: "products_frame" } %>
+                    rel: 'next', data: { turbo_frame: "_top" } %>
       </div>
     <% end %>
   <% end %>

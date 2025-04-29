@@ -8,40 +8,40 @@
       <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.locations') %></h2>
       <p class="text-4xl font-bold text-green-600"><%= @locations.total_count %></p>
 
-      <div id="locations-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
-        <ul class="space-y-3" data-dashboard-target="entries" id="locations-list">
+      <div id="locations-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container">
+        <ul class="space-y-3" id="locations-list">
           <% @locations.each do |location| %>
-            <%= render 'location', location: location %>
+            <%= render 'dashboard/location', location: location %>
           <% end %>
         </ul>
         
-        <% if @locations.next_page %>
-          <div data-dashboard-target="pagination" id="locations-pagination" class="hidden">
+        <div id="locations-pagination" class="pagination">
+          <% if @locations.next_page %>
             <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
-            rel: 'next', data: { turbo_frame: "locations_frame" } %>
-          </div>
-        <% end %>
+                        rel: 'next', data: { turbo_frame: "_top" } %>
+          <% end %>
+        </div>
       </div>
     </div>
 
     <!-- Products Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('products.index.title' )  %></h2>
+      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('products.index.title') %></h2>
       <p class="text-4xl font-bold text-purple-600"><%= @products.total_count %></p>
 
-      <div id="products-scroll-container" class="mt-6 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
-        <ul class="space-y-3" data-dashboard-target="entries" id="products-list">
+      <div id="products-scroll-container" class="mt-6 overflow-y-auto max-h-[400px] scroll-container">
+        <ul class="space-y-3" id="products-list">
           <% @products.each do |product| %>
-            <%= render 'product', product: product %>
+            <%= render 'dashboard/product', product: product %>
           <% end %>
         </ul>
 
-        <% if @products.next_page %>
-          <div data-dashboard-target="pagination" id="products-pagination" class="hidden">
+        <div id="products-pagination" class="pagination">
+          <% if @products.next_page %>
             <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
-            rel: 'next',  data: { turbo_frame: "products_frame" } %>
-          </div>
-        <% end %>
+                        rel: 'next', data: { turbo_frame: "_top" } %>
+          <% end %>
+        </div>
       </div>
     </div>
 
@@ -50,24 +50,20 @@
       <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.batches') %></h2>
       <p class="text-4xl font-bold text-blue-600"><%= @batches.total_count %></p>
     
-      <div id="batches-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container" data-dashboard-target="scrollContainer">
-        <ul class="space-y-3" data-dashboard-target="entries" id="batches-list">
+      <div id="batches-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container">
+        <ul class="space-y-3" id="batches-list">
           <% @batches.each do |batch| %>
-            <%= render 'batch', batch: batch %>
+            <%= render 'dashboard/batch', batch: batch %>
           <% end %>
         </ul>
         
-        <% if @batches.next_page %>
-          <div data-dashboard-target="pagination" id="batches-pagination" class="hidden">
+        <div id="batches-pagination" class="pagination">
+          <% if @batches.next_page %>
             <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
-            rel: 'next', data: { turbo_frame: "batches_frame" } %>
-          </div>
-        <% end %>
+                        rel: 'next', data: { turbo_frame: "_top" } %>
+          <% end %>
+        </div>
       </div>
     </div> 
   </div>
 </div>
-
-<%= turbo_frame_tag "batches_frame" %>
-<%= turbo_frame_tag "locations_frame" %>
-<%= turbo_frame_tag "products_frame" %>

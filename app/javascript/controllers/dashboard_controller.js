@@ -1,15 +1,15 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["entries", "pagination", "scrollContainer"]
+  static targets = ["entries", "pagination"]
   static values = { loading: Boolean }
 
   connect() {
-    this.scrollContainers = this.scrollContainerTargets
+    this.scrollContainers = this.element.querySelectorAll(".scroll-container")
     this.scrollHandlers = []
     
     this.scrollContainers.forEach(container => {
-      const handler = this.handleScroll.bind(this, container)
+      const handler = () => this.handleScroll(container)
       this.scrollHandlers.push(handler)
       container.addEventListener('scroll', handler)
     })
@@ -22,45 +22,35 @@ export default class extends Controller {
   }
 
   handleScroll(container) {
-    if (this.loadingValue) {
-      return
-    }
+    if (this.loadingValue) return
 
-    const scrollPosition = container.scrollTop + container.clientHeight
-    const scrollHeight = container.scrollHeight
-    const threshold = 50 // pixels from bottom
+    const { scrollTop, scrollHeight, clientHeight } = container
+    const threshold = 100
+    const distanceToBottom = scrollHeight - (scrollTop + clientHeight)
 
-    if (scrollPosition >= (scrollHeight - threshold)) {
+    if (distanceToBottom <= threshold) {
       this.loadMore(container)
     }
   }
 
   loadMore(container) {
-    const pagination = container.querySelector("[data-dashboard-target='pagination']")
-    const nextPage = pagination?.querySelector("a[rel='next']")
-    
-    if (!nextPage) {
-      return
-    }
+    const nextPageLink = container.querySelector(".pagination a[rel='next']")
+    if (!nextPageLink) return
 
     this.loadingValue = true
     
-    fetch(nextPage.href, {
+    fetch(nextPageLink.href, {
       headers: { 
         Accept: "text/vnd.turbo-stream.html",
-        "X-Requested-With": "XMLHttpRequest"
+        "X-Custom-Request-Type": "InfiniteScroll"
       }
     })
     .then(response => {
       if (!response.ok) throw new Error("Network response was not ok")
       return response.text()
     })
-    .then(html => {
-      Turbo.renderStreamMessage(html)
-    })
+    .then(html => Turbo.renderStreamMessage(html))
     .catch(error => console.error("Error loading more items:", error))
-    .finally(() => {
-      this.loadingValue = false
-    })
+    .finally(() => this.loadingValue = false)
   }
 }
