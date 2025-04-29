@@ -1,5 +1,7 @@
 module DashboardHelper
   def max_quantity_and_expiration(location, recipe)
+    return [0, nil] if recipe.recipe_items.empty?
+
     min_quantity = Float::INFINITY
     earliest_expiration = nil
 

@@ -150,31 +150,35 @@ class LocationsController < ApplicationController
   end
 
   def sample_csv
-    expiring_date = (Time.current + 5.days).strftime("%Y-%m-%d")
-
+    expiring_soon      = (Time.current + 5.days).strftime("%Y-%m-%d")
+    medium_expiration  = (Time.current + 30.days).strftime("%Y-%m-%d")
+    long_expiration    = (Time.current + 1.year).strftime("%Y-%m-%d")
+    manufactured_today = Time.current.strftime("%Y-%m-%d")
+    manufactured_last_week = (Time.current - 7.days).strftime("%Y-%m-%d")
+  
     sample_data = <<~CSV
       sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_stock_alert,notification_days_before_expiration,manufactured_date
-      BAK123,All-Purpose Flour,pounds,3.49,250,Baking,true,FLR001,2025-11-15,50,10,2025-05-15
-      BVR456,Orange Juice,gallons,4.99,120,Beverages,true,OJU023,2025-08-01,30,7,2025-05-01
+      BAK123,All-Purpose Flour,pounds,3.49,250,Baking,true,FLR001,#{long_expiration},50,10,#{manufactured_today}
+      BVR456,Orange Juice,gallons,4.99,120,Beverages,true,OJU023,#{medium_expiration},30,7,#{manufactured_last_week}
       CLS789,Cotton T-Shirt,units,12.99,500,Clothing,false,,,,20,,2025-03-15
       ELC321,Wireless Mouse,units,24.95,80,Electronics,false,,,,10,,2025-02-28
-      FRT654,Fresh Strawberries,ounces,5.50,180,Fruit,true,STRW789,2025-04-30,40,5,2025-04-20
+      FRT654,Fresh Strawberries,ounces,5.50,180,Fruit,true,STRW789,#{expiring_soon},40,5,#{manufactured_today}
       HHS987,Liquid Hand Soap,liters,2.99,300,Health,false,,,,25,,2025-01-10
-      MTD258,Ground Beef,pounds,6.99,75,Meat,true,GBF456,2025-05-05,20,3,2025-04-28
-      SEA369,Canned Tuna,units,1.29,400,Seafood,true,TUN789,2027-02-01,60,15,2025-02-01
-      VEG147,Organic Carrots,pounds,2.29,200,Vegetables,true,CRT321,2025-05-10,30,5,2025-04-25
+      MTD258,Ground Beef,pounds,6.99,75,Meat,true,GBF456,#{medium_expiration},20,3,#{manufactured_last_week}
+      SEA369,Canned Tuna,units,1.29,400,Seafood,true,TUN789,#{(Time.current + 2.years).strftime("%Y-%m-%d")},60,15,2025-02-01
+      VEG147,Organic Carrots,pounds,2.29,200,Vegetables,true,CRT321,#{medium_expiration},30,5,#{manufactured_today}
       SNK753,Granola Bars,units,0.99,10,Snacks,false,,,,5,3,2024-12-15
-      LTH111,Low Stock Sugar,grams,1.99,60,Baking,true,SGR123,2025-12-01,100,7,2025-04-20
-      EXP999,Expiring Cheese,pounds,4.49,50,Dairy,true,CHS999,#{expiring_date},20,5,2025-04-10
+      LTH111,Low Stock Sugar,grams,1.99,60,Baking,true,SGR123,#{long_expiration},100,7,#{manufactured_today}
+      EXP999,Expiring Cheese,pounds,4.49,50,Dairy,true,CHS999,#{expiring_soon},20,5,#{manufactured_last_week}
       BTH222,Bath Oil,fluid_oz,7.49,90,Personal Care,false,,,,10,,2025-04-01
-      MED333,Cough Syrup,ml,5.99,150,Medicine,true,CS999,2025-10-20,25,5,2025-04-05
+      MED333,Cough Syrup,ml,5.99,150,Medicine,true,CS999,#{medium_expiration},25,5,#{manufactured_last_week}
     CSV
   
     send_data sample_data,
               filename: "sample_products.csv",
               type: "text/csv",
               disposition: "attachment"
-  end
+  end  
 
   private
 
