@@ -5,8 +5,7 @@
       <div class="flex-1">
         <h1 class="text-xl font-bold text-gray-800"><%= @location.name %></h1>
         <div class="text-gray-700 space-y-1 mt-2">
-          <p><strong class="font-semibold"><%= t("locations.show.address") %>:</strong> <%= @location.address %></p>
-          <p><strong class="font-semibold"><%= t("locations.show.city") %>:</strong> <%= @location.city %></p>
+          <p><strong class="font-semibold"><%= t("locations.show.city") %>:</strong> <%= @location.city.titleize %></p>
         </div>
       </div>
 

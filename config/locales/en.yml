@@ -112,7 +112,7 @@ en:
         sku: "SKU"
         location: "Location"
         quantity: "Quantity"
-        notification_days: "Notification Days Before"
+        notification_days: "Notification Days Before Expiration"
         unit_type: Unit Type
       edit: "Edit"
       back: "Back to Batches"
