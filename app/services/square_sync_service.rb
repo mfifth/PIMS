@@ -107,7 +107,7 @@ class SquareSyncService
   end
 
   def sync_product_and_inventory(location, count)
-    product = account.products.find_or_initialize_by(uid: count.catalog_object_id)
+    product = account.products.find_or_initialize_by(sku: count.catalog_object_id)
     product.name = count.catalog_object_name if product.name.blank?
     product.save!
 
