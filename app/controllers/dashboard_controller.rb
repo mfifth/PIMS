@@ -31,7 +31,7 @@ class DashboardController < ApplicationController
   def load_batches
     @batches = Current.account.batches
                   .includes(products: :inventory_items)
-                  .order(created_at: :desc)
+                  .order(expiration_date: :asc)
                   .page(params[:page]).per(5)
   end
 
