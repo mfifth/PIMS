@@ -8,7 +8,7 @@ class CloverController < ApplicationController
   def start
     session[:current_account_id] = Current.account.id
     url = "https://www.clover.com/oauth/authorize?client_id=#{CLIENT_ID}&response_type=code&redirect_uri=#{REDIRECT_URI}"
-    redirect_to url
+    redirect_to url, allow_other_host: true
   end
 
   def callback
@@ -63,7 +63,7 @@ class CloverController < ApplicationController
   end
 
   def sync_data
-    CloverSyncService.new(Current.account).sync_all
-    redirect_to products_path, notice: "Products successfully synced from Clover."
-  end
+    CloverSyncJob.perform_later(Current.account.id)
+    redirect_to root_path, notice: "Sync started! Products will update shortly."
+  end  
 end
