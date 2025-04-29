@@ -113,6 +113,7 @@ en:
         location: "Location"
         quantity: "Quantity"
         notification_days: "Notification Days Before"
+        unit_type: Unit Type
       edit: "Edit"
       back: "Back to Batches"
   errors:
