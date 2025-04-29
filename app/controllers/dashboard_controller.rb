@@ -45,7 +45,9 @@ class DashboardController < ApplicationController
   def load_products
     @products = Current.account.products
                     .includes(:batch, locations: :inventory_items)
-                    .order(created_at: :desc)
+                    .left_joins(:batch)
+                    .order(Arel.sql('batches.expiration_date ASC NULLS LAST'))
+                    .distinct
                     .page(params[:page]).per(5)
-  end
+  end  
 end
