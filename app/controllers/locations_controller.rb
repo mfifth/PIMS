@@ -193,7 +193,7 @@ class LocationsController < ApplicationController
   end
 
   def location_params
-    params.require(:location).permit(:name, :address, :city, :state, :zip_code, :country)
+    params.require(:location).permit(:name, :address, :city, :state, :zip_code, :country, :location_uid)
   end
 
   def generate_csv(items)

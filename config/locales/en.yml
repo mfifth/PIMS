@@ -278,6 +278,7 @@ en:
       country: "Country"
       save: "Save Location"
       cancel: "Cancel"
+      location_uid: "Location UID: Use this as an external unique ID"
     show:
       address: "Address"
       city: "City"
