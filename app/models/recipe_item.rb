@@ -2,7 +2,7 @@ class RecipeItem < ApplicationRecord
   belongs_to :recipe
   belongs_to :product
 
-  VALID_UNITS = %w[grams ounces pounds liters gallons fluid_oz ml units].freeze
+  VALID_UNITS = %w[grams ounces pounds liters gallons fluid_oz milliliters units].freeze
   CONVERSION_RATES = {
     'grams' => {
       'grams' => 1,
@@ -37,7 +37,7 @@ class RecipeItem < ApplicationRecord
       'fluid_oz' => 1,
       'ml' => 29.5735
     },
-    'ml' => {
+    'milliliters' => {
       'liters' => 0.001,
       'gallons' => 0.000264172,
       'fluid_oz' => 0.033814,
@@ -61,7 +61,7 @@ class RecipeItem < ApplicationRecord
       'liters' => ['liters', 'gallons', 'fluid_oz', 'ml'],
       'gallons' => ['liters', 'gallons', 'fluid_oz', 'ml'],
       'fluid_oz' => ['liters', 'gallons', 'fluid_oz', 'ml'],
-      'ml' => ['liters', 'gallons', 'fluid_oz', 'ml']
+      'milliliters' => ['liters', 'gallons', 'fluid_oz', 'ml']
     }
   end
 
@@ -91,7 +91,7 @@ class RecipeItem < ApplicationRecord
     end.map do |unit| 
       display_name = case unit
                     when 'fluid_oz' then 'Fluid Oz'
-                    when 'ml' then 'Milliliters'
+                    when 'milliliters' then 'Milliliters'
                     else unit.humanize
                     end
       [display_name, unit]
@@ -114,7 +114,7 @@ class RecipeItem < ApplicationRecord
   end
 
   def volume_units?(unit)
-    %w[liters gallons fluid_oz ml].include?(unit)
+    %w[liters gallons fluid_oz milliliters].include?(unit)
   end
 
   def conversion_rate(from_unit, to_unit)
@@ -123,7 +123,7 @@ class RecipeItem < ApplicationRecord
 
   def round_for_unit(quantity, unit)
     case unit
-    when 'grams', 'liters', 'ml' then quantity.round(4)
+    when 'grams', 'liters', 'milliliters' then quantity.round(4)
     when 'ounces', 'pounds', 'gallons', 'fluid_oz' then quantity.round(2)
     else quantity.round
     end
