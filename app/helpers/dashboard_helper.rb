@@ -9,13 +9,7 @@ module DashboardHelper
 
       return [0, nil] if inventory_items.empty?
 
-      # Convert required quantity to product's unit_type
-      if recipe_item.convertible_units?(recipe_item.unit, product.unit_type)
-        required_quantity = recipe_item.converted_quantity(product.unit_type)
-      else
-        return [0, nil]
-      end
-
+      required_quantity = recipe_item.converted_quantity(product.unit_type)
       total_available = inventory_items.sum(&:quantity)
 
       return [0, nil] if required_quantity <= 0 || total_available < required_quantity

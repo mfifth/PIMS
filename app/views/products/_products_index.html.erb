@@ -12,20 +12,16 @@
     <% end %>
   </div>
 
-  <!-- Product List inside Turbo Frame -->
   <div class="bg-white shadow-md rounded-lg p-6">
-    <div data-controller="infinite-scroll">
-      <turbo-frame id="products_list">
-        <ul class="divide-y divide-gray-200">
-          <%= render products %>
-        </ul>
-      </turbo-frame>
+    <turbo-frame id="products_list">
+      <ul class="divide-y divide-gray-200">
+        <%= render products %>
+      </ul>
+    </turbo-frame>
 
-      <% if products.next_page %>
-        <div data-controller="infinite-scroll"
-          data-infinite-scroll-url-value="<%= products_path(page: products.next_page, format: :turbo_stream) %>">
-        </div>
-      <% end %>
+    <div id="infinite-scroll-trigger"
+        data-controller="infinite-scroll"
+        data-infinite-scroll-url-value="<%= products_path(page: products.next_page, format: :turbo_stream) if products.next_page %>">
     </div>
   </div>
 </turbo-frame>

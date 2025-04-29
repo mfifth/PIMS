@@ -4,8 +4,9 @@
 
 <% if @products.next_page %>
   <%= turbo_stream.replace "infinite-scroll-trigger" do %>
-    <div data-controller="infinite-scroll"
-      data-infinite-scroll-url-value="<%= products_path(page: @products.next_page) %>">
+    <div id="infinite-scroll-trigger"
+         data-controller="infinite-scroll"
+         data-infinite-scroll-url-value="<%= products_path(page: @products.next_page, format: :turbo_stream) %>">
     </div>
   <% end %>
 <% else %>
