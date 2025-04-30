@@ -21,9 +21,7 @@ class CloverSyncService
       end
     end
 
-    unless Notification.exists?(notification_type: "notice", message: I18n.t('notifications.sync_complete'))
-      Notification.create(message: I18n.t('notifications.sync_complete'), notification_type: "notice")
-    end
+    Notification.find_or_create_by(message: I18n.t('notifications.sync_complete'), notification_type: "notice")
   rescue => e
     log_error("Clover sync_all failed", e)
   end
@@ -69,10 +67,9 @@ class CloverSyncService
 
   def sync_inventory_item(product, stock)
     location_data = stock["location"]
-    location = account.locations.find_or_create_by!(
-      name: location_data["name"],
-      location_uid: location_data["id"]
-    )
+    location = account.locations.find_or_create_by!(location_uid: location_data["id"]) do |loc|
+      loc.name = location_data["name"]
+    end
 
     inventory_item = location.inventory_items.find_or_initialize_by(product: product)
     inventory_item.quantity = stock["quantity"].to_i

@@ -57,6 +57,8 @@ class CloverController < ApplicationController
     case type
     when "ORDER.created"
       CloverOrderSyncJob.perform_later(account.id, entity_id)
+    when "ITEM.updated", "ITEM.created"
+      CloverItemSyncJob.perform_later(account.id, entity_id)
     end
 
     head :ok

@@ -14,9 +14,7 @@ class SquareSyncService
     sync_menu_items_and_categories
     sync_inventory_for_all_locations
 
-    unless Notification.exists?(notification_type: "notice", message: I18n.t('notifications.sync_complete'))
-      Notification.create(message: I18n.t('notifications.sync_complete'), notification_type: "notice")
-    end
+    Notification.find_or_create_by(message: I18n.t('notifications.sync_complete'), notification_type: "notice")
   rescue Square::ApiError => e
     log_error("Square API error during sync_all", e)
   rescue => e
