@@ -15,12 +15,12 @@
           <% end %>
         </ul>
         
-        <div id="locations-pagination" class="pagination">
-          <% if @locations.next_page %>
+        <% if @locations.next_page %>
+          <div id="locations-pagination" class="hidden">
             <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
                         rel: 'next', data: { turbo_frame: "_top" } %>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
 
@@ -36,12 +36,12 @@
           <% end %>
         </ul>
 
-        <div id="products-pagination" class="pagination">
-          <% if @products.next_page %>
+        <% if @products.next_page %>
+          <div id="products-pagination" class="hidden">
             <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
                         rel: 'next', data: { turbo_frame: "_top" } %>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
 
@@ -57,12 +57,12 @@
           <% end %>
         </ul>
         
-        <div id="batches-pagination" class="pagination">
-          <% if @batches.next_page %>
+        <% if @batches.next_page %>
+          <div id="batches-pagination" class="hidden">
             <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
                         rel: 'next', data: { turbo_frame: "_top" } %>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div> 
   </div>

@@ -34,7 +34,7 @@ export default class extends Controller {
   }
 
   loadMore(container) {
-    const nextPageLink = container.querySelector(".pagination a[rel='next']")
+    const nextPageLink = container.querySelector(".hidden a[rel='next']")
     if (!nextPageLink) return
 
     this.loadingValue = true

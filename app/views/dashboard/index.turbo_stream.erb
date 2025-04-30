@@ -5,7 +5,7 @@
   <% end %>
   <%= turbo_stream.replace "batches-pagination" do %>
     <% if @batches.next_page %>
-      <div class="pagination" id="batches-pagination">
+      <div id="batches-pagination" class="hidden">
         <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
                     rel: 'next', data: { turbo_frame: "_top" } %>
       </div>
@@ -18,7 +18,7 @@
   <% end %>
   <%= turbo_stream.replace "locations-pagination" do %>
     <% if @locations.next_page %>
-      <div class="pagination" id="locations-pagination">
+      <div id="locations-pagination" class="hidden">
         <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
                     rel: 'next', data: { turbo_frame: "_top" } %>
       </div>
@@ -31,7 +31,7 @@
   <% end %>
   <%= turbo_stream.replace "products-pagination" do %>
     <% if @products.next_page %>
-      <div class="pagination" id="products-pagination">
+      <div id="products-pagination" class="hidden">
         <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
                     rel: 'next', data: { turbo_frame: "_top" } %>
       </div>

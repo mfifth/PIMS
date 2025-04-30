@@ -171,7 +171,7 @@ class LocationsController < ApplicationController
       LTH111,Low Stock Sugar,grams,1.99,60,Baking,true,SGR123,#{long_expiration},100,7,#{manufactured_today}
       EXP999,Expiring Cheese,pounds,4.49,50,Dairy,true,CHS999,#{expiring_soon},20,5,#{manufactured_last_week}
       BTH222,Bath Oil,fluid_oz,7.49,90,Personal Care,false,,,,10,,2025-04-01
-      MED333,Cough Syrup,ml,5.99,150,Medicine,true,CS999,#{medium_expiration},25,5,#{manufactured_last_week}
+      MED333,Cough Syrup,milliliters,5.99,150,Medicine,true,CS999,#{medium_expiration},25,5,#{manufactured_last_week}
     CSV
   
     send_data sample_data,
