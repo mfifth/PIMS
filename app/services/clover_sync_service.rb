@@ -1,4 +1,6 @@
 class CloverSyncService
+  MAX_RETRIES = 5
+
   def initialize(account)
     @account = account
   end
@@ -13,7 +15,6 @@ class CloverSyncService
         if item["stockCounts"]
           item["stockCounts"].each do |stock|
             next unless stock["location"]
-  
             sync_inventory_item(product, stock)
           end
         end
@@ -23,7 +24,9 @@ class CloverSyncService
     unless Notification.exists?(notification_type: "notice", message: I18n.t('notifications.sync_complete'))
       Notification.create(message: I18n.t('notifications.sync_complete'), notification_type: "notice")
     end
-  end  
+  rescue => e
+    log_error("Clover sync_all failed", e)
+  end
 
   private
 
@@ -34,11 +37,17 @@ class CloverSyncService
     cursor = nil
 
     loop do
-      url = url = "https://api.clover.com/v3/merchants/#{account.clover_merchant_id}/items?expand=stockCounts,categories&limit=100"
+      url = "https://api.clover.com/v3/merchants/#{account.clover_merchant_id}/items?expand=stockCounts,categories&limit=100"
       url += "&cursor=#{cursor}" if cursor
 
-      response = Faraday.get(url) do |req|
-        req.headers["Authorization"] = "Bearer #{account.clover_access_token}"
+      response = with_rate_limit_retries do
+        Faraday.get(url) do |req|
+          req.headers["Authorization"] = "Bearer #{account.clover_access_token}"
+        end
+      end
+
+      unless response.success?
+        raise "Clover API error: #{response.status} - #{response.body}"
       end
 
       data = JSON.parse(response.body)
@@ -80,15 +89,41 @@ class CloverSyncService
   def meal_item?(item)
     name = item["name"].to_s
     description = item["description"].to_s
-    category_name = ""
-  
-    if item["categories"] && item["categories"].any?
-      category_name = item["categories"].first["name"].to_s
-    end
-  
+    category_name = item.dig("categories", 0, "name").to_s
+
     MealClassifier.new(
       OpenStruct.new(item_data: OpenStruct.new(name: name, description: description)),
       category_name
     ).meal?
-  end  
+  end
+
+  def with_rate_limit_retries
+    retries = 0
+
+    begin
+      response = yield
+      if response.status == 429
+        wait_time = response.headers["Retry-After"]&.to_i || (2**retries)
+        sleep(wait_time)
+        raise "Rate limited"
+      end
+      response
+    rescue => e
+      retries += 1
+      if retries <= MAX_RETRIES
+        sleep(2**retries)
+        retry
+      else
+        raise e
+      end
+    end
+  end
+
+  def log_error(context, error)
+    Rails.logger.error("[CloverSyncService] #{context}: #{error.message}\n#{error.backtrace.join("\n")}")
+    Notification.create(
+      message: "#{context}: #{error.message}",
+      notification_type: "error"
+    )
+  end
 end

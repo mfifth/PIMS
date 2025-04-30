@@ -5,8 +5,8 @@ class MealClassifier
     ].freeze
   
     NON_MEAL_KEYWORDS = [
-      "boxed", "wrapped", "frozen", "prepackaged", "ready-to-eat", "instant",
-      "microwave", "convenience", "meal kit", "can", "bottle", "pack", "six-pack", "carton"
+      "frozen", "prepackaged", "ready-to-eat", "instant", "microwave", "convenience", 
+      "meal kit", "can", "bottle", "pack", "six-pack", "carton"
     ].freeze
   
     COMMON_MEAL_NAMES = [
