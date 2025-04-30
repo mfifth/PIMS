@@ -85,7 +85,6 @@
                             'SUM(inventory_items.quantity * products.price) as total_value'
                           )
                           .order('total_value DESC')
-                          .limit(10)
                           .each do |category| %>
                   <%= render 'categories/category', category: category, location: location %>
                 <% end %>

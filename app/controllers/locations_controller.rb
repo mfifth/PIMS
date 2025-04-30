@@ -114,21 +114,20 @@ class LocationsController < ApplicationController
   def categories
     @location = Location.find(params[:id])
     @page = params[:page] || 1
-    @per_page = 5
-    
-    @categories = @location.inventory_items
-                      .joins(product: :category)
-                      .group('categories.id', 'categories.name')
-                      .select(
-                        'categories.id as category_id',
-                        'categories.name as category_name',
-                        'SUM(inventory_items.quantity) as total_quantity',
-                        'SUM(inventory_items.quantity * products.price) as total_value'
-                      )
-                      .order('total_value DESC')
-                      .page(@page)
-                      .per(@per_page)
 
+    @categories = @location.inventory_items
+      .joins(product: :category)
+      .group('categories.id', 'categories.name')
+      .select(
+        'categories.id as category_id',
+        'categories.name as category_name',
+        'SUM(inventory_items.quantity) as total_quantity',
+        'SUM(inventory_items.quantity * products.price) as total_value'
+      )
+      .order(Arel.sql('SUM(inventory_items.quantity * products.price) DESC'))
+      .page(@page)
+      .per(@per_page)
+    
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to @location }
