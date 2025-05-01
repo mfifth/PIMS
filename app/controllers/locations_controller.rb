@@ -136,19 +136,20 @@ class LocationsController < ApplicationController
 
   def import_products
     if params[:file].present?
-      tempfile = params[:file].tempfile
-      file_path = Rails.root.join('tmp', "import_#{Time.now.to_i}.csv")
+      # Create a temporary file in memory
+      tempfile = Tempfile.new(['import_', '.csv'])
+      tempfile.binmode
+      tempfile.write(params[:file].read)
+      tempfile.rewind
   
-      FileUtils.mv(tempfile.path, file_path)  
-      CsvImportJob.perform_later(file_path.to_s, Current.user.id, @location.id)
+      # Pass the tempfile path to the job (it will automatically be deleted after processing)
+      CsvImportJob.perform_later(tempfile.path, Current.user.id, @location.id)
     else
       flash[:alert] = t('locations.csv_file_warning')
     end
   
-    # Redirect after job is enqueued (this won't wait for the job to finish)
     redirect_to @location, notice: t('locations.csv_import_notice')
   end
-  
 
   def sample_csv
     expiring_soon      = (Time.current + 5.days).strftime("%Y-%m-%d")

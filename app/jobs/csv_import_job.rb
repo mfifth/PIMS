@@ -7,15 +7,12 @@ class CsvImportJob < ApplicationJob
   end
 
   def perform(file_path, user_id, location_id)
-    @file_path = Rails.root.join('tmp', file_path)
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
-
-    raise "File not found: #{@file_path}" unless File.exist?(@file_path)
-
+  
     process_csv(file_path)
-
+  
     if @failed_products.any?
       notify_user(I18n.t("csv_import.completed_with_errors"), :alert)
       @failed_products.each do |failed_product|
@@ -32,7 +29,7 @@ class CsvImportJob < ApplicationJob
   end
 
   private
-
+  
   def process_csv(file_path)
     CSV.foreach(file_path, headers: true) do |row|
       begin
@@ -46,7 +43,7 @@ class CsvImportJob < ApplicationJob
         @failed_products << { name: row['name'], errors: I18n.t("csv_import.errors.unexpected", message: e.message) }
       end
     end
-  end
+  end  
 
   def import_row(row_data)
     product = find_or_initialize_product(row_data)
