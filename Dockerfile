@@ -42,6 +42,8 @@ RUN bundle exec bootsnap precompile --gemfile
 # Copy full app
 COPY . .
 
+ENV SKIP_DB=1
+
 # Only one precompile step needed
 RUN SECRET_KEY_BASE_DUMMY=1 RAILS_ENV=production bundle exec rails assets:precompile
 

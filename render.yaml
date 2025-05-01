@@ -17,6 +17,8 @@ services:
     sync: false
   - key: WEB_CONCURRENCY
     sync: false
+  - key: SKIP_DB
+    value: "1" # Prevent DB access during asset precompilation
   region: oregon
   buildCommand: bundle install && rails assets:precompile
   startCommand: bundle exec puma -C config/puma.rb
