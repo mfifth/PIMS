@@ -15,7 +15,7 @@ module SquareHelper
         location = account.locations.find_by(location_uid: data["location_id"])
         next unless location
 
-        RecipeOrderProcessor.new(location).process_recipe(recipe, quantity_sold)
+        RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity_sold)
       else
         product = account.products.find_by(sku: catalog_object_id)
         next unless product

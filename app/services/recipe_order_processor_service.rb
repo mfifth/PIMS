@@ -1,4 +1,4 @@
-class RecipeOrderProcessor
+class RecipeOrderProcessorService
   def initialize(location)
     @location = location
   end
