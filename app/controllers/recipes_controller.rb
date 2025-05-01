@@ -69,7 +69,7 @@ class RecipesController < ApplicationController
 
   def update
     if @recipe.update(recipe_params)
-      redirect_to recipes_path, notice: "Recipe was successfully updated."
+      redirect_to recipes_path, notice: t('recipe_updated')
     else
       render :edit
     end
@@ -79,7 +79,7 @@ class RecipesController < ApplicationController
     @recipe.destroy
   
     respond_to do |format|
-      format.html { redirect_to recipes_path, notice: "Recipe deleted successfully." }
+      format.html { redirect_to recipes_path, notice: t('recipe_deleted') }
       format.turbo_stream
     end
   end

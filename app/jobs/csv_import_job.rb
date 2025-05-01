@@ -2,7 +2,7 @@ class CsvImportJob < ApplicationJob
   queue_as :default
 
   rescue_from(StandardError) do |exception|
-    notify_user("Failed, Data malformed: #{exception.message}", :alert)
+    notify_user(I18n.t("csv_import.errors.malformed", error: exception.message), :alert)
     cleanup_files
   end
 
@@ -13,14 +13,17 @@ class CsvImportJob < ApplicationJob
     @failed_products = []
 
     process_csv(file_path)
-    
+
     if @failed_products.any?
-      notify_user("CSV import completed with errors. Some products failed to import.", :alert)
+      notify_user(I18n.t("csv_import.completed_with_errors"), :alert)
       @failed_products.each do |failed_product|
-        notify_user("Failed to import product: #{failed_product[:name]} - Errors: #{failed_product[:errors]}", :alert)
+        notify_user(
+          I18n.t("csv_import.failed_product", name: failed_product[:name], errors: failed_product[:errors]),
+          :alert
+        )
       end
     else
-      notify_user("CSV import completed successfully!", :notice)
+      notify_user(I18n.t("csv_import.success"), :notice)
     end
   ensure
     cleanup_files
@@ -38,7 +41,7 @@ class CsvImportJob < ApplicationJob
         @failed_products << { name: row['name'], errors: e.record.errors.full_messages.join(", ") }
       rescue StandardError => e
         Rails.logger.error "Unexpected error with row #{row['sku']}: #{e.message}"
-        @failed_products << { name: row['name'], errors: "Unexpected error: #{e.message}" }
+        @failed_products << { name: row['name'], errors: I18n.t("csv_import.errors.unexpected", message: e.message) }
       end
     end
   end
@@ -46,12 +49,12 @@ class CsvImportJob < ApplicationJob
   def import_row(row_data)
     product = find_or_initialize_product(row_data)
     inventory_item = @location.inventory_items.find_or_initialize_by(product: product)
-    
+
     inventory_item.assign_attributes(
       quantity: row_data['quantity'].presence || inventory_item.quantity,
       low_threshold: row_data['low_threshold'].presence || inventory_item.low_threshold
     )
-    
+
     if row_data['batch_number'].present? && row_data['expiration_date'].present?
       product.batch_id = handle_batch(product, row_data)
     end
@@ -76,7 +79,7 @@ class CsvImportJob < ApplicationJob
     if row['category'].present?
       product.category = @user.account.categories.find_or_create_by(name: row['category'])
     end
-    
+
     product
   end
 
@@ -95,7 +98,7 @@ class CsvImportJob < ApplicationJob
 
   def notify_user(message, type = :notice)
     return unless @user.account
-    
+
     Notification.create!(
       account: @user.account,
       message: message,

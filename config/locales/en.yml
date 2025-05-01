@@ -359,6 +359,13 @@ en:
     mark_all_as_read: "Mark all as read."
     ago: "%{time} ago"
     sync_complete: "Now that your menu items have been synced you can add products/ingredients and link them to your recipes to see your inventory update in real time."
+  csv_import:
+    success: "CSV import completed successfully!"
+    completed_with_errors: "CSV import completed with errors. Some products failed to import."
+    failed_product: "Failed to import product: %{name} - Errors: %{errors}"
+    errors:
+      malformed: "Failed, Data malformed: %{error}"
+      unexpected: "Unexpected error: %{message}"
   items: "items"
   quick_update: "Quick Update"
   select_location: Location
@@ -373,3 +380,5 @@ en:
   cancel: Cancel
   confirm_delete_location: "Are you sure you want to delete this location?"
   permission_denied: You do not have permission to perform this action.
+  recipe_updated: Recipe updated successfully
+  recipe_deleted: Recipe was removed successfully

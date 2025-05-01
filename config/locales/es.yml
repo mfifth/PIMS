@@ -392,3 +392,10 @@ es:
   submit: "Enviar"
   cancel: "Cancelar"
   confirm_delete_location: "¿Estás seguro de que deseas eliminar esta ubicación?"
+  csv_import:
+    success: "¡Importación de CSV completada con éxito!"
+    completed_with_errors: "La importación de CSV se completó con errores. Algunos productos no se pudieron importar."
+    failed_product: "No se pudo importar el producto: %{name} - Errores: %{errors}"
+    errors:
+      malformed: "Falló. Datos malformados: %{error}"
+      unexpected: "Error inesperado: %{message}"
