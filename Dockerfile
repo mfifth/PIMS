@@ -44,7 +44,7 @@ RUN bundle exec bootsnap precompile --gemfile
 COPY . .
 
 # Build Tailwind CSS (important for tailwindcss-rails)
-RUN SECRET_KEY_BASE_DUMMY=1 bundle exec rails tailwindcss:build
+RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails tailwindcss:build assets:precompile --skip-checks
 
 # Precompile assets for production (using Importmap, Propshaft, etc.)
 RUN SECRET_KEY_BASE_DUMMY=1 ./bin/rails assets:precompile
