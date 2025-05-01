@@ -35,6 +35,7 @@ Rails.application.configure do
   config.force_ssl = true
 
   config.active_job.queue_adapter = :good_job
+  config.good_job.execution_mode = :external
 
   # Skip http-to-https redirect for the default health check endpoint.
   # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
