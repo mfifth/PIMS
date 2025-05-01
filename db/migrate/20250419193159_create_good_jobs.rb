@@ -3,6 +3,7 @@
 class CreateGoodJobs < ActiveRecord::Migration[8.0]
   def change
     return if Rails.env.development?
+
     create_table :good_jobs, id: :uuid do |t|
       t.text :queue_name
       t.integer :priority
@@ -90,7 +91,9 @@ class CreateGoodJobs < ActiveRecord::Migration[8.0]
       where: "finished_at IS NULL", name: :index_good_job_jobs_for_candidate_lookup
     add_index :good_jobs, [:batch_id], where: "batch_id IS NOT NULL"
     add_index :good_jobs, [:batch_callback_id], where: "batch_callback_id IS NOT NULL"
-    add_index :good_jobs, :labels, using: :gin, opclass: :gin_trgm_ops, where: "(labels IS NOT NULL)", name: :index_good_jobs_on_labels
+    
+    # Removed the problematic GIN index:
+    # add_index :good_jobs, :labels, using: :gin, opclass: :gin_trgm_ops, where: "(labels IS NOT NULL)", name: :index_good_jobs_on_labels
 
     add_index :good_job_executions, [:active_job_id, :created_at], name: :index_good_job_executions_on_active_job_id_and_created_at
     add_index :good_jobs, [:priority, :scheduled_at], order: { priority: "ASC NULLS LAST", scheduled_at: :asc },
