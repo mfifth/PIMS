@@ -1,5 +1,5 @@
 if Rails.env.production? && !ENV["SKIP_DB"]
-  Rails.application.configure do
+  Rails.application.configure do |config|
     config.active_job.queue_adapter = :good_job
     config.good_job.pool_size = 5
   end
