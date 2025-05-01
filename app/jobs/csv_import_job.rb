@@ -3,10 +3,11 @@ class CsvImportJob < ApplicationJob
 
   rescue_from(StandardError) do |exception|
     notify_user(I18n.t("csv_import.errors.malformed", error: exception.message), :alert)
-    cleanup_files
+    cleanup_files(@file_path)
   end
 
   def perform(file_path, user_id, location_id)
+    @file_path = file_path
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
@@ -26,7 +27,7 @@ class CsvImportJob < ApplicationJob
     end
   ensure
     cleanup_files(file_path)
-  end
+  end  
 
   private
   
