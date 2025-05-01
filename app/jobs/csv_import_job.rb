@@ -7,10 +7,12 @@ class CsvImportJob < ApplicationJob
   end
 
   def perform(file_path, user_id, location_id)
-    @file_path = file_path
+    @file_path = Rails.root.join('tmp', file_path)
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
+
+    raise "File not found: #{@file_path}" unless File.exist?(@file_path)
 
     process_csv(file_path)
 
