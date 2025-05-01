@@ -136,17 +136,16 @@ class LocationsController < ApplicationController
 
   def import_products
     if params[:file].present?
-      tempfile = Tempfile.new(['import_', '.csv'])
-      tempfile.binmode
-      tempfile.write(params[:file].read)
-      tempfile.rewind
+      file_contents = params[:file].read
+      file_path = Rails.root.join('tmp', "import_#{Time.now.to_i}.csv")
   
-      CsvImportJob.perform_later(tempfile.path, Current.user.id, @location.id)
-    else
-      flash[:alert] = t('locations.csv_file_warning')
+      File.open(file_path, 'wb') do |file|
+        file.write(file_contents)
+      end
+  
+      CsvImportJob.perform_later(file_path.to_s, Current.user.id, @location.id)
+      redirect_to @location, notice: t('locations.csv_import_notice')
     end
-  
-    redirect_to @location, notice: t('locations.csv_import_notice')
   end  
 
   def sample_csv

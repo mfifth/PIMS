@@ -9,9 +9,9 @@ class CsvImportJob < ApplicationJob
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
-  
+
     process_csv(file_path)
-  
+
     if @failed_products.any?
       notify_user(I18n.t("csv_import.completed_with_errors"), :alert)
       @failed_products.each do |failed_product|
@@ -23,10 +23,12 @@ class CsvImportJob < ApplicationJob
     else
       notify_user(I18n.t("csv_import.success"), :notice)
     end
+  ensure
+    cleanup_files(file_path)
   end
 
   private
-  
+
   def process_csv(file_path)
     CSV.foreach(file_path, headers: true) do |row|
       begin
@@ -93,7 +95,7 @@ class CsvImportJob < ApplicationJob
   end
 
   def notify_user(message, type = :notice)
-    return unless @user.account
+    return unless @user&.account
 
     Notification.create!(
       account: @user.account,
@@ -102,5 +104,17 @@ class CsvImportJob < ApplicationJob
     )
   rescue => e
     Rails.logger.error "Failed to create notification: #{e.message}"
+  end
+
+  def cleanup_files(file_path)
+    return unless file_path.present?
+
+    if File.exist?(file_path)
+      File.delete(file_path)
+    else
+      Rails.logger.warn "Tried to delete missing file: #{file_path}"
+    end
+  rescue => e
+    Rails.logger.error "Failed to delete file #{file_path}: #{e.message}"
   end
 end
