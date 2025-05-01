@@ -1,12 +1,16 @@
-return if ENV["SKIP_DB"]
-
-if Rails.env.production?
+if Rails.env.production? && !ENV["SKIP_DB"]
   Rails.application.configure do
     config.active_job.queue_adapter = :good_job
   end
 
-  # Ensure migrations run in production
-  unless ActiveRecord::Base.connection.table_exists?('good_jobs')
-    CreateGoodJobs.new.change
+  begin
+    # This will safely check the table without crashing if DB is unavailable
+    ActiveRecord::Base.connection_pool.with_connection do |conn|
+      unless conn.table_exists?('good_jobs')
+        Rails.logger.info "[GoodJob] 'good_jobs' table does not exist."
+      end
+    end
+  rescue => e
+    Rails.logger.warn "[GoodJob] Skipping good_jobs check: #{e.class} - #{e.message}"
   end
 end
