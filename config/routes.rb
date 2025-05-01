@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   end
 
   mount StripeEvent::Engine, at: '/stripe/webhooks'
+  mount GoodJob::Engine => 'good_job'
 
   post "/graphql", to: "graphql#execute"
   get "users/new"
