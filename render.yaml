@@ -1,30 +1,44 @@
 # Exported from Render on 2025-04-11T19:51:17Z
 version: "1"
 services:
-- type: web
-  name: PIMS
-  runtime: ruby
-  repo: https://github.com/mfifth/PIMS
-  plan: free
-  envVars:
-  - key: SMTP_PASSWORD
-    sync: false
-  - key: SMTP_USERNAME
-    sync: false
-  - key: DATABASE_URL
-    sync: false
-  - key: RAILS_MASTER_KEY
-    sync: false
-  - key: WEB_CONCURRENCY
-    sync: false
-  - key: SKIP_DB
-    value: "1" # Prevent DB access during asset precompilation
-  region: oregon
-  buildCommand: bundle install && rails assets:precompile
-  startCommand: bundle exec puma -C config/puma.rb
-  preDeployCommand: bundle exec rails db:migrate
+  - type: web
+    name: PIMS
+    runtime: ruby
+    repo: https://github.com/mfifth/PIMS
+    plan: free
+    envVars:
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_USERNAME
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: RAILS_MASTER_KEY
+        sync: false
+      - key: WEB_CONCURRENCY
+        sync: false
+      - key: SKIP_DB
+        value: "1" # Prevent DB access during asset precompilation
+    region: oregon
+    buildCommand: bundle install && rails assets:precompile
+    startCommand: bundle exec puma -C config/puma.rb
+    preDeployCommand: bundle exec rails db:migrate
+
+  - type: worker
+    name: PIMS-background-jobs
+    runtime: ruby
+    repo: https://github.com/mfifth/PIMS
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: RAILS_MASTER_KEY
+        sync: false
+    region: oregon
+    buildCommand: bundle install
+    startCommand: bundle exec good_job start
 
 cron:
-- name: Expiration Notifications
-  schedule: "0 13 * * *"
-  command: bundle exec rails runner 'ExpirationNotificationJob.perform_later'
+  - name: Expiration Notifications
+    schedule: "0 13 * * *"
+    command: bundle exec rails runner 'ExpirationNotificationJob.perform_later'
