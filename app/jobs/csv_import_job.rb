@@ -25,7 +25,7 @@ class CsvImportJob < ApplicationJob
       notify_user(I18n.t("csv_import.success"), :notice)
     end
   ensure
-    cleanup_files
+    cleanup_files(file_path)
   end
 
   private
@@ -107,9 +107,9 @@ class CsvImportJob < ApplicationJob
     Rails.logger.error "Failed to create notification: #{e.message}"
   end
 
-  def cleanup_files
-    File.delete(@file_path) if @file_path && File.exist?(@file_path)
+  def cleanup_files(file_path)
+    File.delete(file_path) if File.exist?(file_path)
   rescue => e
-    Rails.logger.error "Failed to cleanup CSV file: #{e.message}"
+    Rails.logger.error "Failed to delete file: #{e.message}"
   end
 end
