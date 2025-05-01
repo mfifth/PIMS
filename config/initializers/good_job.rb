@@ -1,17 +1,13 @@
-if Rails.env.production? && !ENV["SKIP_DB"]
-  Rails.application.configure do |config|
-    config.active_job.queue_adapter = :good_job
-    config.good_job.pool_size = 5
-  end
-  config.good_job.pool_size = 5
-  begin
-    # This will safely check the table without crashing if DB is unavailable
-    ActiveRecord::Base.connection_pool.with_connection do |conn|
-      unless conn.table_exists?('good_jobs')
-        Rails.logger.info "[GoodJob] 'good_jobs' table does not exist."
-      end
-    end
-  rescue => e
-    Rails.logger.warn "[GoodJob] Skipping good_jobs check: #{e.class} - #{e.message}"
+Rails.application.configure do
+  config.active_job.queue_adapter = :good_job
+  
+  if Rails.env.production?
+    config.good_job = {
+      execution_mode: :external,    # Required for Render
+      max_threads: 5,              # Match your Render DB connections
+      enable_cron: false,          # Disable unless using cron
+      shutdown_timeout: 25,        # Give jobs time to finish
+      logger: Rails.logger         # Better logging
+    }
   end
 end
