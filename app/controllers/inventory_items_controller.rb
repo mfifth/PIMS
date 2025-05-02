@@ -4,7 +4,8 @@ class InventoryItemsController < ApplicationController
 
     render json: {
       quantity: item&.quantity,
-      low_threshold: item&.low_threshold
+      low_threshold: item&.low_threshold,
+      unit_type: item&.unit_type
     }
   end
 end

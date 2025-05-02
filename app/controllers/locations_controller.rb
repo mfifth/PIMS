@@ -95,7 +95,6 @@ class LocationsController < ApplicationController
     redirect_back fallback_location: '/', notice: t('notifications.inventory_updated')
   end
 
-  # In your LocationsController
   def inventory_data
     location = Location.find(params[:location_id])
     products = location.products
@@ -112,6 +111,7 @@ class LocationsController < ApplicationController
           quantity: inventory_item&.quantity || 0,
           category_id: product.category_id,
           batch_id: product.batch_id
+          unit_type: inventory_item.unit_type.titleize
         }
       end
     }

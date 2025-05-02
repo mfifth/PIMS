@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["locationSelect", "quantity", "lowThreshold"]
+  static targets = ["locationSelect", "quantity", "lowThreshold", "unitType"]
   static values = {
     productId: Number
   }
@@ -20,6 +20,11 @@ export default class extends Controller {
 
       this.quantityTarget.value = data.quantity || ""
       this.lowThresholdTarget.value = data.low_threshold || ""
+
+      // Set unit_type if available
+      if (data.unit_type) {
+        this.unitTypeTarget.value = data.unit_type
+      }
     } catch (error) {
       console.error("Failed to fetch inventory info:", error)
     }
