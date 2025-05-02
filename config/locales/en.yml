@@ -253,6 +253,7 @@ en:
     new: "New Location"
     inventory_title: "Inventory"
     left: 'left'
+    products: "products"
     csv_import_notice: "Import started - you'll receive a notification when complete"
     csv_file_warning: "Please select a CSV file"
     perishable:
@@ -368,7 +369,6 @@ en:
       malformed: "Failed, Data malformed: %{error}"
       unexpected: "Unexpected error: %{message}"
   items: "items"
-  products: "products"
   quick_update: "Quick Update"
   select_location: Location
   select_location_prompt: "Select location"
