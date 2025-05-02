@@ -9,6 +9,7 @@ class CsvImportJob < ApplicationJob
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
+    @file_contents = file_contents
 
     process_csv
     
@@ -30,7 +31,7 @@ class CsvImportJob < ApplicationJob
   private
 
   def process_csv
-    CSV.parse(file_contents, headers: true) do |row|
+    CSV.parse(@file_contents, headers: true) do |row|
       begin
         ActiveRecord::Base.transaction do
           import_row(row.to_h)
