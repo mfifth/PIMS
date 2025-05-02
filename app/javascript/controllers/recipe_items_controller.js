@@ -59,6 +59,7 @@ export default class extends Controller {
     const productId = event.currentTarget.dataset.productId
     const productName = event.currentTarget.dataset.productName
     const unitType = event.currentTarget.dataset.unitType || 'units'
+    const unitOptions = JSON.parse(event.currentTarget.dataset.unitOptions || '{}')
   
     if (this.removedIds.includes(productId)) {
       this.removedIds = this.removedIds.filter(id => id !== productId)
@@ -69,17 +70,27 @@ export default class extends Controller {
   
     const newItem = this.itemsTarget.lastElementChild
     const productNameElement = newItem.querySelector('[data-recipe-items-target="productName"]')
-    const unitInputElement = newItem.querySelector('[data-recipe-items-target="unitInput"]')
+    const unitSelect = newItem.querySelector('select[name*="[unit]"]')
     const productIdInput = newItem.querySelector('input[name*="product_id"]')
     const quantityInputElement = newItem.querySelector('input[name*="quantity"]')
   
-    if (productNameElement && unitInputElement && productIdInput) {
+    if (productNameElement && unitSelect && productIdInput) {
       productNameElement.textContent = productName
-      unitInputElement.value = unitType
       productIdInput.value = productId
+  
+      unitSelect.innerHTML = ""
+      Object.entries(unitOptions).forEach(([name, value]) => {
+        const option = document.createElement("option")
+        option.textContent = name
+        option.value = value
+        unitSelect.appendChild(option)
+      })
+  
+      if (unitSelect.options.length > 0) {
+        unitSelect.value = unitType
+      }
     }
   
-    // Set step based on unit type
     if (quantityInputElement) {
       quantityInputElement.setAttribute('step', ['units', 'fluid_oz'].includes(unitType) ? '1' : '0.1')
     }
