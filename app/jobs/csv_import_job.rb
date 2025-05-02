@@ -5,13 +5,15 @@ class CsvImportJob < ApplicationJob
     notify_user(I18n.t("csv_import.errors.malformed", error: exception.message), :alert)
   end
 
-  def perform(file_path, user_id, location_id)
+  def perform(file_name, user_id, location_id)
+    file_path = Rails.root.join('storage', file_name)
+  
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
-
+  
     process_csv(file_path)
-
+  
     if @failed_products.any?
       notify_user(I18n.t("csv_import.completed_with_errors"), :alert)
       @failed_products.each do |failed_product|
@@ -24,8 +26,8 @@ class CsvImportJob < ApplicationJob
       notify_user(I18n.t("csv_import.success"), :notice)
     end
   ensure
-    cleanup_files(file_path)
-  end
+    cleanup_file(file_path)
+  end  
 
   private
 
@@ -106,13 +108,11 @@ class CsvImportJob < ApplicationJob
     Rails.logger.error "Failed to create notification: #{e.message}"
   end
 
-  def cleanup_files(file_path)
-    return unless file_path.present?
-
+  def cleanup_file(file_path)
     if File.exist?(file_path)
       File.delete(file_path)
     else
-      Rails.logger.warn "Tried to delete missing file: #{file_path}"
+      Rails.logger.warn "File not found for cleanup: #{file_path}"
     end
   rescue => e
     Rails.logger.error "Failed to delete file #{file_path}: #{e.message}"

@@ -137,13 +137,13 @@ class LocationsController < ApplicationController
   def import_products
     if params[:file].present?
       file_contents = params[:file].read
-      file_path = Rails.root.join('tmp', "import_#{Time.now.to_i}.csv")
-  
-      File.open(file_path, 'wb') do |file|
-        file.write(file_contents)
-      end
-  
-      CsvImportJob.perform_later(file_path.to_s, Current.user.id, @location.id)
+      timestamp = Time.now.to_i
+      file_name = "import_#{timestamp}.csv"
+      file_path = Rails.root.join('storage', file_name)
+    
+      File.open(file_path, 'wb') { |file| file.write(file_contents) }
+    
+      CsvImportJob.perform_later(file_name, Current.user.id, @location.id)
       redirect_to @location, notice: t('locations.csv_import_notice')
     end
   end  
