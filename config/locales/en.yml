@@ -238,6 +238,7 @@ en:
     perishable_items: "Perishable"
     non_perishable_items: "Non-Perishable"
     items: "items"
+    products: "products"
     categories: "Categories"
     expiring_soon: "Expiring Soon"
     view: "View"
@@ -367,6 +368,7 @@ en:
       malformed: "Failed, Data malformed: %{error}"
       unexpected: "Unexpected error: %{message}"
   items: "items"
+  products: "products"
   quick_update: "Quick Update"
   select_location: Location
   select_location_prompt: "Select location"

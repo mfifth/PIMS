@@ -57,13 +57,13 @@
               <div class="bg-blue-50 p-2 rounded space-y-0.5">
                 <p class="text-blue-800 font-medium"><%= t("locations.perishable_items") %></p>
                 <p class="text-gray-700">
-                  <%= location.inventory_items.joins(:product).where(products: { perishable: true }).sum(:quantity) %> <%= t("locations.items", default: "items") %>
+                <%= location.perishable_count %> <%= t("locations.products") %>
                 </p>
               </div>
               <div class="bg-green-50 p-2 rounded space-y-0.5">
                 <p class="text-green-800 font-medium"><%= t("locations.non_perishable_items") %></p>
                 <p class="text-gray-700">
-                  <%= location.inventory_items.joins(:product).where(products: { perishable: false }).sum(:quantity) %> <%= t("locations.items", default: "items") %>
+                  <%= location.non_perishable_count %> <%= t("locations.products") %>
                 </p>
               </div>
             </div>
@@ -81,7 +81,7 @@
                           .group('categories.name')
                           .select(
                             'categories.name as category_name',
-                            'SUM(inventory_items.quantity) as total_quantity',
+                            'COUNT(DISTINCT products.id) as total_quantity',
                             'SUM(inventory_items.quantity * products.price) as total_value'
                           )
                           .order('total_value DESC')

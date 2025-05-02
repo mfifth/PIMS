@@ -6,7 +6,13 @@ class LocationsController < ApplicationController
   before_action :require_admin!, only: [:create, :edit, :update, :new, :destroy, :import_products]
 
   def index
-    @locations = Current.account.locations.includes(:inventory_items)
+    @locations = Current.account.locations
+                        .includes(inventory_items: :product)
+                        .select("locations.*, 
+                          COUNT(CASE WHEN products.perishable = TRUE THEN 1 END) as perishable_count,
+                          COUNT(CASE WHEN products.perishable = FALSE THEN 1 END) as non_perishable_count")
+                        .left_joins(inventory_items: :product)
+                        .group("locations.id")
   end
 
   def show
