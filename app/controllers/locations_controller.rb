@@ -136,17 +136,14 @@ class LocationsController < ApplicationController
 
   def import_products
     if params[:file].present?
-      file_contents = params[:file].read
-      timestamp = Time.now.to_i
-      file_name = "import_#{timestamp}.csv"
-      file_path = Rails.root.join('storage', file_name)
-    
-      File.open(file_path, 'wb') { |file| file.write(file_contents) }
-    
-      CsvImportJob.perform_later(file_name, Current.user.id, @location.id)
+      CsvImportJob.perform_later(
+        params[:file].read,  # Pass file contents as string
+        Current.user.id, 
+        @location.id
+      )
       redirect_to @location, notice: t('locations.csv_import_notice')
     end
-  end  
+  end
 
   def sample_csv
     expiring_soon      = (Time.current + 5.days).strftime("%Y-%m-%d")

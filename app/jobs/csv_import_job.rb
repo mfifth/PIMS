@@ -5,15 +5,13 @@ class CsvImportJob < ApplicationJob
     notify_user(I18n.t("csv_import.errors.malformed", error: exception.message), :alert)
   end
 
-  def perform(file_name, user_id, location_id)
-    file_path = Rails.root.join('storage', file_name)
-  
+  def perform(file_contents, user_id, location_id)  
     @user = User.find_by(id: user_id)
     @location = Location.find_by(id: location_id)
     @failed_products = []
-  
-    process_csv(file_path)
-  
+
+    process_csv
+    
     if @failed_products.any?
       notify_user(I18n.t("csv_import.completed_with_errors"), :alert)
       @failed_products.each do |failed_product|
@@ -31,8 +29,8 @@ class CsvImportJob < ApplicationJob
 
   private
 
-  def process_csv(file_path)
-    CSV.foreach(file_path, headers: true) do |row|
+  def process_csv
+    CSV.parse(file_contents, headers: true) do |row|
       begin
         ActiveRecord::Base.transaction do
           import_row(row.to_h)
