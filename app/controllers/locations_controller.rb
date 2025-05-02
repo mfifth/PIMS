@@ -110,7 +110,7 @@ class LocationsController < ApplicationController
           name: product.name,
           quantity: inventory_item&.quantity || 0,
           category_id: product.category_id,
-          batch_id: product.batch_id
+          batch_id: product.batch_id,
           unit_type: inventory_item.unit_type.titleize
         }
       end
@@ -141,15 +141,23 @@ class LocationsController < ApplicationController
   end
 
   def import_products
-    if params[:file].present?
-      CsvImportJob.perform_later(
-        params[:file].read,  # Pass file contents as string
-        Current.user.id, 
-        @location.id
-      )
+    return unless params[:file].present?
+  
+    file_contents = params[:file].read
+  
+    if Rails.env.development?
+      CsvImporter.new(
+        user: Current.user,
+        location: @location,
+        file_contents: file_contents
+      ).import
+  
+      redirect_to @location
+    else
+      CsvImportJob.perform_later(file_contents, Current.user.id, @location.id)
       redirect_to @location, notice: t('locations.csv_import_notice')
     end
-  end
+  end  
 
   def sample_csv
     expiring_soon      = (Time.current + 5.days).strftime("%Y-%m-%d")

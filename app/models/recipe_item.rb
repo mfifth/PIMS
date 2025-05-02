@@ -76,11 +76,11 @@ class RecipeItem < ApplicationRecord
     end
   end
 
-  def converted_quantity(target_unit = product.unit_type)
-    return quantity if unit == target_unit || !convertible_units?(unit, target_unit)
+  def convert_from_inventory(unit_type, quantity)
+    return quantity if unit == unit_type || !convertible_units?(unit_type, unit)
 
-    base_quantity = quantity * conversion_rate(unit, target_unit)
-    round_for_unit(base_quantity, target_unit)
+    converted = quantity * conversion_rate(unit_type, unit)
+    round_for_unit(converted, unit)
   end
 
   def compatible_unit_options

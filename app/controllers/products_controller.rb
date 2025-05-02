@@ -115,7 +115,7 @@ class ProductsController < ApplicationController
   end
 
   def inventory_item_params
-    params.require(:product).permit(:quantity, :location_id, :daily_usage, :low_threshold)
+    params.require(:product).permit(:quantity, :location_id, :unit_type, :daily_usage, :low_threshold)
   end
 
   def update_inventory?

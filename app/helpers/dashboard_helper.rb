@@ -11,8 +11,11 @@ module DashboardHelper
 
       return [0, nil] if inventory_items.empty?
 
-      required_quantity = recipe_item.converted_quantity(product.unit_type)
-      total_available = inventory_items.sum(&:quantity)
+      total_available = inventory_items.sum do |inventory_item|
+        recipe_item.convert_from_inventory(inventory_item.unit_type, inventory_item.quantity)
+      end
+
+      required_quantity = recipe_item.quantity
 
       return [0, nil] if required_quantity <= 0 || total_available < required_quantity
 
