@@ -84,18 +84,22 @@ class RecipeItem < ApplicationRecord
   end
 
   def compatible_unit_options
-    return self.class.unit_options unless product&.unit_type
-  
-    self.class::VALID_UNITS.select do |unit|
-      convertible_units?(unit, product.unit_type)
-    end.map do |unit| 
-      display_name = case unit
-                    when 'fluid_oz' then 'Fluid Oz'
-                    when 'milliliters' then 'Milliliters'
-                    else unit.humanize
-                    end
-      [display_name, unit]
-    end
+    # Get all unique unit types from inventory items for this product
+    inventory_units = product.inventory_items.pluck(:unit_type).compact.uniq
+    
+    # If no inventory items, use product's unit_type
+    available_units = inventory_units.any? ? inventory_units : [product.unit_type || 'units']
+    
+    # Filter to only valid units and convert to display format
+    available_units.select { |u| VALID_UNITS.include?(u) }
+                  .map do |unit|
+                    display_name = case unit
+                                  when 'fluid_oz' then 'Fluid Oz'
+                                  when 'ml' then 'Milliliters'
+                                  else unit.humanize
+                                  end
+                    [display_name, unit]
+                  end
   end
 
   def convertible_units?(from_unit, to_unit)

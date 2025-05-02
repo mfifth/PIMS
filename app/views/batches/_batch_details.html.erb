@@ -34,7 +34,7 @@
               <tr class="bg-white hover:bg-gray-100 transition">
                 <td class="py-3 px-4 font-medium text-gray-800"><%= product.name %></td>
                 <td class="py-3 px-4 font-medium text-gray-800"><%= product.sku %></td>
-                <td class="py-3 px-4 font-medium text-gray-800"><%= product.unit_type.titleize %></td>
+                <td class="py-3 px-4 font-medium text-gray-800"><%= inventory_item.unit_type.titleize %></td>
                 <td class="py-3 px-4 text-gray-700"><%= inventory_item.location&.name || t("batches.show.no_location") %></td>
                 <td class="py-3 px-4 font-medium text-blue-600"><%= inventory_item.quantity %></td>
                 <td class="py-3 px-4 font-medium text-gray-800"><%= product.batch.notification_days_before_expiration %></td>

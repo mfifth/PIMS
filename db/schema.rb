@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_01_210552) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_02_202713) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_01_210552) do
     t.integer "daily_usage"
     t.integer "low_threshold"
     t.integer "location_id"
+    t.string "unit_type", default: "units"
     t.index ["location_id"], name: "index_inventory_items_on_location_id"
     t.index ["product_id"], name: "index_inventory_items_on_product_id"
   end

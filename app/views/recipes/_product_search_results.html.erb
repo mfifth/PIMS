@@ -6,8 +6,8 @@
       data-action="click->recipe-items#selectProduct"
       data-product-id="<%= product.id %>"
       data-product-name="<%= product.name %>"
-      data-unit-type="<%= product.unit_type %>">
-      <%= product.name %>
+      data-unit-type="<%= product.inventory_unit_type || product.unit_type %>">
+      <%= product.name %> (<%= product.inventory_unit_type || product.unit_type %>)
     </button>
   <% end %>
 <% elsif params[:query].present? %>

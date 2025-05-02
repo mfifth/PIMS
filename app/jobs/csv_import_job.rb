@@ -49,7 +49,8 @@ class CsvImportJob < ApplicationJob
 
     inventory_item.assign_attributes(
       quantity: row_data['quantity'].presence || inventory_item.quantity,
-      low_threshold: row_data['low_threshold'].presence || inventory_item.low_threshold
+      low_threshold: row_data['low_threshold'].presence || inventory_item.low_threshold,
+      unit_type: row['unit_type'] || 'units'
     )
 
     if row_data['batch_number'].present? && row_data['expiration_date'].present?
@@ -69,7 +70,6 @@ class CsvImportJob < ApplicationJob
     product.assign_attributes(
       name: row['name'],
       price: row['price'],
-      unit_type: row['unit_type'] || 'units',
       perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'])
     )
 

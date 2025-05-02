@@ -163,6 +163,7 @@ class ProductsController < ApplicationController
     InventoryItem.find_or_create_by!(
       location_id: inventory_item_params[:location_id],
       low_threshold: params[:product][:low_threshold],
+      unit_type: params[:product][:unit_type],
       product_id: @product.id,
       quantity: inventory_item_params[:quantity],
       daily_usage: inventory_item_params[:daily_usage]

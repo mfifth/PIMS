@@ -43,14 +43,19 @@ class RecipesController < ApplicationController
   def product_search
     query = params[:query].to_s.strip
     selected_ids = params[:selected_ids] || []
-  
+    
     @products = if query.present?
-      base_scope = Current.account.products.where.not(id: selected_ids).where(perishable: true)
+      base_scope = Current.account.products
+                    .left_joins(:inventory_items)
+                    .where.not(id: selected_ids)
+                    .where(perishable: true)
+                    .select('products.*, inventory_items.unit_type as inventory_unit_type')
+                    .distinct
       
       if ActiveRecord::Base.connection.adapter_name.downcase.include?("sqlite")
-        base_scope.where("LOWER(name) LIKE ?", "%#{query.downcase}%").limit(5)
+        base_scope.where("LOWER(products.name) LIKE ?", "%#{query.downcase}%").limit(5)
       else
-        base_scope.where("name ILIKE ?", "%#{query}%").limit(10)
+        base_scope.where("products.name ILIKE ?", "%#{query}%").limit(10)
       end
     else
       []

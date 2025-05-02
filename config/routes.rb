@@ -22,6 +22,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :recipe_items, only: [] do
+    collection do
+      get :unit_options
+    end
+  end
+
   resources :suppliers
   resources :locations do
     get 'inventory_data', to: 'locations#inventory_data'

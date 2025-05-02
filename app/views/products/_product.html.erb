@@ -3,9 +3,7 @@
     <div class="text-lg font-semibold text-gray-800"><%= product.name %></div>
     <div class="text-sm text-gray-600">
       <%= t('products.sku_title') %>: <%= product.sku %> |
-      <%= t('products.unit_type_title') %>: <%= product.unit_type.titleize %> |
-      <%= t('products.category') %>: <%= product.category&.name&.titleize || t('products.na') %>
-      <br>
+      <%= t('products.category') %>: <%= product.category&.name&.titleize || t('products.na') %> |
       <%= show_price(product) %>
       <%= show_batch_info(product) %>
     </div>
@@ -14,7 +12,7 @@
   <div class="mt-2 text-sm text-gray-700">
     <strong><%= t('products.stock_locations') %>:</strong>
     <% product.inventory_items.includes(:location).each do |inventory_item| %>
-      <p><%= inventory_item.location.name %>: <%= inventory_item.quantity %> <%= t('products.in_stock') %></p>
+      <p><%= inventory_item.location.name %>: <%= "#{inventory_item.quantity} #{inventory_item.unit_type.pluralize}" %> <%= t('products.in_stock') %></p>
     <% end %>
   </div>
 

@@ -69,37 +69,23 @@ export default class extends Controller {
   
     const newItem = this.itemsTarget.lastElementChild
     const productNameElement = newItem.querySelector('[data-recipe-items-target="productName"]')
-    const unitDisplayElement = newItem.querySelector('[data-recipe-items-target="unitDisplay"]')
     const unitInputElement = newItem.querySelector('[data-recipe-items-target="unitInput"]')
-    const unitSelectElement = newItem.querySelector('select[name*="[unit]"]')
     const productIdInput = newItem.querySelector('input[name*="product_id"]')
     const quantityInputElement = newItem.querySelector('input[name*="quantity"]')
   
-    if (productNameElement && unitDisplayElement && unitInputElement && productIdInput) {
+    if (productNameElement && unitInputElement && productIdInput) {
       productNameElement.textContent = productName
-      unitDisplayElement.textContent = unitType
       unitInputElement.value = unitType
       productIdInput.value = productId
     }
   
-    if (unitSelectElement && unitType && this.unitMapValue[unitType]) {
-      const options = this.unitMapValue[unitType]
-      unitSelectElement.innerHTML = options
-        .map(unit => {
-          let displayName = unit;
-          if (unit === 'fluid_oz') displayName = 'Fluid Oz';
-          if (unit === 'ml') displayName = 'Milliliters';
-          return `<option value="${unit}">${displayName.charAt(0).toUpperCase() + displayName.slice(1)}</option>`
-        })
-        .join('')
-    }
-  
-    if (unitType === "units" && quantityInputElement) {
-      quantityInputElement.setAttribute('step', '1');
+    // Set step based on unit type
+    if (quantityInputElement) {
+      quantityInputElement.setAttribute('step', ['units', 'fluid_oz'].includes(unitType) ? '1' : '0.1')
     }
   
     this.clearSearch()
-  }  
+  }
 
   add(event) {
     event.preventDefault()
