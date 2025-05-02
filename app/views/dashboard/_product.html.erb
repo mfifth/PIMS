@@ -1,18 +1,23 @@
-<li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
+<li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition" id="product_<%= product.id %>">
   <div class="flex justify-between">
     <a href="<%= product_path(product) %>" class="text-gray-800 font-medium hover:underline">
       <%= product.name %>
     </a>
   </div>
 
-  <% product.locations.each do |location| %>
-    <% if product.batch&.expiration_date.present? %>
-      <% expiration_date = product.batch.expiration_date %>
-      <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
-      <span class="<%= color_class %> text-xs"><%= t("products.expiration", date: expiration_date) %></span>
-    <% end %>
-    <p class="text-gray-500 text-xs"><%= t("products.qty", count: location.inventory_items.detect { |i| i.product_id == product.id }&.quantity) %></p>
-    <p class="text-gray-500 text-xs"><%= t("products.unit_type", type: product.unit_type.titleize) %></p>
-    <p class="text-gray-500 text-xs"><%= t("products.location_with_name", name: location.name) %></p>
+  <% if product.batch&.expiration_date %>
+    <% expiration_date = product.batch.expiration_date %>
+    <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
+    <span class="<%= color_class %> text-xs"><%= t("products.expiration", date: expiration_date) %></span>
   <% end %>
+
+  <div class="locations-container">
+    <% product.locations.each do |location| %>
+      <div class="location-item">
+        <p class="text-gray-500 text-xs"><%= t("products.qty", count: location.inventory_items.detect { |i| i.product_id == product.id }&.quantity) %></p>
+        <p class="text-gray-500 text-xs"><%= t("products.unit_type", type: product.unit_type.titleize) %></p>
+        <p class="text-gray-500 text-xs"><%= t("products.location_with_name", name: location.name) %></p>
+      </div>
+    <% end %>
+  </div>
 </li>

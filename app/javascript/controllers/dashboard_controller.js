@@ -7,6 +7,7 @@ export default class extends Controller {
   connect() {
     this.scrollContainers = this.element.querySelectorAll(".scroll-container")
     this.scrollHandlers = []
+    this.lastScrollTime = 0
     
     this.scrollContainers.forEach(container => {
       const handler = () => this.handleScroll(container)
@@ -23,9 +24,14 @@ export default class extends Controller {
 
   handleScroll(container) {
     if (this.loadingValue) return
+    
+    // Throttle scroll events
+    const now = Date.now()
+    if (now - this.lastScrollTime < 500) return
+    this.lastScrollTime = now
 
     const { scrollTop, scrollHeight, clientHeight } = container
-    const threshold = 100
+    const threshold = 500  // Increased threshold
     const distanceToBottom = scrollHeight - (scrollTop + clientHeight)
 
     if (distanceToBottom <= threshold) {
@@ -51,6 +57,9 @@ export default class extends Controller {
     })
     .then(html => Turbo.renderStreamMessage(html))
     .catch(error => console.error("Error loading more items:", error))
-    .finally(() => this.loadingValue = false)
+    .finally(() => {
+      this.loadingValue = false
+      this.lastScrollTime = Date.now() // Reset timer after load
+    })
   }
 }

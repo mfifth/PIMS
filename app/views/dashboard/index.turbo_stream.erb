@@ -27,7 +27,9 @@
 
 <% when 'products' %>
   <%= turbo_stream.append "products-list" do %>
-    <%= render partial: "dashboard/product", collection: @products, as: :product %>
+    <% @products.each do |product| %>
+      <%= render partial: "dashboard/product", locals: { product: product } %>
+    <% end %>
   <% end %>
   <%= turbo_stream.replace "products-pagination" do %>
     <% if @products.next_page %>
