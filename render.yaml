@@ -21,7 +21,6 @@ services:
     region: oregon
     buildCommand: bundle install && rails assets:precompile
     startCommand: bundle exec puma -C config/puma.rb
-    preDeployCommand: bundle exec rails db:migrate
 
   - type: worker
     name: PIMS-background-jobs
