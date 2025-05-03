@@ -5,29 +5,19 @@ module DashboardHelper
     min_quantity = Float::INFINITY
     earliest_expiration = nil
 
-    recipe.recipe_items.includes(product: [:batch, :inventory_items]).each do |recipe_item|
-      product = recipe_item.product
-      inventory_items = location.inventory_items.where(product: product)
+    recipe.recipe_items.each do |recipe_item|
+      # Calculate how many we can make of this item
+      max_for_item = recipe_item.max_possible_quantity(location)
+      min_quantity = [min_quantity, max_for_item].min
 
-      return [0, nil] if inventory_items.empty?
-
-      total_available = inventory_items.sum do |inventory_item|
-        recipe_item.convert_from_inventory(inventory_item.unit_type, inventory_item.quantity)
+      # Check expiration if perishable
+      if recipe_item.product.perishable?
+        item_expiration = recipe_item.earliest_expiration(location)
+        earliest_expiration = [earliest_expiration, item_expiration].compact.min
       end
 
-      required_quantity = recipe_item.quantity
-
-      return [0, nil] if required_quantity <= 0 || total_available < required_quantity
-
-      max_recipes_for_item = (total_available / required_quantity).floor
-      min_quantity = [min_quantity, max_recipes_for_item].min
-
-      if product.perishable?
-        inventory_expirations = product.batch&.expiration_date
-        return [0, nil] unless inventory_expirations
-
-        earliest_expiration = [earliest_expiration, inventory_expirations].compact.min
-      end
+      # Early exit if we can't make any
+      break if min_quantity == 0
     end
 
     [min_quantity, earliest_expiration]
