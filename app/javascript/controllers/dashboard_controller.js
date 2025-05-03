@@ -36,29 +36,40 @@ export default class extends Controller {
 
   loadMore(container) {
     const nextPageLink = container.querySelector(".hidden a[rel='next']")
-    if (!nextPageLink) return
+    if (!nextPageLink) {
+      console.log('No more pages to load')
+      return
+    }
   
-    this.loadingValue = true
-    
-    setTimeout(() => {
-      fetch(nextPageLink.href, {
-        headers: { 
-          Accept: "text/vnd.turbo-stream.html",
-          "X-Custom-Request-Type": "InfiniteScroll"
-        }
-      })
-      .then(response => {
-        if (!response.ok) throw new Error("Network response was not ok")
-        return response.text()
-      })
-      .then(html => {
-        Turbo.renderStreamMessage(html)
-        setTimeout(() => this.handleScroll(container), 100)
-      })
-      .catch(error => console.error("Error loading more items:", error))
-      .finally(() => {
-        this.loadingValue = false
-      })
-    }, 100)
+    // Prevent duplicate requests
+    if (nextPageLink.dataset.loading === 'true') return
+    nextPageLink.dataset.loading = 'true'
+  
+    fetch(nextPageLink.href, {
+      headers: { 
+        Accept: "text/vnd.turbo-stream.html",
+        "X-Custom-Request-Type": "InfiniteScroll"
+      }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
+      return response.text()
+    })
+    .then(html => {
+      if (!html.includes('turbo-stream')) {
+        throw new Error('Invalid Turbo Stream response')
+      }
+      Turbo.renderStreamMessage(html)
+    })
+    .catch(error => {
+      console.error('Infinite scroll error:', error)
+      // Re-enable loading on error
+      nextPageLink.dataset.loading = 'false'
+    })
+    .finally(() => {
+      this.loadingValue = false
+      // Manually re-check scroll position after load
+      setTimeout(() => this.handleScroll(container), 100)
+    })
   }
 }

@@ -3,12 +3,20 @@
   <%= turbo_stream.append "batches-list" do %>
     <%= render partial: "dashboard/batch", collection: @batches, as: :batch %>
   <% end %>
+  
   <%= turbo_stream.replace "batches-pagination" do %>
     <% if @batches.next_page %>
       <div id="batches-pagination" class="hidden">
-        <%= link_to "Next page", dashboard_path(page: @batches.next_page, card: 'batches'), 
-                    rel: 'next', data: { turbo_frame: "_top" } %>
+        <%= link_to "Next page", 
+                    dashboard_path(page: @batches.next_page, card: 'batches'), 
+                    rel: 'next', 
+                    data: { 
+                      turbo_frame: "_top",
+                      loading: 'false' 
+                    } %>
       </div>
+    <% else %>
+      <div id="batches-pagination" class="hidden"></div>
     <% end %>
   <% end %>
 
@@ -16,12 +24,20 @@
   <%= turbo_stream.append "locations-list" do %>
     <%= render partial: "dashboard/location", collection: @locations, as: :location %>
   <% end %>
+  
   <%= turbo_stream.replace "locations-pagination" do %>
     <% if @locations.next_page %>
       <div id="locations-pagination" class="hidden">
-        <%= link_to "Next page", dashboard_path(page: @locations.next_page, card: 'locations'), 
-                    rel: 'next', data: { turbo_frame: "_top" } %>
+        <%= link_to "Next page", 
+                    dashboard_path(page: @locations.next_page, card: 'locations'), 
+                    rel: 'next', 
+                    data: { 
+                      turbo_frame: "_top",
+                      loading: 'false' 
+                    } %>
       </div>
+    <% else %>
+      <div id="locations-pagination" class="hidden"></div>
     <% end %>
   <% end %>
 
@@ -31,12 +47,33 @@
       <%= render partial: "dashboard/product", locals: { product: product } %>
     <% end %>
   <% end %>
+  
   <%= turbo_stream.replace "products-pagination" do %>
     <% if @products.next_page %>
       <div id="products-pagination" class="hidden">
-        <%= link_to "Next page", dashboard_path(page: @products.next_page, card: 'products'), 
-                    rel: 'next', data: { turbo_frame: "_top" } %>
+        <%= link_to "Next page", 
+                    dashboard_path(page: @products.next_page, card: 'products'), 
+                    rel: 'next', 
+                    data: { 
+                      turbo_frame: "_top",
+                      loading: 'false' 
+                    } %>
       </div>
+    <% else %>
+      <div id="products-pagination" class="hidden"></div>
     <% end %>
   <% end %>
+<% end %>
+
+<%# Add a debug stream for production troubleshooting %>
+<%= turbo_stream.append "debug-console" do %>
+  <script>
+    console.log('Turbo Stream processed for <%= params[:card] %>', {
+      page: <%= params[:page] || 1 %>,
+      next_page: <%= @batches.next_page if params[:card] == 'batches' %> || 
+                 <%= @locations.next_page if params[:card] == 'locations' %> || 
+                 <%= @products.next_page if params[:card] == 'products' %> || null,
+      time: new Date().toISOString()
+    });
+  </script>
 <% end %>
