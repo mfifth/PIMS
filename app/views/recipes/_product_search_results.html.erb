@@ -1,6 +1,6 @@
 <% if products.any? %>
   <% products.each do |product| %>
-    <% unit_options = product.recipe_items.build.compatible_unit_options.to_h %>
+    <% unit_options = RecipeItem.new(product: product).compatible_unit_options %>
     <button
       type="button"
       class="w-full text-left px-4 py-2 hover:bg-gray-100 border-b last:border-b-0"
@@ -8,7 +8,7 @@
       data-product-id="<%= product.id %>"
       data-product-name="<%= product.name %>"
       data-unit-type="<%= product.inventory_unit_type %>"
-      data-unit-options="<%= unit_options.to_json %>">
+      data-unit-options="<%= unit_options.to_h.to_json %>">
       <%= product.name %>
     </button>
   <% end %>

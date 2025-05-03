@@ -58,9 +58,9 @@ class RecipeItem < ApplicationRecord
       'grams' => ['grams', 'ounces', 'pounds'],
       'ounces' => ['grams', 'ounces', 'pounds'],
       'pounds' => ['grams', 'ounces', 'pounds'],
-      'liters' => ['liters', 'gallons', 'fluid_oz', 'milliliters'],
+      'liters' => ['liters', 'fluid_oz', 'milliliters'],
       'gallons' => ['liters', 'gallons', 'fluid_oz', 'milliliters'],
-      'fluid_oz' => ['liters', 'gallons', 'fluid_oz', 'milliliters'],
+      'fluid_oz' => ['liters', 'fluid_oz', 'milliliters'],
       'milliliters' => ['liters', 'gallons', 'fluid_oz', 'milliliters']
     }
   end
@@ -109,18 +109,25 @@ class RecipeItem < ApplicationRecord
   end
 
   def compatible_unit_options
-    inventory_units = product.inventory_items.pluck(:unit_type).compact.uniq
-    available_units = inventory_units.any? ? inventory_units : [product.unit_type || 'units']
-    
-    available_units.select { |u| VALID_UNITS.include?(u) }
-                  .map do |unit|
-                    display_name = case unit
-                                  when 'fluid_oz' then 'Fluid Oz'
-                                  when 'ml' then 'Milliliters'
-                                  else unit.humanize
-                                  end
-                    [display_name, unit]
-                  end
+    # Get the product's base unit (first check inventory, then fall back to product.unit_type)
+    base_unit = if product.inventory_items.any?
+                  product.inventory_items.first.unit_type
+                else
+                  product.unit_type || 'units'
+                end
+  
+    # Get all compatible units from the compatibility map
+    compatible_units = self.class.unit_compatibility_map[base_unit] || [base_unit]
+  
+    # Format for select dropdown
+    compatible_units.map do |unit|
+      display_name = case unit
+                    when 'fluid_oz' then 'Fluid Oz'
+                    when 'ml' then 'Milliliters'
+                    else unit.humanize
+                    end
+      [display_name, unit]
+    end
   end
 
   def convertible_units?(from_unit)
