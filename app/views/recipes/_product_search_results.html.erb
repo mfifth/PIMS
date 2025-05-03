@@ -10,7 +10,6 @@
     data-unit-options="<%= unit_options.to_json %>">
     <%= product.name %> (<%= product.inventory_unit_type %>)
   </button>
-  <% end %>
 <% elsif params[:query].present? %>
   <div class="p-2 text-gray-500">
     No matching products found<% if params[:selected_ids].present? %> (some may already be added)<% end %>

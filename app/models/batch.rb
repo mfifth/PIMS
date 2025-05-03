@@ -3,7 +3,7 @@ class Batch < ApplicationRecord
   belongs_to :account
   belongs_to :supplier, optional: true
 
-  validates :batch_number, presence: true
+  validates :batch_number, presence: true, uniqueness: true
   validates :expiration_date, presence: true
 
   validates :batch_number, uniqueness: { scope: :account_id }
