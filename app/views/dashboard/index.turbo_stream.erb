@@ -8,7 +8,7 @@
     <% if @batches.next_page %>
       <div id="batches-pagination" class="hidden">
         <%= link_to "Next page", 
-                    dashboard_path(page: @batches.next_page, card: 'batches'), 
+                    dashboard_path(batches_page: @batches.next_page, card: 'batches'), 
                     rel: 'next', 
                     data: { 
                       turbo_frame: "_top",
@@ -29,7 +29,7 @@
     <% if @locations.next_page %>
       <div id="locations-pagination" class="hidden">
         <%= link_to "Next page", 
-                    dashboard_path(page: @locations.next_page, card: 'locations'), 
+                    dashboard_path(locations_page: @locations.next_page, card: 'locations'), 
                     rel: 'next', 
                     data: { 
                       turbo_frame: "_top",
@@ -52,7 +52,7 @@
     <% if @products.next_page %>
       <div id="products-pagination" class="hidden">
         <%= link_to "Next page", 
-                    dashboard_path(page: @products.next_page, card: 'products'), 
+                    dashboard_path(products_page: @products.next_page, card: 'products'), 
                     rel: 'next', 
                     data: { 
                       turbo_frame: "_top",
@@ -63,17 +63,4 @@
       <div id="products-pagination" class="hidden"></div>
     <% end %>
   <% end %>
-<% end %>
-
-<%# Add a debug stream for production troubleshooting %>
-<%= turbo_stream.append "debug-console" do %>
-  <script>
-    console.log('Turbo Stream processed for <%= params[:card] %>', {
-      page: <%= params[:page] || 1 %>,
-      next_page: <%= @batches.next_page if params[:card] == 'batches' %> || 
-                 <%= @locations.next_page if params[:card] == 'locations' %> || 
-                 <%= @products.next_page if params[:card] == 'products' %> || null,
-      time: new Date().toISOString()
-    });
-  </script>
 <% end %>

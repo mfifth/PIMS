@@ -32,14 +32,14 @@ class DashboardController < ApplicationController
     @batches = Current.account.batches
                   .includes(products: :inventory_items)
                   .order(expiration_date: :asc)
-                  .page(params[:page]).per(5)
+                  .page(params[:batches_page]).per(5)
   end
 
   def load_locations
     @locations = Current.account.locations
                     .includes(:inventory_items, products: :batch)
                     .order(created_at: :desc)
-                    .page(params[:page]).per(5)
+                    .page(params[:locations_page]).per(5)
   end
 
   def load_products
@@ -49,6 +49,6 @@ class DashboardController < ApplicationController
       .preload(locations: :inventory_items)
       .select('products.*, batches.expiration_date AS earliest_expiration')
       .order(Arel.sql('earliest_expiration ASC NULLS LAST'))
-      .page(params[:page]).per(5)
-  end  
+      .page(params[:products_page]).per(5)
+  end
 end
