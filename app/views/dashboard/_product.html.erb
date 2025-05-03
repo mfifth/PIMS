@@ -5,10 +5,14 @@
     </a>
   </div>
 
-  <% if product.batch&.expiration_date %>
-    <% expiration_date = product.batch.expiration_date %>
-    <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
-    <span class="<%= color_class %> text-xs"><%= t("products.expiration", date: expiration_date) %></span>
+  <% if product.earliest_expiration %>
+    <% expiration_date = product.earliest_expiration.to_date rescue nil %>
+    <% if expiration_date %>
+      <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
+      <span class="<%= color_class %> text-xs">
+        <%= t("products.expiration", date: l(expiration_date, format: :long)) %>
+      </span>
+    <% end %>
   <% end %>
 
   <div class="locations-container">

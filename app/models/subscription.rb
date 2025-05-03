@@ -21,4 +21,16 @@ class Subscription < ApplicationRecord
     'plus' => 4,
     'premium' => Float::INFINITY
   }
+
+  def expired?
+    ends_at.present? && Time.current >= ends_at
+  end
+
+  def trialing?
+    plan == "trial" && status == "active"
+  end
+
+  def active?
+    status == "active" && (ends_at.nil? || Time.current < ends_at)
+  end
 end

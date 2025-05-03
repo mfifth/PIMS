@@ -44,12 +44,12 @@ class DashboardController < ApplicationController
 
   def load_products
     @products = Current.account.products
-                    .left_joins(:batch)
-                    .includes(:batch)
-                    .preload(locations: :inventory_items)
-                    .select('products.*, batches.expiration_date')
-                    .group('products.id')  # Ensure distinct products
-                    .order(Arel.sql('batches.expiration_date ASC NULLS LAST'))
-                    .page(params[:page]).per(5)
+      .left_joins(:batch)
+      .includes(:batch)
+      .preload(locations: :inventory_items)
+      .select('products.*, MIN(batches.expiration_date) AS earliest_expiration')
+      .group('products.id')
+      .order(Arel.sql('earliest_expiration ASC NULLS LAST'))
+      .page(params[:page]).per(5)
   end
 end
