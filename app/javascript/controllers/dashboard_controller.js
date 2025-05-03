@@ -22,7 +22,6 @@ export default class extends Controller {
     this.scrollContainers.forEach((container, index) => {
       container.removeEventListener('scroll', this.scrollHandlers[index])
     })
-    // Abort any pending requests
     this.activeRequests.forEach(controller => controller.abort())
   }
 
