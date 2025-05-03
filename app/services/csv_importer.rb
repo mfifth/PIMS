@@ -44,17 +44,17 @@ class CsvImporter
     def import_row(row_data)
       product = find_or_initialize_product(row_data)
       inventory_item = @location.inventory_items.find_or_initialize_by(product: product)
-  
+    
       inventory_item.assign_attributes(
         quantity: row_data['quantity'].presence || inventory_item.quantity,
-        low_threshold: row_data['low_threshold'].presence || inventory_item.low_threshold,
-        unit_type: row_data['unit_type'] || 'units'
+        low_threshold: row_data['low_stock_alert'].presence || inventory_item.low_threshold,
+        unit_type: row_data['unit_type'].presence || 'units'
       )
-  
+    
       if row_data['batch_number'].present? && row_data['expiration_date'].present?
         product.batch_id = handle_batch(product, row_data)
       end
-  
+    
       product.save!
       inventory_item.save!
     end
