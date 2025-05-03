@@ -47,9 +47,8 @@ class DashboardController < ApplicationController
       .left_joins(:batch)
       .includes(:batch)
       .preload(locations: :inventory_items)
-      .select('products.*, MIN(batches.expiration_date) AS earliest_expiration')
-      .group('products.id')
+      .select('products.*, batches.expiration_date AS earliest_expiration')
       .order(Arel.sql('earliest_expiration ASC NULLS LAST'))
       .page(params[:page]).per(5)
-  end
+  end  
 end
