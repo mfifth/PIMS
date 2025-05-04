@@ -23,7 +23,7 @@ class InvitationsController < ApplicationController
     @invitation.confirm!
     redirect_to new_user_url(
       token: @invitation.token,
-      email: @invitation.email
+      admin: params[:invitation][:admin]
     ), notice: t('notifications.complete_registration')
   end
 
@@ -44,6 +44,6 @@ class InvitationsController < ApplicationController
   private
   
   def invite_params
-    params.require(:invitation).permit(:email, :admin)
+    params.require(:invitation).permit(:email)
   end
 end

@@ -8,6 +8,7 @@ class UsersController < ApplicationController
     if params[:token].present?
       invitation = Invitation.find_by(token: params[:token])
       @user.email_address = invitation&.email
+      @user.admin = params[:admin]
     end
   end
 
