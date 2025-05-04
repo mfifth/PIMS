@@ -25,6 +25,6 @@ class Invitation < ApplicationRecord
   end
 
   def send_invitation_email
-    InvitationMailer.invite(self).deliver_later
+    Rails.env.development? ? InvitationMailer.invite(self).deliver_now : InvitationMailer.invite(self).deliver_later
   end
 end
