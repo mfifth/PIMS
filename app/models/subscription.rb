@@ -2,6 +2,7 @@ class Subscription < ApplicationRecord
   belongs_to :account
 
   PRODUCT_PLAN_LIMITS = {
+    'trial' => 50,
     'free' => 20,
     'starter' => 50,
     'plus' => 100,
@@ -9,6 +10,7 @@ class Subscription < ApplicationRecord
   }
 
   USER_PLAN_LIMITS = {
+    'trial' => 2,
     'free' => 1,
     'starter' => 3,
     'plus' => 5,
@@ -16,6 +18,7 @@ class Subscription < ApplicationRecord
   }
 
   LOCATION_PLAN_LIMITS = {
+    'trial' => 2,
     'free' => 1,
     'starter' => 2,
     'plus' => 4,

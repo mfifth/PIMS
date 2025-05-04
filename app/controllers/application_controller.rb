@@ -22,13 +22,13 @@ class ApplicationController < ActionController::Base
   end
 
   def check_trial_status
-    return unless Current.account&.subscription
-    subscription = Current.account.subscription
+    subscription = Current.account&.subscription
+    return unless subscription
   
     if subscription.trialing? && subscription.expired?
       subscription.update!(status: "expired", plan: "free")
   
-      redirect_to root_path, alert: "Your free trial has ended. Please choose a plan to continue."
+      redirect_to root_path, alert: t('notifications.free_trial_end')
     end
   end
 end

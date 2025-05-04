@@ -34,7 +34,7 @@
     </div>
   </div>
 
-  <% if ['plus', 'premium', 'starter'].include?(Current.account.subscription.plan) %>
+  <% if ['plus', 'premium', 'starter', 'trial'].include?(Current.account.subscription.plan) %>
     <!-- Notification Settings Section -->
     <div class="bg-white shadow-sm rounded-xl p-6 border border-gray-200">
       <h2 class="text-lg font-semibold mb-6 text-gray-800"><%= t("settings.notifications") %></h2>
@@ -71,14 +71,14 @@
 <br>
 
 <div id='notifications-section'>
-  <% if ['plus', 'premium', 'starter', 'free'].include?(Current.account.subscription.plan) %>
+  <% if ['plus', 'premium', 'starter', 'free', 'trial'].include?(Current.account.subscription.plan) %>
       <!-- Test Email -->
       <%= form_with url: send_test_email_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
         <%= submit_tag t("settings.test_email"), class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>
       <% end %>
   <% end %>
 
-  <% if ['plus', 'premium', 'starter'].include?(Current.account.subscription.plan) %>
+  <% if ['plus', 'premium'].include?(Current.account.subscription.plan) %>
       <!-- Test Text -->
       <%= form_with url: send_test_text_user_path(Current.user), method: :post, data: { turbo_frame: "notifications" }, class: "inline-block", local: false do %>
         <%= submit_tag t("settings.test_text"), class: "bg-blue bg-blue-600 text-white px-4 py-1 rounded-md text-sm hover:bg-blue-700 transition" %>

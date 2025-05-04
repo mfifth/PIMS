@@ -340,6 +340,7 @@ en:
     square_synced: "%{quantity} locations were synced. You can now sync products."
     inventory_synced: "Inventory synced from Square, %{size} items synced."
     failed_fetch: "Failed to fetch Square locations."
+    free_trial_end: "Your free trial has ended. Please choose a plan to continue."
     account_created: "Account successfully created."
     check_email: "Please check your email to confirm your account."
     updated_settings: "Settings successfully updated."
