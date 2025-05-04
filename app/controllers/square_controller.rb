@@ -48,7 +48,7 @@ class SquareController < ApplicationController
     when "inventory.updated"
       SquareInventorySyncJob.perform_later(account.id, data)
     when "order.created", "order.updated"
-      process_order(account, data)
+      SquareOrderProcessingJob.perform_later(account.id, data)
     else
       Rails.logger.info("Received unsupported event type: #{type}")
     end
