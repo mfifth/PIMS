@@ -38,7 +38,7 @@ class DashboardController < ApplicationController
   def load_locations
     @locations = Current.account.locations
                     .includes(:inventory_items, products: :batch)
-                    .order(created_at: :desc)
+                    .order(created_at: :asc)
                     .page(params[:locations_page]).per(5)
   end
 

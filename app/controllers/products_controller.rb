@@ -10,7 +10,8 @@ class ProductsController < ApplicationController
              "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
              .page(params[:page]).per(5)
     else
-      @products = Current.account.products.left_joins(:category).page(params[:page]).per(5)
+      @products = Current.account.products.left_joins(:category)
+      .order("products.name ASC").page(params[:page]).per(5)
     end
 
     respond_to do |format|

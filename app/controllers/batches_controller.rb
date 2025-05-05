@@ -7,12 +7,12 @@ class BatchesController < ApplicationController
     if params[:query].present?
       @batches = Current.account.batches
                  .left_joins(:products)
-                 .order(:expiration_date)
                  .where("products.name LIKE ? OR batch_number LIKE ? OR expiration_date LIKE ?", 
                  "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
                  .page(params[:page]).per(5).distinct
     else
-      @batches = Current.account.batches.left_joins(:products).page(params[:page]).per(5).distinct
+      @batches = Current.account.batches.left_joins(:products)
+      .order(expiration_date: :asc).page(params[:page]).per(5).distinct
     end
 
     respond_to do |format|
