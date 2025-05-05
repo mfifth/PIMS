@@ -291,6 +291,7 @@ es:
       syncing: "Sincronizando..."
       connect: "Conectar con Square"
       connecting: "Conectando..."
+      sync_started: "Square sync started. This may take a few minutes."
     clover:
       connected: "Cuenta de Clover conectada"
       sync_data: "Sincronizar datos"

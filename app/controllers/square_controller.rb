@@ -58,7 +58,7 @@ class SquareController < ApplicationController
 
   def sync_data
     SquareSyncJob.perform_later(Current.account.id)
-    redirect_to root_path, notice: "Square sync started. This may take a few minutes."
+    redirect_to root_path, notice: t('accounts_settings.square.sync_started')
   end  
 
   private
