@@ -22,7 +22,7 @@ en:
       syncing: "Syncing..."
       connect: "Connect with Square"
       connecting: "Connecting..."
-      sync_started: "Sincronización con Square iniciada. Esto puede tardar unos minutos."
+      sync_started: "Square sync started. This may take a few minutes."
     clover:
       connected: "Clover account connected"
       sync_data: "Sync Data"
