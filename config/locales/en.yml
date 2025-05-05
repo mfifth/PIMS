@@ -249,7 +249,7 @@ en:
     synced: "Synced"
     items_count: "%{count} items"
     total_value: "Total value: $%{value}"
-    low_stock_alert: "%{count} items need restocking"
+    low_stock_alert: "Low Stock Alert"
     updated: "Updated %{time} ago"
     new: "New Location"
     inventory_title: "Inventory"
