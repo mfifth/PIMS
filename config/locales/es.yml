@@ -290,10 +290,23 @@ es:
       syncing: "Sincronizando..."
       connect: "Conectar con Square"
       connecting: "Conectando..."
+    clover:
+      connected: "Cuenta de Clover conectada"
+      sync_data: "Sincronizar datos"
+      syncing: "Sincronizando..."
+      connect: "Conectar con Clover"
+      connecting: "Conectando..."
     invite:
       title: "Invitar a un usuario a tu cuenta"
       label: "Correo electrónico del usuario"
       submit: "Enviar invitación"
+      label: "Dirección de correo electrónico"
+      submit: "Enviar invitación"
+      role_label: "Seleccionar un rol"
+      admin_label: "Administrador"
+      admin_description: "Los administradores pueden gestionar inventario, recetas, usuarios y configuraciones."
+      general_label: "Usuario general (solo lectura)"
+      general_description: "Los usuarios generales pueden ver el inventario (no las recetas) pero no pueden realizar cambios."
     invited_users:
       title: "Usuarios invitados"
       email: "Correo electrónico"

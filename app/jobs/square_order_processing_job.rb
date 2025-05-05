@@ -1,6 +1,6 @@
 class SquareOrderProcessingJob < ApplicationJob
     include SquareHelper
-    queue_as :default  # GoodJob will use PostgreSQL
+    queue_as :default
   
     def self.unique_key(account_id, data)
       "order_#{data['id']}"
@@ -15,6 +15,6 @@ class SquareOrderProcessingJob < ApplicationJob
       process_order(account, data)
     rescue ActiveRecord::RecordNotFound => e
       Rails.logger.error("OrderProcessingJob failed: #{e.message}")
-      raise  # Triggers retry (GoodJob will retry automatically)
+      raise
     end
 end
