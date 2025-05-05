@@ -37,15 +37,15 @@
               <%= t("locations.low_stock_alert", count: low_items.count) %>
             </h3>
             <div class="mt-2">
-              <ul class="space-y-2">
+              <ul class="space-y-3">
                 <% low_items.each do |item| %>
-                  <li class="flex justify-between text-sm">
-                    <span class="font-medium text-red-700 truncate max-w-[160px]">
+                  <li class="text-sm">
+                    <div class="font-medium text-red-700 max-w-[160px]">
                       <%= item.product.name %>
-                    </span>
-                    <span class="ml-2 whitespace-nowrap text-red-600">
+                    </div>
+                    <div class="text-red-600">
                       <%= item.quantity %> <%= t('locations.left') %>
-                    </span>
+                    </div>
                   </li>
                 <% end %>
               </ul>
