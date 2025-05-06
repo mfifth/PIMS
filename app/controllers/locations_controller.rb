@@ -7,10 +7,14 @@ class LocationsController < ApplicationController
 
   def index
     @recipes = Current.account.recipes
-    @locations = Current.account.locations.includes(inventory_items: :product)
-    
-    # Add logging to verify
-    Rails.logger.info "Locations found: #{@locations.map(&:name)}"
+    @locations = Current.account.locations
+                       .includes(inventory_items: :product)
+                       .joins("LEFT JOIN inventory_items ON inventory_items.location_id = locations.id")
+                       .joins("LEFT JOIN products ON products.id = inventory_items.product_id")
+                       .select("locations.*, 
+                         SUM(CASE WHEN products.perishable = TRUE THEN 1 ELSE 0 END) as perishable_count,
+                         SUM(CASE WHEN products.perishable = FALSE THEN 1 ELSE 0 END) as non_perishable_count")
+                       .group("locations.id")
   end
 
   def show
