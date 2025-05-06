@@ -8,12 +8,13 @@ class LocationsController < ApplicationController
   def index
     @recipes = Current.account.recipes
     @locations = Current.account.locations
-                        .includes(inventory_items: :product)
-                        .select("locations.*, 
-                          COUNT(CASE WHEN products.perishable = TRUE THEN 1 END) as perishable_count,
-                          COUNT(CASE WHEN products.perishable = FALSE THEN 1 END) as non_perishable_count")
-                        .left_joins(inventory_items: :product)
-                        .group("locations.id")
+                       .includes(inventory_items: :product)
+                       .joins("LEFT JOIN inventory_items ON inventory_items.location_id = locations.id")
+                       .joins("LEFT JOIN products ON products.id = inventory_items.product_id")
+                       .select("locations.*, 
+                         SUM(CASE WHEN products.perishable = TRUE THEN 1 ELSE 0 END) as perishable_count,
+                         SUM(CASE WHEN products.perishable = FALSE THEN 1 ELSE 0 END) as non_perishable_count")
+                       .group("locations.id")
   end
 
   def show
