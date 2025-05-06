@@ -47,7 +47,9 @@
           </div>
 
           <br>
-          <%= yield %>
+          <%= turbo_frame_tag "main" do %>
+            <%= yield %>
+          <% end %>
         </main>
       </div>
     </div>
