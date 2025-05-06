@@ -1,7 +1,7 @@
 <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition" id="product_<%= product.id %>">
   <div class="flex justify-between">
     <a href="<%= product_path(product) %>" class="text-gray-800 font-medium hover:underline">
-      <%= product.name %>
+      <%= product.name.titleize %>
     </a>
   </div>
 

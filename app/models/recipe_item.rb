@@ -2,26 +2,35 @@ class RecipeItem < ApplicationRecord
   belongs_to :recipe
   belongs_to :product
 
-  VALID_UNITS = %w[grams ounces pounds liters gallons fluid_oz milliliters units].freeze
+  VALID_UNITS = %w[grams ounces pounds kilograms liters gallons fluid_oz milliliters units].freeze
   CONVERSION_RATES = {
     'grams' => {
       'grams' => 1,
-      'ounces' => 1.0/28.3495,
-      'pounds' => 1.0/453.592
+      'kilograms' => 0.001,
+      'ounces' => 1.0 / 28.3495,
+      'pounds' => 1.0 / 453.592
+    },
+    'kilograms' => {
+      'grams' => 1000,
+      'kilograms' => 1,
+      'ounces' => 35.274,
+      'pounds' => 2.20462
     },
     'ounces' => {
       'grams' => 28.3495,
+      'kilograms' => 0.0283495,
       'ounces' => 1,
-      'pounds' => 1.0/16
+      'pounds' => 1.0 / 16
     },
     'pounds' => {
       'grams' => 453.592,
+      'kilograms' => 0.453592,
       'ounces' => 16,
       'pounds' => 1
     },
     'liters' => {
       'liters' => 1,
-      'gallons' => 1.0/3.78541,
+      'gallons' => 1.0 / 3.78541,
       'fluid_oz' => 33.814,
       'milliliters' => 1000
     },
@@ -33,7 +42,7 @@ class RecipeItem < ApplicationRecord
     },
     'fluid_oz' => {
       'liters' => 0.0295735,
-      'gallons' => 1.0/128,
+      'gallons' => 1.0 / 128,
       'fluid_oz' => 1,
       'milliliters' => 29.5735
     },
@@ -58,6 +67,7 @@ class RecipeItem < ApplicationRecord
       'grams' => ['grams', 'ounces', 'pounds'],
       'ounces' => ['grams', 'ounces', 'pounds'],
       'pounds' => ['grams', 'ounces', 'pounds'],
+      'kilograms' => ['grams', 'kilograms', 'ounces', 'pounds'],
       'liters' => ['liters', 'fluid_oz', 'milliliters'],
       'gallons' => ['liters', 'gallons', 'fluid_oz', 'milliliters'],
       'fluid_oz' => ['liters', 'fluid_oz', 'milliliters'],
@@ -139,7 +149,7 @@ class RecipeItem < ApplicationRecord
   private
 
   def weight_units?(unit)
-    %w[grams ounces pounds].include?(unit)
+    %w[grams kilograms ounces pounds].include?(unit)
   end
 
   def volume_units?(unit)
@@ -152,7 +162,7 @@ class RecipeItem < ApplicationRecord
 
   def round_for_unit(quantity, unit)
     case unit
-    when 'grams', 'liters', 'milliliters' then quantity.round(4)
+    when 'grams', 'kilograms', 'liters', 'milliliters' then quantity.round(4)
     when 'ounces', 'pounds', 'gallons', 'fluid_oz' then quantity.round(2)
     else quantity.round
     end

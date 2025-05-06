@@ -26,7 +26,7 @@ class Product < ApplicationRecord
     VALID_UNITS.map { |u| [u.humanize, u] }
   end
 
-  VALID_UNITS = %w[grams ounces pounds liters gallons fluid_oz milliliters units].freeze
+  VALID_UNITS = %w[grams ounces pounds kilograms liters gallons fluid_oz milliliters units].freeze
 
   private
 
