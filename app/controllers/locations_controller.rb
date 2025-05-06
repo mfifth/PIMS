@@ -9,7 +9,6 @@ class LocationsController < ApplicationController
     @recipes = Current.account.recipes
     @locations = Current.account.locations.includes(inventory_items: :product)
     
-    # Add counts in Ruby
     @locations.each do |loc|
       perishable = loc.inventory_items.joins(:product).where(products: { perishable: true }).count
       non_perishable = loc.inventory_items.joins(:product).where(products: { perishable: false }).count
