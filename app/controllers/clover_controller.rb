@@ -18,29 +18,30 @@ class CloverController < ApplicationController
         req.body = {
           client_id:     CLIENT_ID,
           client_secret: CLIENT_SECRET,
-          code:          params[:code]
+          code:          params[:code],
+          redirect_uri:  REDIRECT_URI
         }.to_query
       end
 
       if response.success?
         data = JSON.parse(response.body)
-        access_token = data['access_token']
-        merchant_id  = data['merchant_id']
-
         account = Account.find(session.delete(:current_account_id))
         account.update!(
-          clover_access_token: access_token,
-          clover_merchant_id: merchant_id
+          clover_access_token: data['access_token'],
+          clover_merchant_id: data['merchant_id']
         )
 
-        register_clover_webhook(account)
-
-        redirect_to dashboard_path, notice: "Clover connected!"
+        if register_clover_webhook(account)
+          redirect_to dashboard_path, notice: "Clover connected successfully!"
+        else
+          redirect_to dashboard_path, alert: "Clover connected but webhook registration failed"
+        end
       else
-        render plain: "Error getting access token", status: :bad_request
+        Rails.logger.error "Clover OAuth Error: #{response.body}"
+        redirect_to dashboard_path, alert: "Failed to connect with Clover"
       end
     else
-      render plain: "No authorization code provided", status: :unprocessable_entity
+      redirect_to dashboard_path, alert: "Authorization failed: no code received"
     end
   end
 
