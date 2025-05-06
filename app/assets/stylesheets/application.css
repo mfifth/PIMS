@@ -58,6 +58,73 @@
   scrollbar-color: #cbd5e0 #f1f5f9;
 }
 
+/* app/assets/stylesheets/application.css */
+[data-controller="flip"] {
+  perspective: 1000px;
+}
+
+[data-flip-target="front"], 
+[data-flip-target="back"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/* app/assets/stylesheets/application.css */
+[data-flip-target="front"], 
+[data-flip-target="back"] {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  backface-visibility: hidden;
+}
+
+[data-flip-target="front"].hidden {
+  opacity: 0;
+  transform: rotateY(180deg);
+}
+
+[data-flip-target="back"].hidden {
+  opacity: 0;
+  transform: rotateY(-180deg);
+}
+
+[data-flip-target="back"]:not(.hidden) {
+  opacity: 1;
+  transform: rotateY(0deg);
+}
+
+/* app/assets/stylesheets/application.css */
+.flip-container {
+  perspective: 1000px;
+}
+
+.flip-container.flipped .flipper {
+  transform: rotateY(180deg);
+}
+
+.flipper {
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  position: relative;
+}
+
+.front, .back {
+  backface-visibility: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.front {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
 .btn-primary {
   @apply bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg shadow-sm transition-all duration-200 flex items-center;
 }

@@ -106,6 +106,5 @@ Rails.application.routes.draw do
   post "/clover/webhook", to: "clover#webhook"
   post "/clover/sync_data", to: "clover#sync_data", as: :clover_sync_data
 
-  # Defines the root path route ("/")
-  root "dashboard#index"
+  root to: 'pages#home'
 end
