@@ -107,4 +107,6 @@ Rails.application.routes.draw do
   post "/clover/sync_data", to: "clover#sync_data", as: :clover_sync_data
 
   root to: 'pages#home'
+  get '/contact_us', to: 'pages#contact_us', as: 'contact'
+  post '/contact_us_create', to: 'pages#contact_us_create'
 end
