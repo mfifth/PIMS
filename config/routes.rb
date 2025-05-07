@@ -109,8 +109,8 @@ Rails.application.routes.draw do
   get '/contact_us', to: 'pages#contact_us', as: :contact
   post '/contact_us_create', to: 'pages#contact_us_create'
 
-  get '/privacy_policy' to: 'pages#privacy_policy'
-  get '/eula' to: 'pages#eula'
+  get '/privacy_policy', to: 'pages#privacy_policy'
+  get '/eula', to: 'pages#eula'
 
   root to: 'pages#home'
 end
