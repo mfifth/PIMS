@@ -1,9 +1,14 @@
 class CloverController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :webhook
+  skip_before_action :require_authentication, only: :webhook
 
   CLIENT_ID     = ENV['CLOVER_CLIENT_ID']
   CLIENT_SECRET = ENV['CLOVER_CLIENT_SECRET']
   REDIRECT_URI  = 'https://pimsco.tech/clover/oauth/callback'
+
+  before_action do
+    response.headers['X-Frame-Options'] = 'DENY'
+  end
 
   def start
     session[:current_account_id] = Current.account.id

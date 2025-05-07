@@ -1,5 +1,6 @@
 class SquareController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :webhook
+  skip_before_action :require_authentication, only: :webhook
 
   before_action do
     response.headers['X-Frame-Options'] = 'DENY'
@@ -85,5 +86,42 @@ class SquareController < ApplicationController
                       grant_type: "authorization_code"
                     }
                   )
+  end
+
+  private
+
+  def verify_webhook_signature
+    # Get the signature from the headers
+    signature = request.headers["X-Clover-Signature"]
+    return head :unauthorized unless signature
+
+    # Read the raw body (must be done carefully)
+    request.body.rewind
+    payload = request.body.read
+
+    # Verify the signature
+    unless valid_signature?(payload, signature)
+      Rails.logger.error "Invalid webhook signature received"
+      head :unauthorized
+    end
+  end
+
+  def valid_signature?(payload, received_signature)
+    # Retrieve your webhook signing secret (set this in your environment variables)
+    secret = ENV['CLOVER_WEBHOOK_SIGNING_SECRET']
+    return false unless secret
+
+    # Compute the expected signature
+    expected_signature = OpenSSL::HMAC.hexdigest(
+      OpenSSL::Digest.new('sha256'),
+      secret,
+      payload
+    )
+
+    # Compare signatures in a timing-safe manner
+    ActiveSupport::SecurityUtils.secure_compare(
+      expected_signature,
+      received_signature
+    )
   end
 end
