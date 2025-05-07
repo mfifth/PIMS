@@ -39,6 +39,7 @@ class RecipeOrderProcessorService
       'gallons' => { 'liters' => 3.78541, 'gallons' => 1, 'fluid_oz' => 128, 'milliliters' => 3785.41 },
       'fluid_oz' => { 'liters' => 0.0295735, 'gallons' => 1.0 / 128, 'fluid_oz' => 1, 'milliliters' => 29.5735 },
       'milliliters' => { 'liters' => 0.001, 'gallons' => 0.000264172, 'fluid_oz' => 0.033814, 'milliliters' => 1 },
+      'kilograms' => { 'grams' => 1000, 'kilograms' => 1, 'ounces' => 35.274, 'pounds' => 2.20462 },
       'units' =>   { 'units' => 1 }
     }.dig(from_unit, to_unit) || 1
   end
