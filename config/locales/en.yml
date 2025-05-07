@@ -356,6 +356,7 @@ en:
     blank_email: "Email cannot be blank."
     email_warning: "Please enter a valid email address."
     product_limit_warning: "You have reached the maximum limit of %{limit} products for your subscription."
+    recipe_limit_warning: "You have reached the maximum limit of %{limit} products for your subscription."
     location_limit_warning: "You have reached the maximum limit of %{limit} locations for your subscription."
     low_limit_warning: "%{product} is running low at %{location_name} (only %{quantity} left)."
     batch_expiry: "Batch %{batch_number} with %{product_count} products will expire soon (%{expiration_date})."

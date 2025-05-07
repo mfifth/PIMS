@@ -7,5 +7,14 @@ class Recipe < ApplicationRecord
 
   validates :uid, presence: true, uniqueness: { scope: :account_id }
   validates :name, presence: true, uniqueness: { scope: :account_id }
+  validate :recipe_limit_not_exceeded, on: :create
+
+  private
+
+  def recipe_limit_not_exceeded
+    if account.recipes.count >= Subscription::RECIPE_PLAN_LIMITS[account.subscription.plan]
+      errors.add(:base, I18n.t('notifications.recipe_limit_warning', limit: Subscription::RECIPE_PLAN_LIMITS[account.subscription.plan]))
+    end
+  end
 end
   
