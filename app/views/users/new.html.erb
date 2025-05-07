@@ -2,7 +2,7 @@
   <div class="w-full max-w-md p-8 bg-white shadow-md rounded-lg">
 
     <!-- Page Title -->
-    <h2 class="text-3xl font-semibold text-center text-gray-700">Sign Up</h2>
+    <h2 class="text-3xl font-semibold text-center text-gray-700"><%= t('sign_up.title') %></h2>
 
     <% if @user.errors.any? %>
       <div class="mt-4 text-sm text-red-600 bg-red-100 border border-red-400 rounded-md p-3">
@@ -24,7 +24,7 @@
       <div>
         <%= form.text_field :name, 
           required: true, autofocus: true, 
-          placeholder: "Full Name",
+          placeholder: t('sign_up.form.name_placeholder'),
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 
@@ -32,7 +32,7 @@
       <div>
         <%= form.telephone_field :phone, 
           autocomplete: "tel", 
-          placeholder: "Phone Number",
+          placeholder: t('sign_up.form.phone_placeholder'),
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 
@@ -40,7 +40,7 @@
       <div>
         <%= form.email_field :email_address, 
           required: true, autocomplete: "email", 
-          placeholder: "Email Address",
+          placeholder: t('sign_up.form.email_placeholder'),
           value: params[:email],
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
@@ -49,7 +49,8 @@
       <div>
         <%= form.password_field :password, 
           required: true, 
-          placeholder: "Create Password", maxlength: 72,
+          placeholder: t('sign_up.form.password_placeholder'), 
+          maxlength: 72,
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 
@@ -57,23 +58,24 @@
       <div>
         <%= form.password_field :password_confirmation, 
           required: true, 
-          placeholder: "Confirm Password", maxlength: 72,
+          placeholder: t('sign_up.form.password_confirmation_placeholder'), 
+          maxlength: 72,
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 
       <!-- Submit Button -->
       <div class="w-full px-1 py-1 text-white text-center bg-blue-600 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
-        <%= form.submit "Create Account" %>
+        <%= form.submit t('sign_up.form.submit_button') %>
       </div>
 
     <% end %>
 
     <!-- Already Have an Account? -->
     <div class="mt-6 text-center">
-      <p class="text-sm text-gray-600">Already have an account? 
-        <%= link_to "Sign In", '/session/new', class: "text-blue-600 hover:underline" %>
+      <p class="text-sm text-gray-600">
+        <%= t('sign_up.already_have_account') %> 
+        <%= link_to t('sign_up.sign_in_link'), '/session/new', class: "text-blue-600 hover:underline" %>
       </p>
     </div>
-
   </div>
 </div>

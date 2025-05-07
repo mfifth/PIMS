@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= I18n.locale %>">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PIMS - Product Inventory Management System</title>
+  <title><%= t('pims.title') %></title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -40,12 +40,25 @@
           </div>
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:items-center space-x-8">
-          <a href="#features" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">Features</a>
-          <a href="#screenshots" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">Screenshots</a>
-          <a href="#pricing" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium">Pricing</a>
-					<%= link_to "Contact Us", 'contact_us', class: "text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium" %>
-          <%= link_to "Login", 'signin', class: "text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium" %>
-          <%= link_to "Get Started", 'signup', class: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+          <!-- Language Switcher -->
+          <div class="relative">
+            <button class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium focus:outline-none" id="language-menu-button">
+              <%= I18n.locale.to_s.upcase %>
+              <i class="fas fa-chevron-down ml-1"></i>
+            </button>
+            <div class="hidden absolute right-0 mt-2 w-16 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" id="language-menu">
+              <% I18n.available_locales.each do |locale| %>
+                <%= link_to locale.to_s.upcase, url_for(locale: locale), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+              <% end %>
+            </div>
+          </div>
+          
+          <a href="#features" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.features') %></a>
+          <a href="#screenshots" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.screenshots') %></a>
+          <a href="#pricing" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.pricing') %></a>
+          <%= link_to t('pims.nav.contact_us'), 'contact_us', class: "text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium" %>
+          <%= link_to t('pims.nav.login'), "signin?locale=#{params[:locale]}", class: "text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium" %>
+          <%= link_to t('pims.nav.get_started'), "signup?locale=#{params[:locale]}", class: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
         </div>
       </div>
     </div>
@@ -56,15 +69,15 @@
     <div class="max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
       <div class="text-center">
         <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-          <span class="block">Product Inventory</span>
-          <span class="block text-green-600">Management System</span>
+          <span class="block"><%= t('pims.hero.title_line1') %></span>
+          <span class="block text-green-600"><%= t('pims.hero.title_line2') %></span>
         </h1>
         <p class="mt-3 max-w-md mx-auto text-base text-gray-600 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          Streamline your product management, track inventory across locations, and manage batches with our powerful PIMS solution.
+          <%= t('pims.hero.description') %>
         </p>
         <div class="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
           <div class="rounded-md shadow">
-            <%= link_to "Get Started for Free", signup_path, class: "w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10" %>
+            <%= link_to t('pims.hero.cta'), signup_path, class: "w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10" %>
           </div>
         </div>
       </div>
@@ -75,9 +88,9 @@
   <div id="features" class="py-12 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="lg:text-center">
-        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Features</h2>
+        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase"><%= t('pims.features.title') %></h2>
         <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Everything you need to manage your inventory
+          <%= t('pims.features.subtitle') %>
         </p>
       </div>
 
@@ -89,9 +102,9 @@
               <i class="fas fa-tachometer-alt text-xl"></i>
             </div>
             <div class="mt-4">
-              <h3 class="text-lg font-medium text-gray-900">Comprehensive Dashboard</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.features.items.dashboard.title') %></h3>
               <p class="mt-2 text-base text-gray-600">
-                Get an instant overview of your inventory with key metrics for locations, products, and batches all in one place.
+                <%= t('pims.features.items.dashboard.description') %>
               </p>
             </div>
           </div>
@@ -102,9 +115,9 @@
               <i class="fas fa-map-marker-alt text-xl"></i>
             </div>
             <div class="mt-4">
-              <h3 class="text-lg font-medium text-gray-900">Multi-Location Management</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.features.items.locations.title') %></h3>
               <p class="mt-2 text-base text-gray-600">
-                Track inventory across multiple locations with detailed breakdowns of perishable and non-perishable items.
+                <%= t('pims.features.items.locations.description') %>
               </p>
             </div>
           </div>
@@ -115,9 +128,9 @@
               <i class="fas fa-boxes text-xl"></i>
             </div>
             <div class="mt-4">
-              <h3 class="text-lg font-medium text-gray-900">Product Catalog</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.features.items.products.title') %></h3>
               <p class="mt-2 text-base text-gray-600">
-                Manage your entire product catalog with categories, pricing, and detailed inventory tracking.
+                <%= t('pims.features.items.products.description') %>
               </p>
             </div>
           </div>
@@ -128,9 +141,9 @@
               <i class="fas fa-layer-group text-xl"></i>
             </div>
             <div class="mt-4">
-              <h3 class="text-lg font-medium text-gray-900">Batch Tracking</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.features.items.batches.title') %></h3>
               <p class="mt-2 text-base text-gray-600">
-                Track products by batches with expiration dates, quantities, and automatic alerts for low stock.
+                <%= t('pims.features.items.batches.description') %>
               </p>
             </div>
           </div>
@@ -141,9 +154,9 @@
               <i class="fas fa-utensils text-xl"></i>
             </div>
             <div class="mt-4">
-              <h3 class="text-lg font-medium text-gray-900">Recipe Management</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.features.items.recipes.title') %></h3>
               <p class="mt-2 text-base text-gray-600">
-                Create and manage recipes with ingredient lists and automatically track inventory usage after every sale.
+                <%= t('pims.features.items.recipes.description') %>
               </p>
             </div>
           </div>
@@ -154,9 +167,9 @@
               <i class="fas fa-chart-bar text-xl"></i>
             </div>
             <div class="mt-4">
-              <h3 class="text-lg font-medium text-gray-900">Advanced Reporting</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.features.items.reporting.title') %></h3>
               <p class="mt-2 text-base text-gray-600">
-                Generate detailed reports on inventory levels, batch information, & product movement.
+                <%= t('pims.features.items.reporting.description') %>
               </p>
             </div>
           </div>
@@ -166,501 +179,479 @@
   </div>
 
   <!-- Screenshots Section -->
-	<div id="screenshots" class="py-16 bg-gray-50">
-		<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-			<div class="text-center">
-				<h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">In Action</h2>
-				<p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-					See PIMS in action
-				</p>
-				<p class="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
-					Our intuitive interface makes inventory management simple and efficient.
-				</p>
-			</div>
-
-			<div class="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
-				<!-- Locations Screenshot -->
-				<div class="bg-white rounded-lg shadow-xl overflow-hidden">
-					<div class="p-4 bg-gray-100 border-b border-gray-200">
-						<h3 class="text-lg font-medium text-gray-900">Location Management</h3>
-					</div>
-					<div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
-						<div class="bg-white p-6 rounded-lg shadow-sm">
-							<div class="flex justify-between items-end mb-6">
-								<div class="flex-1">
-									<h1 class="text-xl font-bold text-gray-800">Main Warehouse</h1>
-									<div class="text-gray-700 space-y-1 mt-2">
-										<p><strong class="font-semibold">City:</strong> Springfield</p>
-									</div>
-								</div>
-							</div>
-
-							<div class="space-y-6">
-								<div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
-									<h2 class="text-2xl font-semibold text-gray-800">Inventory</h2>
-									<div class="flex flex-wrap gap-2 mt-4 md:mt-0">
-										<a href="#" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">All</a>
-										<a href="#" class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">Perishable</a>
-										<a href="#" class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium">Non-Perishable</a>
-									</div>
-								</div>
-
-								<!-- Organic Apples -->
-								<div class="bg-gray-50 p-6 rounded-lg shadow">
-									<div class="flex justify-between items-start">
-										<div>
-											<span class="font-semibold text-lg">Organic Apples</span>
-											<h5 class="text-sm text-gray-500">SKU: APP-ORG-001</h5>
-											<span class="mt-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-												<svg class="mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-													<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-												</svg>
-												Low stock (threshold: 10)
-											</span>
-										</div>
-										<span class="text-gray-600 text-sm">Quantity: 8</span>
-									</div>
-
-									<div class="mt-2 flex items-center space-x-3">
-										<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-											Fruits
-										</span>
-										<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-											Perishable
-										</span>
-									</div>
-
-									<div class="mt-4 grid grid-cols-2 gap-4">
-										<div>
-											<p class="text-sm text-gray-500">Unit Price</p>
-											<p class="font-medium">$2.99</p>
-										</div>
-										<div>
-											<p class="text-sm text-gray-500">Total Value</p>
-											<p class="font-medium">$23.92</p>
-										</div>
-									</div>
-
-									<div class="mt-4">
-										<p class="text-sm font-medium text-gray-700">Batch Details:</p>
-										<div class="mt-2 text-sm text-gray-600">
-											<p>Batch #: BCH-2023-05-001</p>
-											<p class="flex items-center">
-												Expiration: Jun 15, 2023
-												<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-													<svg class="mr-1 h-3 w-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-														<path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-													</svg>
-													Expiring in 5 days
-												</span>
-											</p>
-										</div>
-									</div>
-								</div>
-
-								<!-- All-Purpose Flour -->
-								<div class="bg-gray-50 p-6 rounded-lg shadow mt-4">
-									<div class="flex justify-between items-start">
-										<div>
-											<span class="font-semibold text-lg">All-Purpose Flour</span>
-											<h5 class="text-sm text-gray-500">SKU: FLR-AP-001</h5>
-										</div>
-										<span class="text-gray-600 text-sm">Quantity: 24</span>
-									</div>
-
-									<div class="mt-2 flex items-center space-x-3">
-										<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-											Baking
-										</span>
-										<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-											Perishable
-										</span>
-									</div>
-
-									<div class="mt-4 grid grid-cols-2 gap-4">
-										<div>
-											<p class="text-sm text-gray-500">Unit Price</p>
-											<p class="font-medium">$3.49</p>
-										</div>
-										<div>
-											<p class="text-sm text-gray-500">Total Value</p>
-											<p class="font-medium">$83.76</p>
-										</div>
-									</div>
-								</div>
-
-								<!-- Granulated Sugar -->
-								<div class="bg-gray-50 p-6 rounded-lg shadow mt-4">
-									<div class="flex justify-between items-start">
-										<div>
-											<span class="font-semibold text-lg">Granulated Sugar</span>
-											<h5 class="text-sm text-gray-500">SKU: SUG-GR-001</h5>
-										</div>
-										<span class="text-gray-600 text-sm">Quantity: 18</span>
-									</div>
-
-									<div class="mt-2 flex items-center space-x-3">
-										<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-											Pantry
-										</span>
-										<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
-											Perishable
-										</span>
-									</div>
-
-									<div class="mt-4 grid grid-cols-2 gap-4">
-										<div>
-											<p class="text-sm text-gray-500">Unit Price</p>
-											<p class="font-medium">$2.29</p>
-										</div>
-										<div>
-											<p class="text-sm text-gray-500">Total Value</p>
-											<p class="font-medium">$41.22</p>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Products Screenshot -->
-				<div class="bg-white rounded-lg shadow-xl overflow-hidden">
-					<div class="p-4 bg-gray-100 border-b border-gray-200">
-						<h3 class="text-lg font-medium text-gray-900">Product Catalog</h3>
-					</div>
-					<div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
-						<div class="space-y-6">
-							<!-- Organic Apples -->
-							<div class="bg-white p-6 rounded-lg shadow">
-								<div>
-									<div class="text-lg font-semibold text-gray-800">Organic Apples</div>
-									<div class="text-sm text-gray-600">
-										SKU: APP-ORG-001 | Category: Fruits | Price: $2.99
-									</div>
-								</div>
-
-								<div class="mt-2 text-sm text-gray-700">
-									<strong>Stock Locations:</strong>
-									<p>Main Warehouse: 8 Units in stock</p>
-									<p>Downtown Store: 15 Units in stock</p>
-								</div>
-
-								<div class="mt-2 space-x-2">
-									<a href="#" class="text-blue-500 hover:underline">View</a>
-									<a href="#" class="text-yellow-500 hover:underline">Edit</a>
-									<a href="#" class="text-red-500 hover:underline">Delete</a>
-								</div>
-							</div>
-
-							<!-- All-Purpose Flour -->
-							<div class="bg-white p-6 rounded-lg shadow">
-								<div>
-									<div class="text-lg font-semibold text-gray-800">All-Purpose Flour</div>
-									<div class="text-sm text-gray-600">
-										SKU: FLR-AP-001 | Category: Baking | Price: $3.49
-									</div>
-								</div>
-
-								<div class="mt-2 text-sm text-gray-700">
-									<strong>Stock Locations:</strong>
-									<p>Main Warehouse: 24 Pounds in stock</p>
-									<p>Downtown Store: 12 Pounds in stock</p>
-								</div>
-
-								<div class="mt-2 space-x-2">
-									<a href="#" class="text-blue-500 hover:underline">View</a>
-									<a href="#" class="text-yellow-500 hover:underline">Edit</a>
-									<a href="#" class="text-red-500 hover:underline">Delete</a>
-								</div>
-							</div>
-
-							<!-- Granulated Sugar -->
-							<div class="bg-white p-6 rounded-lg shadow">
-								<div>
-									<div class="text-lg font-semibold text-gray-800">Granulated Sugar</div>
-									<div class="text-sm text-gray-600">
-										SKU: SUG-GR-001 | Category: Pantry | Price: $2.29
-									</div>
-								</div>
-
-								<div class="mt-2 text-sm text-gray-700">
-									<strong>Stock Locations:</strong>
-									<p>Main Warehouse: 18 Pounds in stock</p>
-									<p>Downtown Store: 9 Pounds in stock</p>
-								</div>
-
-								<div class="mt-2 space-x-2">
-									<a href="#" class="text-blue-500 hover:underline">View</a>
-									<a href="#" class="text-yellow-500 hover:underline">Edit</a>
-									<a href="#" class="text-red-500 hover:underline">Delete</a>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<!-- Recipes Screenshot -->
-				<div class="bg-white rounded-lg shadow-xl overflow-hidden">
-					<div class="p-4 bg-gray-100 border-b border-gray-200">
-						<h3 class="text-lg font-medium text-gray-900">Recipe Management</h3>
-					</div>
-					<div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
-						<div class="bg-white rounded-lg shadow p-6">
-							<div class="flex justify-between items-start">
-								<div>
-									<h2 class="text-xl font-semibold">Apple Pie</h2>
-									<p class="text-sm text-gray-500 mt-1">Recipe ID: REC-001</p>
-								</div>
-								<div class="text-blue-500 hover:text-blue-700">
-									Edit
-								</div>
-							</div>
-
-							<div class="mt-4">
-								<h3 class="font-bold text-gray-700 mb-2">Ingredients</h3>
-								<ul class="space-y-3">
-									<li class="flex items-center gap-4">
-										<span class="w-1/2">Organic Apples</span>
-										<span class="w-1/4">6</span>
-										<span class="w-1/4">Units</span>
-									</li>
-									<li class="flex items-center gap-4">
-										<span class="w-1/2">All-Purpose Flour</span>
-										<span class="w-1/4">500</span>
-										<span class="w-1/4">Grams</span>
-									</li>
-									<li class="flex items-center gap-4">
-										<span class="w-1/2">Granulated Sugar</span>
-										<span class="w-1/4">250</span>
-										<span class="w-1/4">Grams</span>
-									</li>
-								</ul>
-
-								<div class="mt-4 text-sm text-gray-500">
-									Updated 2 days ago
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="p-8 bg-gray-100 min-h-screen">
-  <div class="flex justify-between items-center mb-8">
-    <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
-  </div>
-
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- Locations Card -->
-    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Locations</h2>
-        <span class="text-2xl font-bold text-green-600">2</span>
-      </div>
-
-      <div class="space-y-4">
-        <!-- Main Restaurant -->
-        <div class="border-b border-gray-100 pb-4">
-          <div class="flex justify-between items-center">
-            <h3 class="font-medium text-gray-800">Main Restaurant</h3>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              Synced
-            </span>
-          </div>
-          <p class="text-sm text-gray-600 mt-1">
-            433 items • Total value: $1,299.00
-          </p>
-        </div>
-
-        <!-- Second Location -->
-        <div class="pb-4">
-          <h3 class="font-medium text-gray-800">Second Location</h3>
-          <p class="text-sm text-gray-600 mt-1">
-            2,486 items • Total value: $1,515.74
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recipes Card -->
-    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800">Available Recipes</h2>
-        <span class="text-2xl font-bold text-purple-600">2</span>
-      </div>
-
-      <div class="space-y-4">
-        <!-- Pancakes -->
-        <div class="border-b border-gray-100 pb-4">
-          <div class="flex justify-between items-center">
-            <h3 class="font-medium text-gray-800">Pancakes</h3>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              10 can make
-            </span>
-          </div>
-          <p class="text-sm text-gray-600 mt-1">
-            Until May 13, 2025
-          </p>
-        </div>
-
-        <!-- Margherita Pizza -->
-        <div class="pb-4">
-          <div class="flex justify-between items-center">
-            <h3 class="font-medium text-gray-800">Margherita Pizza</h3>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              53 can make
-            </span>
-          </div>
-          <p class="text-sm text-gray-600 mt-1">
-            Until May 21, 2025
-          </p>
-        </div>
-
-        <p class="text-xs text-gray-400 mt-4">
-          Updated 3 days ago
+  <div id="screenshots" class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center">
+        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase"><%= t('pims.screenshots.title') %></h2>
+        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <%= t('pims.screenshots.subtitle') %>
+        </p>
+        <p class="mt-4 max-w-2xl text-xl text-gray-600 mx-auto">
+          <%= t('pims.screenshots.description') %>
         </p>
       </div>
+
+      <div class="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <!-- Locations Screenshot -->
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="p-4 bg-gray-100 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900"><%= t('pims.screenshots.location_management') %></h3>
+          </div>
+          <div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
+            <div class="bg-white p-6 rounded-lg shadow-sm">
+              <div class="flex justify-between items-end mb-6">
+                <div class="flex-1">
+                  <h1 class="text-xl font-bold text-gray-800"><%= t('pims.screenshots.main_warehouse') %></h1>
+                  <div class="text-gray-700 space-y-1 mt-2">
+                    <p><strong class="font-semibold"><%= t('pims.screenshots.city') %>:</strong> Springfield</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-6">
+                <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
+                  <h2 class="text-2xl font-semibold text-gray-800"><%= t('pims.screenshots.inventory') %></h2>
+                  <div class="flex flex-wrap gap-2 mt-4 md:mt-0">
+                    <a href="#" class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium"><%= t('pims.screenshots.all') %></a>
+                    <a href="#" class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium"><%= t('pims.screenshots.perishable') %></a>
+                    <a href="#" class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm font-medium"><%= t('pims.screenshots.non_perishable') %></a>
+                  </div>
+                </div>
+
+                <!-- Organic Apples -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="font-semibold text-lg"><%= t('pims.screenshots.organic_apples') %></span>
+                      <h5 class="text-sm text-gray-500"><%= t('pims.screenshots.sku') %>: APP-ORG-001</h5>
+                      <span class="mt-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <svg class="mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <%= t('pims.screenshots.low_stock', threshold: 10) %>
+                      </span>
+                    </div>
+                    <span class="text-gray-600 text-sm"><%= t('pims.screenshots.quantity') %>: 8</span>
+                  </div>
+
+                  <div class="mt-2 flex items-center space-x-3">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= t('pims.screenshots.fruits') %>
+                    </span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                      <%= t('pims.screenshots.perishable') %>
+                    </span>
+                  </div>
+
+                  <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-sm text-gray-500"><%= t('pims.screenshots.unit_price') %></p>
+                      <p class="font-medium">$2.99</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-500"><%= t('pims.screenshots.total_value') %></p>
+                      <p class="font-medium">$23.92</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-4">
+                    <p class="text-sm font-medium text-gray-700"><%= t('pims.screenshots.batch_details') %>:</p>
+                    <div class="mt-2 text-sm text-gray-600">
+                      <p><%= t('pims.screenshots.batch_number') %>: BCH-2023-05-001</p>
+                      <p class="flex items-center">
+                        <%= t('pims.screenshots.expiration') %>: Jun 15, 2023
+                        <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                          <svg class="mr-1 h-3 w-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                          </svg>
+                          <%= t('pims.screenshots.expiring_in', days: 5) %>
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- All-Purpose Flour -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow mt-4">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="font-semibold text-lg"><%= t('pims.screenshots.all_purpose_flour') %></span>
+                      <h5 class="text-sm text-gray-500"><%= t('pims.screenshots.sku') %>: FLR-AP-001</h5>
+                    </div>
+                    <span class="text-gray-600 text-sm"><%= t('pims.screenshots.quantity') %>: 24</span>
+                  </div>
+
+                  <div class="mt-2 flex items-center space-x-3">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= t('pims.screenshots.baking') %>
+                    </span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                      <%= t('pims.screenshots.perishable') %>
+                    </span>
+                  </div>
+
+                  <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-sm text-gray-500"><%= t('pims.screenshots.unit_price') %></p>
+                      <p class="font-medium">$3.49</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-500"><%= t('pims.screenshots.total_value') %></p>
+                      <p class="font-medium">$83.76</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Granulated Sugar -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow mt-4">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <span class="font-semibold text-lg"><%= t('pims.screenshots.granulated_sugar') %></span>
+                      <h5 class="text-sm text-gray-500"><%= t('pims.screenshots.sku') %>: SUG-GR-001</h5>
+                    </div>
+                    <span class="text-gray-600 text-sm"><%= t('pims.screenshots.quantity') %>: 18</span>
+                  </div>
+
+                  <div class="mt-2 flex items-center space-x-3">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                      <%= t('pims.screenshots.pantry') %>
+                    </span>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                      <%= t('pims.screenshots.perishable') %>
+                    </span>
+                  </div>
+
+                  <div class="mt-4 grid grid-cols-2 gap-4">
+                    <div>
+                      <p class="text-sm text-gray-500"><%= t('pims.screenshots.unit_price') %></p>
+                      <p class="font-medium">$2.29</p>
+                    </div>
+                    <div>
+                      <p class="text-sm text-gray-500"><%= t('pims.screenshots.total_value') %></p>
+                      <p class="font-medium">$41.22</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Products Screenshot -->
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="p-4 bg-gray-100 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900"><%= t('pims.screenshots.product_catalog') %></h3>
+          </div>
+          <div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
+            <div class="space-y-6">
+              <!-- Organic Apples -->
+              <div class="bg-white p-6 rounded-lg shadow">
+                <div>
+                  <div class="text-lg font-semibold text-gray-800"><%= t('pims.screenshots.organic_apples') %></div>
+                  <div class="text-sm text-gray-600">
+                    <%= t('pims.screenshots.sku') %>: APP-ORG-001 | <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.fruits') %> | <%= t('pims.screenshots.price') %>: $2.99
+                  </div>
+                </div>
+
+                <div class="mt-2 text-sm text-gray-700">
+                  <strong><%= t('pims.screenshots.stock_locations') %>:</strong>
+                  <p><%= t('pims.screenshots.main_warehouse') %>: 8 <%= t('pims.screenshots.units_in_stock') %></p>
+                  <p><%= t('pims.screenshots.downtown_store') %>: 15 <%= t('pims.screenshots.units_in_stock') %></p>
+                </div>
+
+                <div class="mt-2 space-x-2">
+                  <a href="#" class="text-blue-500 hover:underline"><%= t('pims.screenshots.view') %></a>
+                  <a href="#" class="text-yellow-500 hover:underline"><%= t('pims.screenshots.edit') %></a>
+                  <a href="#" class="text-red-500 hover:underline"><%= t('pims.screenshots.delete') %></a>
+                </div>
+              </div>
+
+              <!-- All-Purpose Flour -->
+              <div class="bg-white p-6 rounded-lg shadow">
+                <div>
+                  <div class="text-lg font-semibold text-gray-800"><%= t('pims.screenshots.all_purpose_flour') %></div>
+                  <div class="text-sm text-gray-600">
+                    <%= t('pims.screenshots.sku') %>: FLR-AP-001 | <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.baking') %> | <%= t('pims.screenshots.price') %>: $3.49
+                  </div>
+                </div>
+
+                <div class="mt-2 text-sm text-gray-700">
+                  <strong><%= t('pims.screenshots.stock_locations') %>:</strong>
+                  <p><%= t('pims.screenshots.main_warehouse') %>: 24 <%= t('pims.screenshots.pounds_in_stock') %></p>
+                  <p><%= t('pims.screenshots.downtown_store') %>: 12 <%= t('pims.screenshots.pounds_in_stock') %></p>
+                </div>
+
+                <div class="mt-2 space-x-2">
+                  <a href="#" class="text-blue-500 hover:underline"><%= t('pims.screenshots.view') %></a>
+                  <a href="#" class="text-yellow-500 hover:underline"><%= t('pims.screenshots.edit') %></a>
+                  <a href="#" class="text-red-500 hover:underline"><%= t('pims.screenshots.delete') %></a>
+                </div>
+              </div>
+
+              <!-- Granulated Sugar -->
+              <div class="bg-white p-6 rounded-lg shadow">
+                <div>
+                  <div class="text-lg font-semibold text-gray-800"><%= t('pims.screenshots.granulated_sugar') %></div>
+                  <div class="text-sm text-gray-600">
+                    <%= t('pims.screenshots.sku') %>: SUG-GR-001 | <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.pantry') %> | <%= t('pims.screenshots.price') %>: $2.29
+                  </div>
+                </div>
+
+                <div class="mt-2 text-sm text-gray-700">
+                  <strong><%= t('pims.screenshots.stock_locations') %>:</strong>
+                  <p><%= t('pims.screenshots.main_warehouse') %>: 18 <%= t('pims.screenshots.pounds_in_stock') %></p>
+                  <p><%= t('pims.screenshots.downtown_store') %>: 9 <%= t('pims.screenshots.pounds_in_stock') %></p>
+                </div>
+
+                <div class="mt-2 space-x-2">
+                  <a href="#" class="text-blue-500 hover:underline"><%= t('pims.screenshots.view') %></a>
+                  <a href="#" class="text-yellow-500 hover:underline"><%= t('pims.screenshots.edit') %></a>
+                  <a href="#" class="text-red-500 hover:underline"><%= t('pims.screenshots.delete') %></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recipes Screenshot -->
+        <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+          <div class="p-4 bg-gray-100 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900"><%= t('pims.screenshots.recipe_management') %></h3>
+          </div>
+          <div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h2 class="text-xl font-semibold"><%= t('pims.screenshots.apple_pie') %></h2>
+                  <p class="text-sm text-gray-500 mt-1"><%= t('pims.screenshots.recipe_id') %>: REC-001</p>
+                </div>
+                <div class="text-blue-500 hover:text-blue-700">
+                  <%= t('pims.screenshots.edit') %>
+                </div>
+              </div>
+
+              <div class="mt-4">
+                <h3 class="font-bold text-gray-700 mb-2"><%= t('pims.screenshots.ingredients') %></h3>
+                <ul class="space-y-3">
+                  <li class="flex items-center gap-4">
+                    <span class="w-1/2"><%= t('pims.screenshots.organic_apples') %></span>
+                    <span class="w-1/4">6</span>
+                    <span class="w-1/4"><%= t('pims.screenshots.units') %></span>
+                  </li>
+                  <li class="flex items-center gap-4">
+                    <span class="w-1/2"><%= t('pims.screenshots.all_purpose_flour') %></span>
+                    <span class="w-1/4">500</span>
+                    <span class="w-1/4"><%= t('pims.screenshots.grams') %></span>
+                  </li>
+                  <li class="flex items-center gap-4">
+                    <span class="w-1/2"><%= t('pims.screenshots.granulated_sugar') %></span>
+                    <span class="w-1/4">250</span>
+                    <span class="w-1/4"><%= t('pims.screenshots.grams') %></span>
+                  </li>
+                </ul>
+
+                <div class="mt-4 text-sm text-gray-500">
+                  <%= t('pims.screenshots.updated_days_ago', count: 2) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard Section -->
+  <div class="p-8 bg-gray-100 min-h-screen">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800"><%= t('pims.dashboard.title') %></h1>
     </div>
 
-    <!-- Products & Batches Combined Card -->
-    <div class="space-y-6">
-      <!-- Products Card -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <!-- Locations Card -->
       <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-800">Products</h2>
-          <span class="text-2xl font-bold text-blue-600">2</span>
+          <h2 class="text-xl font-semibold text-gray-800"><%= t('pims.dashboard.locations') %></h2>
+          <span class="text-2xl font-bold text-green-600">2</span>
         </div>
 
         <div class="space-y-4">
-          <!-- Fresh Strawberries -->
+          <!-- Main Restaurant -->
           <div class="border-b border-gray-100 pb-4">
-            <h3 class="font-medium text-gray-800">Fresh Strawberries</h3>
-            <p class="text-sm text-red-500">
-              EXP: May 6, 2025
-            </p>
+            <div class="flex justify-between items-center">
+              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.main_restaurant') %></h3>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                <%= t('pims.dashboard.synced') %>
+              </span>
+            </div>
             <p class="text-sm text-gray-600 mt-1">
-              Qty: 180 • Unit Type: Ounces • Location: Second Location
+              433 <%= t('pims.dashboard.items') %> • <%= t('pims.dashboard.total_value') %>: $1,299.00
             </p>
           </div>
 
-          <!-- Expiring Cheese -->
+          <!-- Second Location -->
           <div class="pb-4">
-            <h3 class="font-medium text-gray-800">Expiring Cheese</h3>
-            <p class="text-sm text-red-500">
-              EXP: May 6, 2025
-            </p>
+            <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.second_location') %></h3>
             <p class="text-sm text-gray-600 mt-1">
-              Qty: 50 • Unit Type: Pounds • Location: Second Location
+              2,486 <%= t('pims.dashboard.items') %> • <%= t('pims.dashboard.total_value') %>: $1,515.74
             </p>
           </div>
         </div>
       </div>
 
-      <!-- Batches Card -->
+      <!-- Recipes Card -->
       <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
         <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-800">Batches</h2>
-          <span class="text-2xl font-bold text-yellow-600">2</span>
+          <h2 class="text-xl font-semibold text-gray-800"><%= t('pims.dashboard.available_recipes') %></h2>
+          <span class="text-2xl font-bold text-purple-600">2</span>
         </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Batch 1 -->
-          <div class="border border-gray-200 rounded-lg p-3">
-            <h3 class="font-medium text-gray-800">CHS999</h3>
-            <p class="text-xs text-gray-600">
-              MFG: April 24, 2025
-            </p>
-            <p class="text-xs text-gray-600">
-              EXP: May 6, 2025
-            </p>
-            <p class="text-xs text-gray-600">
-              Products: 1
+        <div class="space-y-4">
+          <!-- Pancakes -->
+          <div class="border-b border-gray-100 pb-4">
+            <div class="flex justify-between items-center">
+              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.pancakes') %></h3>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                10 <%= t('pims.dashboard.can_make') %>
+              </span>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">
+              <%= t('pims.dashboard.until') %> May 13, 2025
             </p>
           </div>
 
-          <!-- Batch 2 -->
-          <div class="border border-gray-200 rounded-lg p-3">
-            <h3 class="font-medium text-gray-800">STRW789</h3>
-            <p class="text-xs text-gray-600">
-              MFG: May 1, 2025
+          <!-- Margherita Pizza -->
+          <div class="pb-4">
+            <div class="flex justify-between items-center">
+              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.margherita_pizza') %></h3>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                53 <%= t('pims.dashboard.can_make') %>
+              </span>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">
+              <%= t('pims.dashboard.until') %> May 21, 2025
             </p>
-            <p class="text-xs text-gray-600">
-              EXP: May 6, 2025
-            </p>
-            <p class="text-xs text-gray-600">
-              Products: 1
-            </p>
+          </div>
+
+          <p class="text-xs text-gray-400 mt-4">
+            <%= t('pims.dashboard.updated_days_ago', count: 3) %>
+          </p>
+        </div>
+      </div>
+
+      <!-- Products & Batches Combined Card -->
+      <div class="space-y-6">
+        <!-- Products Card -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800"><%= t('pims.dashboard.products') %></h2>
+            <span class="text-2xl font-bold text-blue-600">2</span>
+          </div>
+
+          <div class="space-y-4">
+            <!-- Fresh Strawberries -->
+            <div class="border-b border-gray-100 pb-4">
+              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.fresh_strawberries') %></h3>
+              <p class="text-sm text-red-500">
+                <%= t('pims.dashboard.exp') %>: May 6, 2025
+              </p>
+              <p class="text-sm text-gray-600 mt-1">
+                <%= t('pims.dashboard.qty') %>: 180 • <%= t('pims.dashboard.unit_type') %>: <%= t('pims.dashboard.ounces') %> • <%= t('pims.dashboard.location') %>: <%= t('pims.dashboard.second_location') %>
+              </p>
+            </div>
+
+            <!-- Expiring Cheese -->
+            <div class="pb-4">
+              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.expiring_cheese') %></h3>
+              <p class="text-sm text-red-500">
+                <%= t('pims.dashboard.exp') %>: May 6, 2025
+              </p>
+              <p class="text-sm text-gray-600 mt-1">
+                <%= t('pims.dashboard.qty') %>: 50 • <%= t('pims.dashboard.unit_type') %>: <%= t('pims.dashboard.pounds') %> • <%= t('pims.dashboard.location') %>: <%= t('pims.dashboard.second_location') %>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Batches Card -->
+        <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-gray-800"><%= t('pims.dashboard.batches') %></h2>
+            <span class="text-2xl font-bold text-yellow-600">2</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <!-- Batch 1 -->
+            <div class="border border-gray-200 rounded-lg p-3">
+              <h3 class="font-medium text-gray-800">CHS999</h3>
+              <p class="text-xs text-gray-600">
+                <%= t('pims.dashboard.mfg') %>: April 24, 2025
+              </p>
+              <p class="text-xs text-gray-600">
+                <%= t('pims.dashboard.exp') %>: May 6, 2025
+              </p>
+              <p class="text-xs text-gray-600">
+                <%= t('pims.dashboard.products') %>: 1
+              </p>
+            </div>
+
+            <!-- Batch 2 -->
+            <div class="border border-gray-200 rounded-lg p-3">
+              <h3 class="font-medium text-gray-800">STRW789</h3>
+              <p class="text-xs text-gray-600">
+                <%= t('pims.dashboard.mfg') %>: May 1, 2025
+              </p>
+              <p class="text-xs text-gray-600">
+                <%= t('pims.dashboard.exp') %>: May 6, 2025
+              </p>
+              <p class="text-xs text-gray-600">
+                <%= t('pims.dashboard.products') %>: 1
+              </p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- Pricing Section -->
   <div id="pricing" class="py-16 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="sm:flex sm:flex-col sm:align-center">
-        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Pricing</h2>
+        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase"><%= t('pims.pricing.title') %></h2>
         <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Simple, transparent pricing
+          <%= t('pims.pricing.subtitle') %>
         </p>
         <p class="mt-5 max-w-2xl text-xl text-gray-600 mx-auto">
-          Choose the plan that fits your business needs.
+          <%= t('pims.pricing.description') %>
         </p>
       </div>
 
       <div class="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-0">
-        <!-- Basic Plan -->
+        <!-- Starter Plan -->
         <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
           <div class="p-6">
-            <h2 class="text-lg leading-6 font-medium text-gray-900">Starter</h2>
+            <h2 class="text-lg leading-6 font-medium text-gray-900"><%= t('pims.pricing.plans.starter.name') %></h2>
             <p class="mt-4 text-sm text-gray-500">
-              Perfect for small businesses getting started with inventory management.
+              <%= t('pims.pricing.plans.starter.description') %>
             </p>
             <p class="mt-8">
-              <span class="text-4xl font-extrabold text-gray-900">$30</span>
-              <span class="text-base font-medium text-gray-500">/mo</span>
+              <span class="text-4xl font-extrabold text-gray-900"><%= t('pims.pricing.plans.starter.price') %></span>
+              <span class="text-base font-medium text-gray-500"><%= t('pims.pricing.plans.starter.period') %></span>
             </p>
-            <%= link_to "Get started", signup_path(plan: 'basic'), class: "mt-8 block w-full bg-gray-800 border border-gray-800 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900" %>
+            <%= link_to t('pims.pricing.get_started'), signup_path(plan: 'basic'), class: "mt-8 block w-full bg-gray-800 border border-gray-800 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900" %>
           </div>
           <div class="pt-6 pb-8 px-6">
-            <h3 class="text-xs font-medium text-gray-900 tracking-wide uppercase">Whats included</h3>
+            <h3 class="text-xs font-medium text-gray-900 tracking-wide uppercase"><%= t('pims.pricing.whats_included') %></h3>
             <ul class="mt-6 space-y-4">
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Add up to 2 locations, 3 admins</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">25 products to track</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">15 Recipes to track</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Email Notifications for low stock or expiring dates</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Sync with Square or Clover for real time updates</span>
-              </li>
+              <% t('pims.pricing.plans.starter.features').each do |feature| %>
+                <li class="flex space-x-3">
+                  <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  <span class="text-sm text-gray-500"><%= feature %></span>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
@@ -668,49 +659,27 @@
         <!-- Plus Plan -->
         <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
           <div class="p-6">
-            <h2 class="text-lg leading-6 font-medium text-gray-900">Plus</h2>
+            <h2 class="text-lg leading-6 font-medium text-gray-900"><%= t('pims.pricing.plans.plus.name') %></h2>
             <p class="mt-4 text-sm text-gray-500">
-              For growing businesses that need more locations and features.
+              <%= t('pims.pricing.plans.plus.description') %>
             </p>
             <p class="mt-8">
-              <span class="text-4xl font-extrabold text-gray-900">$50</span>
-              <span class="text-base font-medium text-gray-500">/mo</span>
+              <span class="text-4xl font-extrabold text-gray-900"><%= t('pims.pricing.plans.plus.price') %></span>
+              <span class="text-base font-medium text-gray-500"><%= t('pims.pricing.plans.plus.period') %></span>
             </p>
-            <%= link_to "Get started", signup_path(plan: 'plus'), class: "mt-8 block w-full bg-green-600 border border-green-600 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-700" %>
+            <%= link_to t('pims.pricing.get_started'), signup_path(plan: 'plus'), class: "mt-8 block w-full bg-green-600 border border-green-600 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-green-700" %>
           </div>
           <div class="pt-6 pb-8 px-6">
-            <h3 class="text-xs font-medium text-gray-900 tracking-wide uppercase">Whats included</h3>
+            <h3 class="text-xs font-medium text-gray-900 tracking-wide uppercase"><%= t('pims.pricing.whats_included') %></h3>
             <ul class="mt-6 space-y-4">
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Up to 3 locations, 5 admins</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">50 products</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">25 recipes to track</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Email & Text Notification Alerts</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Sync with Square or Clover for real time updates</span>
-              </li>
+              <% t('pims.pricing.plans.plus.features').each do |feature| %>
+                <li class="flex space-x-3">
+                  <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  <span class="text-sm text-gray-500"><%= feature %></span>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
@@ -718,61 +687,27 @@
         <!-- Premium Plan -->
         <div class="border border-gray-200 rounded-lg shadow-sm divide-y divide-gray-200">
           <div class="p-6">
-            <h2 class="text-lg leading-6 font-medium text-gray-900">Premium</h2>
+            <h2 class="text-lg leading-6 font-medium text-gray-900"><%= t('pims.pricing.plans.premium.name') %></h2>
             <p class="mt-4 text-sm text-gray-500">
-              For large businesses with complex inventory needs.
+              <%= t('pims.pricing.plans.premium.description') %>
             </p>
             <p class="mt-8">
-              <span class="text-4xl font-extrabold text-gray-900">$99</span>
-              <span class="text-base font-medium text-gray-500">/mo</span>
+              <span class="text-4xl font-extrabold text-gray-900"><%= t('pims.pricing.plans.premium.price') %></span>
+              <span class="text-base font-medium text-gray-500"><%= t('pims.pricing.plans.premium.period') %></span>
             </p>
-            <%= link_to "Get started", signup_path(plan: 'premium'), class: "mt-8 block w-full bg-gray-800 border border-gray-800 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900" %>
+            <%= link_to t('pims.pricing.get_started'), signup_path(plan: 'premium'), class: "mt-8 block w-full bg-gray-800 border border-gray-800 rounded-md py-2 text-sm font-semibold text-white text-center hover:bg-gray-900" %>
           </div>
           <div class="pt-6 pb-8 px-6">
-            <h3 class="text-xs font-medium text-gray-900 tracking-wide uppercase">Whats included</h3>
+            <h3 class="text-xs font-medium text-gray-900 tracking-wide uppercase"><%= t('pims.pricing.whats_included') %></h3>
             <ul class="mt-6 space-y-4">
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Up to 5 locations</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">100 products</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">50 Recipes</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">10 users/admins</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Priority Support</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Email & Text Notifications</span>
-              </li>
-              <li class="flex space-x-3">
-                <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span class="text-sm text-gray-500">Sync with Square or Clover</span>
-              </li>
+              <% t('pims.pricing.plans.premium.features').each do |feature| %>
+                <li class="flex space-x-3">
+                  <svg class="flex-shrink-0 h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  </svg>
+                  <span class="text-sm text-gray-500"><%= feature %></span>
+                </li>
+              <% end %>
             </ul>
           </div>
         </div>
@@ -782,9 +717,9 @@
       <div class="mt-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="bg-gray-50 rounded-lg p-8">
           <div class="text-center">
-            <h2 class="text-2xl font-bold text-gray-900">Need more? We've got you covered</h2>
+            <h2 class="text-2xl font-bold text-gray-900"><%= t('pims.pricing.addons.title') %></h2>
             <p class="mt-2 text-lg text-gray-600">
-              Customize your plan with these add-ons
+              <%= t('pims.pricing.addons.subtitle') %>
             </p>
           </div>
           
@@ -794,9 +729,9 @@
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-100 text-blue-600 mb-4">
                 <i class="fas fa-map-marker-alt text-xl"></i>
               </div>
-              <h3 class="text-lg font-medium text-gray-900">Additional Locations</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.pricing.addons.additional_locations') %></h3>
               <p class="mt-2 text-gray-600">
-                $10/month per location
+                <%= t('pims.pricing.addons.price_per_location') %>
               </p>
             </div>
             
@@ -805,9 +740,9 @@
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-purple-100 text-purple-600 mb-4">
                 <i class="fas fa-boxes text-xl"></i>
               </div>
-              <h3 class="text-lg font-medium text-gray-900">Additional Products</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.pricing.addons.additional_products') %></h3>
               <p class="mt-2 text-gray-600">
-                $10/month per 10 products
+                <%= t('pims.pricing.addons.price_per_products') %>
               </p>
             </div>
             
@@ -816,9 +751,9 @@
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-red-100 text-red-600 mb-4">
                 <i class="fas fa-utensils text-xl"></i>
               </div>
-              <h3 class="text-lg font-medium text-gray-900">Additional Recipes</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.pricing.addons.additional_recipes') %></h3>
               <p class="mt-2 text-gray-600">
-                $10/month per 5 recipes
+                <%= t('pims.pricing.addons.price_per_recipes') %>
               </p>
             </div>
             
@@ -827,16 +762,16 @@
               <div class="flex items-center justify-center h-12 w-12 rounded-md bg-green-100 text-green-600 mb-4">
                 <i class="fas fa-users text-xl"></i>
               </div>
-              <h3 class="text-lg font-medium text-gray-900">Additional Users</h3>
+              <h3 class="text-lg font-medium text-gray-900"><%= t('pims.pricing.addons.additional_users') %></h3>
               <p class="mt-2 text-gray-600">
-                $5/month per user
+                <%= t('pims.pricing.addons.price_per_user') %>
               </p>
             </div>
           </div>
           
           <div class="mt-8 text-center">
             <p class="text-gray-600">
-              Have special requirements? <a href="/contact_us" class="text-green-600 hover:text-green-800">Contact us</a> for custom solutions.
+              <%= t('pims.pricing.addons.special_requirements') %> <a href="/contact_us" class="text-green-600 hover:text-green-800"><%= t('pims.pricing.addons.contact_us') %></a> <%= t('pims.pricing.addons.for_custom_solutions') %>
             </p>
           </div>
         </div>
@@ -848,16 +783,16 @@
   <div class="bg-gray-50">
     <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
       <h2 class="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-        <span class="block">Ready to dive in?</span>
-        <span class="block text-green-600">Start your free trial today.</span>
+        <span class="block"><%= t('pims.cta.line1') %></span>
+        <span class="block text-green-600"><%= t('pims.cta.line2') %></span>
       </h2>
       <div class="mt-8 flex lg:mt-0 lg:flex-shrink-0">
         <div class="inline-flex rounded-md shadow">
-          <%= link_to "Get started", 'signup', class: "inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700" %>
+          <%= link_to t('pims.cta.get_started'), "signup?locale=#{params[:locale]}", class: "inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700" %>
         </div>
-				<div class="inline-flex rounded-md shadow">
-					<%= link_to "Contact Us", contact_path, class: "inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
-				</div>
+        <div class="inline-flex rounded-md shadow">
+          <%= link_to t('pims.cta.contact_us'), contact_path, class: "inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50" %>
+        </div>
       </div>
     </div>
   </div>
@@ -867,16 +802,36 @@
     <div class="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
       <nav class="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
         <div class="px-5 py-2">
-          <a href="/eula" class="text-base text-gray-500 hover:text-gray-900">End User License Agreement</a>
+          <a href="/eula" class="text-base text-gray-500 hover:text-gray-900"><%= t('pims.footer.eula') %></a>
         </div>
         <div class="px-5 py-2">
-          <a href="/privacy_policy" class="text-base text-gray-500 hover:text-gray-900">Privacy Policy</a>
+          <a href="/privacy_policy" class="text-base text-gray-500 hover:text-gray-900"><%= t('pims.footer.privacy_policy') %></a>
         </div>
       </nav>
       <p class="mt-8 text-center text-base text-gray-500">
-        &copy; 2025 PIMS. All rights reserved.
+        <%= t('pims.footer.copyright', year: Time.current.year) %>
       </p>
     </div>
   </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const languageButton = document.getElementById('language-menu-button');
+      const languageMenu = document.getElementById('language-menu');
+      
+      if (languageButton && languageMenu) {
+        languageButton.addEventListener('click', function() {
+          languageMenu.classList.toggle('hidden');
+        });
+        
+        // Close when clicking outside
+        document.addEventListener('click', function(event) {
+          if (!languageButton.contains(event.target) && !languageMenu.contains(event.target)) {
+            languageMenu.classList.add('hidden');
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
