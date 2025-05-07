@@ -8,6 +8,12 @@ class PagesController < ApplicationController
 	def contact_us
 	end
 
+	def eula
+	end
+
+	def privacy_policy
+	end
+
 	def contact_us_create
 		name = params[:name]
 		email = params[:email]
