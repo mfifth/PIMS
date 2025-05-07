@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_02_202713) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_07_073300) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -218,6 +218,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_02_202713) do
     t.datetime "ends_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "extra_products_count"
+    t.integer "extra_locations_count"
+    t.integer "extra_recipes_count"
+    t.integer "extra_users_count"
     t.index ["account_id"], name: "index_subscriptions_on_account_id"
   end
 

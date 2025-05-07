@@ -52,6 +52,26 @@ class Subscription < ApplicationRecord
     status == "active" && (ends_at.nil? || Time.current < ends_at)
   end
 
+  def total_product_limit
+    base = PRODUCT_PLAN_LIMITS[plan] || 0
+    base + (extra_products_count || 0)
+  end
+
+  def total_location_limit
+    base = LOCATION_PLAN_LIMITS[plan] || 0
+    base + (extra_locations_count || 0)
+  end
+
+  def total_recipe_limit
+    base = RECIPE_PLAN_LIMITS[plan] || 0
+    base + (extra_recipes_count || 0)
+  end
+
+  def total_user_limit
+    base = USER_PLAN_LIMITS[plan] || 0
+    base + (extra_users_count || 0)
+  end
+
   # ----- ADD-ON CALCULATIONS -----
 
   def extra_locations_count
