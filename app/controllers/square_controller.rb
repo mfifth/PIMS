@@ -46,7 +46,7 @@ class SquareController < ApplicationController
     return head :not_found unless account
   
     case type
-    when "inventory.updated"
+    when "inventory.count.updated"
       SquareInventorySyncJob.perform_later(account.id, data)
     when "order.created", "order.updated"
       SquareOrderProcessingJob.perform_later(account.id, data)
