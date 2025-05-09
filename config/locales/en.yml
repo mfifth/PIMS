@@ -511,7 +511,7 @@ en:
             - "Sync with Square for real time updates"
         plus:
           name: "Plus"
-          description: "For growing businesses ready to scale — manage more locations, track more items, and stay organized every step of the way."
+          description: "For growing restaurants and kitchens looking to scale. Manage more, worry about less."
           price: "$50"
           period: "/mo"
           features:
