@@ -508,7 +508,7 @@ en:
             - "25 products to track"
             - "15 recipes to track"
             - "Email Notifications for low stock or expiring dates"
-            - "Sync with Square or Clover for real time updates"
+            - "Sync with Square for real time updates"
         plus:
           name: "Plus"
           description: "For growing businesses that need more locations and features."
@@ -519,7 +519,7 @@ en:
             - "50 products"
             - "25 recipes to track"
             - "Email & Text Notification Alerts"
-            - "Sync with Square or Clover for real time updates"
+            - "Sync with Square for real time updates"
         premium:
           name: "Premium"
           description: "For large businesses with complex inventory needs."
@@ -532,7 +532,7 @@ en:
             - "10 users/admins"
             - "Priority Support"
             - "Email & Text Notifications"
-            - "Sync with Square or Clover"
+            - "Sync with Square for real time updates"
       addons:
         title: "Need more? We've got you covered"
         subtitle: "Customize your plan with these add-ons"
