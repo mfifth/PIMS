@@ -434,22 +434,22 @@ es:
       items:
         dashboard:
           title: "Panel Integral"
-          description: "Obtenga una visión general instantánea de su inventario con métricas clave para ubicaciones, productos y lotes, todo en un solo lugar."
+          description: "Obtén una vista instantánea de tu inventario con métricas clave de ubicaciones, productos y lotes, todo en un solo lugar."
         locations:
-          title: "Gestión Multi-ubicación"
-          description: "Realice un seguimiento del inventario en múltiples ubicaciones con desgloses detallados de artículos perecederos y no perecederos."
+          title: "Gestión Multisede"
+          description: "Supervisa el inventario en múltiples ubicaciones con desgloses detallados de productos perecederos y no perecederos."
         products:
           title: "Catálogo de Productos"
-          description: "Administre todo su catálogo de productos con categorías, precios y seguimiento detallado del inventario."
+          description: "Administra todo tu catálogo de productos con categorías, precios y un seguimiento detallado del inventario."
         batches:
           title: "Seguimiento de Lotes"
-          description: "Realice un seguimiento de productos por lotes con fechas de caducidad, cantidades y alertas automáticas para bajo stock."
+          description: "Sigue los productos perecederos a través de lotes con fechas de caducidad y números de lote. Recibe alertas automáticas por mensaje de texto o correo electrónico."
         recipes:
           title: "Gestión de Recetas"
-          description: "Cree y administre recetas con listas de ingredientes y realice un seguimiento automático del uso de inventario después de cada venta."
+          description: "Crea y gestiona recetas con listas de ingredientes para ver lo que está disponible y rastrear instantáneamente el uso del inventario después de cada venta."
         reporting:
-          title: "Informes Avanzados"
-          description: "Genere informes detallados sobre niveles de inventario, información de lotes y movimiento de productos."
+          title: "Reportes Avanzados"
+          description: "Genera reportes detallados sobre niveles de inventario, información de lotes y movimiento de productos."
     screenshots:
       title: "En Acción"
       subtitle: "Vea PIMS en funcionamiento"
