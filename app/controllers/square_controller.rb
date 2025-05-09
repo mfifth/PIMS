@@ -6,6 +6,8 @@ class SquareController < ApplicationController
     response.headers['X-Frame-Options'] = 'DENY'
   end
 
+  before_action :verify_square_webhook_signature, only: :webhook
+
   def start
     session[:current_account_id] = Current.account.id
     state = SecureRandom.hex(24)
@@ -41,10 +43,10 @@ class SquareController < ApplicationController
     merchant_id = event.dig("merchant_id")
     type        = event["event_type"]
     data        = event["data"]
-  
+
     account = Account.find_by(square_merchant_id: merchant_id)
     return head :not_found unless account
-  
+
     case type
     when "inventory.count.updated"
       SquareInventorySyncJob.perform_later(account.id, data)
@@ -53,14 +55,14 @@ class SquareController < ApplicationController
     else
       Rails.logger.info("Received unsupported event type: #{type}")
     end
-  
+
     head :ok
   end
 
   def sync_data
     SquareSyncJob.perform_later(Current.account.id)
     redirect_to root_path, notice: t('accounts_settings.square.sync_started')
-  end  
+  end
 
   private
 
@@ -88,40 +90,30 @@ class SquareController < ApplicationController
                   )
   end
 
-  private
-
-  def verify_webhook_signature
-    # Get the signature from the headers
-    signature = request.headers["X-Clover-Signature"]
+  def verify_square_webhook_signature
+    signature = request.headers['X-Square-Signature']
     return head :unauthorized unless signature
 
-    # Read the raw body (must be done carefully)
+    # Read the raw body (Square requires the raw payload)
     request.body.rewind
     payload = request.body.read
 
-    # Verify the signature
-    unless valid_signature?(payload, signature)
-      Rails.logger.error "Invalid webhook signature received"
+    # Get your Square webhook signature key (from developer dashboard)
+    signature_key = ENV['SQUARE_WEBHOOK_SIGNATURE_KEY']
+    return head :unauthorized unless signature_key
+
+    # Construct the string: <notification_url><request_body>
+    notification_url = request.original_url
+    string_to_sign = notification_url + payload
+
+    # Compute the HMAC-SHA1 digest
+    expected_signature = Base64.strict_encode64(
+      OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), signature_key, string_to_sign)
+    )
+
+    unless ActiveSupport::SecurityUtils.secure_compare(expected_signature, signature)
+      Rails.logger.error "Invalid Square webhook signature"
       head :unauthorized
     end
-  end
-
-  def valid_signature?(payload, received_signature)
-    # Retrieve your webhook signing secret (set this in your environment variables)
-    secret = ENV['CLOVER_WEBHOOK_SIGNING_SECRET']
-    return false unless secret
-
-    # Compute the expected signature
-    expected_signature = OpenSSL::HMAC.hexdigest(
-      OpenSSL::Digest.new('sha256'),
-      secret,
-      payload
-    )
-
-    # Compare signatures in a timing-safe manner
-    ActiveSupport::SecurityUtils.secure_compare(
-      expected_signature,
-      received_signature
-    )
   end
 end
