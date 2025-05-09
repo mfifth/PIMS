@@ -12,8 +12,9 @@ class Recipe < ApplicationRecord
   private
 
   def recipe_limit_not_exceeded
-    if account.recipes.count >= Subscription::RECIPE_PLAN_LIMITS[account.subscription.plan]
-      errors.add(:base, I18n.t('notifications.recipe_limit_warning', limit: Subscription::RECIPE_PLAN_LIMITS[account.subscription.plan]))
+    current_limit = account.subscription.total_recipe_limit
+    if account.recipes.count >= current_limit
+      errors.add(:base, I18n.t('notifications.recipe_limit_warning', limit: current_limit))
     end
   end
 end

@@ -30,9 +30,10 @@ class Product < ApplicationRecord
 
   private
 
-  def product_limit_not_exceeded
-    if account.products.count >= Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]
-      errors.add(:base, t('notifications.product_limit_warning', limit: Subscription::PRODUCT_PLAN_LIMITS[account.subscription.plan]))
+  def product_limit_not_exceeded    
+    current_limit = account.subscription.total_product_limit
+    if account.products.count >= current_limit
+      errors.add(:base, t('notifications.product_limit_warning', limit: current_limit))
     end
   end
 

@@ -9,10 +9,9 @@ class Location < ApplicationRecord
   private
 
   def location_limit_not_exceeded
-    return unless account.locations.count >= 
-    Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]
+    current_limit = account.subscription.total_location_limit
+    return unless account.locations.count >= current_limit
 
-    errors.add(:base, I18n.t('notifications.location_limit_warning', 
-    limit: Subscription::LOCATION_PLAN_LIMITS[account.subscription.plan]))
+    errors.add(:base, I18n.t('notifications.location_limit_warning', limit: current_limit))
   end
 end

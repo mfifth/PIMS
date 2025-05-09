@@ -95,9 +95,11 @@ class User < ApplicationRecord
   end
 
   def user_limit_not_exceeded
-    return unless account
-    if account.users.count >= Subscription::USER_PLAN_LIMITS[account.subscription.plan]
-      errors.add(:base, t('notifications.user_limit', limit: Subscription::USER_PLAN_LIMITS[account.subscription.plan]))
+    return unless account #skip this validation if account is not created yet
+
+    current_limit = account.subscription.total_user_limit
+    if account.users.count >= current_limit
+      errors.add(:base, t('notifications.user_limit', limit: current_limit))
     end
   end
 end

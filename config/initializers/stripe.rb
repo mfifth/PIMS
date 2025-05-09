@@ -12,7 +12,6 @@ StripeEvent.configure do |events|
         account = Account.find_by(stripe_customer_id: subscription.customer)
 
         if account && account.subscription
-          # Extract plan (main product) and add-ons
           main_plan = nil
           extra_products = 0
           extra_locations = 0
@@ -39,7 +38,7 @@ StripeEvent.configure do |events|
           end
 
           account.subscription.update!(
-            plan: main_plan || account.subscription.plan, # fallback to existing if not found
+            plan: main_plan || account.subscription.plan,
             status: subscription.status,
             started_at: Time.at(subscription.start_date),
             ends_at: Time.at(subscription.current_period_end),
