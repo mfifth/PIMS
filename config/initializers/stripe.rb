@@ -61,7 +61,7 @@ StripeEvent.configure do |events|
     event = event.data.object
     account = Account.find_by(stripe_customer_id: event.customer)
     if account && account.subscription
-      account.subscription.update!(status: 'invalid')
+      account.subscription.update!(status: 'invalid', plan: 'free')
     else
       Rails.logger.error "Account or subscription not found for deletion: #{event.customer}"
     end
