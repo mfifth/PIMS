@@ -37,12 +37,7 @@ class CloverController < ApplicationController
           clover_access_token: data['access_token'],
           clover_merchant_id: data['merchant_id']
         )
-
-        if register_clover_webhook(account)
-          redirect_to dashboard_path, notice: "Clover connected successfully!"
-        else
-          redirect_to dashboard_path, alert: "Clover connected but webhook registration failed"
-        end
+        redirect_to dashboard_path, notice: "Clover connected successfully!"
       else
         Rails.logger.error "Clover OAuth Error: #{response.body}"
         redirect_to dashboard_path, alert: "Failed to connect with Clover"
