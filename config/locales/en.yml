@@ -413,7 +413,7 @@ en:
           description: "Track inventory across multiple locations with detailed breakdowns of perishable and non-perishable items."
         products:
           title: "Product Catalog"
-          description: "Manage your entire product catalog with categories, pricing, and detailed inventory tracking."
+          description: "Manage your entire product catalog with categories, pricing, and detailed tracking information."
         batches:
           title: "Batch Tracking"
           description: "Track perishable products through batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
