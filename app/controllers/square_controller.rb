@@ -94,19 +94,15 @@ class SquareController < ApplicationController
     signature = request.headers['X-Square-Signature']
     return head :unauthorized unless signature
 
-    # Read the raw body (Square requires the raw payload)
     request.body.rewind
     payload = request.body.read
 
-    # Get your Square webhook signature key (from developer dashboard)
     signature_key = ENV['SQUARE_WEBHOOK_SIGNATURE_KEY']
     return head :unauthorized unless signature_key
 
-    # Construct the string: <notification_url><request_body>
     notification_url = request.original_url
     string_to_sign = notification_url + payload
 
-    # Compute the HMAC-SHA1 digest
     expected_signature = Base64.strict_encode64(
       OpenSSL::HMAC.digest(OpenSSL::Digest.new('sha1'), signature_key, string_to_sign)
     )

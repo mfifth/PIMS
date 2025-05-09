@@ -10,6 +10,8 @@ class CloverController < ApplicationController
     response.headers['X-Frame-Options'] = 'DENY'
   end
 
+  before_action :verify_clover_webhook_signature, only: :webhook
+
   def start
     session[:current_account_id] = Current.account.id
     url = "https://www.clover.com/oauth/authorize?client_id=#{CLIENT_ID}&response_type=code&redirect_uri=#{REDIRECT_URI}"
@@ -74,4 +76,30 @@ class CloverController < ApplicationController
     CloverSyncJob.perform_later(Current.account.id)
     redirect_to root_path, notice: "Sync started! Products will update shortly."
   end  
+
+  private
+
+  def verify_clover_webhook_signature
+    signature = request.headers['X-Clover-Signature']
+    return head :unauthorized unless signature
+
+    # Read the raw body carefully
+    request.body.rewind
+    payload = request.body.read
+
+    secret = CLIENT_SECRET
+    return head :unauthorized unless secret
+
+    # Compute expected signature
+    expected_signature = OpenSSL::HMAC.hexdigest(
+      OpenSSL::Digest.new('sha256'),
+      secret,
+      payload
+    )
+
+    unless ActiveSupport::SecurityUtils.secure_compare(expected_signature, signature)
+      Rails.logger.error "Invalid Clover webhook signature"
+      head :unauthorized
+    end
+  end
 end
