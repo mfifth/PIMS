@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :check_trial_status, if: :account_present?
 
   def set_locale
-    I18n.locale = params[:locale] || Current.user&.locale || I18n.default_locale
+    I18n.locale = params[:locale].presence || Current.user&.locale || I18n.default_locale
   end
 
   def require_admin!

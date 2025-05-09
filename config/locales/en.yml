@@ -399,7 +399,7 @@ en:
     hero:
       title_line1: "Product Inventory"
       title_line2: "Management System"
-      description: "Streamline your product management, track inventory across locations, and manage batches with our powerful PIMS solution."
+      description: Streamline your inventory management, track perishable goods across multiple locations, and get real time insights for the meals you create — all from one easy-to-use dashboard.
       cta: "Get Started for Free"
     features:
       title: "Features"
@@ -416,10 +416,10 @@ en:
           description: "Manage your entire product catalog with categories, pricing, and detailed inventory tracking."
         batches:
           title: "Batch Tracking"
-          description: "Track products by batches with expiration dates, quantities, and automatic alerts for low stock."
+          description: "Track products by batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
         recipes:
           title: "Recipe Management"
-          description: "Create and manage recipes with ingredient lists and automatically track inventory usage after every sale."
+          description: "Create and manage recipes with ingredient lists to see what's currently available and automatically track inventory usage after every sale."
         reporting:
           title: "Advanced Reporting"
           description: "Generate detailed reports on inventory levels, batch information, & product movement."
@@ -573,5 +573,5 @@ en:
       email_placeholder: "Enter your email"
       password_placeholder: "Enter your password"
       submit_button: "Sign In"
-    forgot_password: "Forgot password?"
+    forgot_password: "Forgot your password?"
     sign_up_link: "Sign Up"
