@@ -283,7 +283,7 @@ es:
       download_sample: "Descargar ejemplo"
   account_settings:
     title: "Configuración de la cuenta"
-    confirm_delete: "Esta seguro que quieres borrar "
+    confirm_delete: "¿Estás seguro de que deseas eliminar tu cuenta?"
     square:
       connected: "Cuenta de Square conectada"
       sync_locations: "Sincronizar ubicaciones"
