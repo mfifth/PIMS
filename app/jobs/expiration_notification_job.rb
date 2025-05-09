@@ -4,7 +4,7 @@ class ExpirationNotificationJob < ApplicationJob
   def perform
     today = Date.current
 
-    Batch.where.not(expiration_date: nil, notification_days_before_expiration: nil)
+    Batch.where.not(expiration_date: nil, notification_days_before_expiration: 0)
     .find_each do |batch|
       notify_date = batch.expiration_date - batch.notification_days_before_expiration.days
 
