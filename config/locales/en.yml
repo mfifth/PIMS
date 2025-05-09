@@ -416,10 +416,10 @@ en:
           description: "Manage your entire product catalog with categories, pricing, and detailed inventory tracking."
         batches:
           title: "Batch Tracking"
-          description: "Track products by batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
+          description: "Track perishable products through batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
         recipes:
           title: "Recipe Management"
-          description: "Create and manage recipes with ingredient lists to see what's currently available and automatically track inventory usage after every sale."
+          description: "Create and manage recipes with ingredient lists to see what's currently available and instantly track inventory usage after every sale."
         reporting:
           title: "Advanced Reporting"
           description: "Generate detailed reports on inventory levels, batch information, & product movement."
