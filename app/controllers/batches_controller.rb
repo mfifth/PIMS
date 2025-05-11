@@ -12,9 +12,10 @@ class BatchesController < ApplicationController
       like = adapter.include?("postgresql") ? "ILIKE" : "LIKE"
   
       @batches = @batches.where(
-        "products.name #{like} :q OR batch_number #{like} :q OR expiration_date::text #{like} :q",
+        "products.name #{like} :q OR batch_number #{like} :q OR expiration_date #{like} :q",
         q: query
       )
+
     else
       @batches = @batches.order(expiration_date: :asc)
     end
