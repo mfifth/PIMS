@@ -14,6 +14,7 @@ export default class extends Controller {
 
   disconnect() {
     window.removeEventListener("scroll", this.scrollHandler)
+    clearTimeout(this.debounceTimeout)
   }
 
   checkScroll() {
@@ -38,9 +39,10 @@ export default class extends Controller {
 
     try {
       const response = await fetch(url)
+      if (!response.ok) throw new Error(`Failed to load page: ${response.statusText}`)
       const html = await response.text()
 
-      const container = document.querySelector(this.containerValue)
+      const container = this.element.querySelector(this.containerValue) // using this.element
       if (!container) {
         console.error("Scroll container not found")
         this.hasMorePages = false
@@ -58,6 +60,7 @@ export default class extends Controller {
       }
     } catch (err) {
       console.error("Error loading next page:", err)
+      // You could optionally display an error message to the user here
     }
 
     this.isLoading = false
@@ -69,10 +72,9 @@ export default class extends Controller {
   }
 
   debounce(func, delay) {
-    let timeout
-    return function () {
-      clearTimeout(timeout)
-      timeout = setTimeout(() => func.apply(this, arguments), delay)
+    return (...args) => {
+      clearTimeout(this.debounceTimeout)
+      this.debounceTimeout = setTimeout(() => func.apply(this, args), delay)
     }
   }
 }

@@ -2,7 +2,6 @@ class BatchesController < ApplicationController
   before_action :set_batch, only: [:show, :edit, :update, :destroy]
   before_action :require_admin!, only: [:create, :update, :destroy, :edit, :new]
 
-  # GET /batches
   def index
     @batches = Current.account.batches.left_joins(:products).distinct
   
@@ -28,16 +27,13 @@ class BatchesController < ApplicationController
     end
   end  
 
-  # GET /batches/:id
   def show
   end
 
-  # GET /batches/new
   def new
     @batch = Batch.new
   end
 
-  # POST /batches
   def create
     @batch = Batch.new(batch_params.merge(account_id: Current.account.id))
     if @batch.save
@@ -47,11 +43,9 @@ class BatchesController < ApplicationController
     end
   end
 
-  # GET /batches/:id/edit
   def edit
   end
 
-  # PATCH/PUT /batches/:id
   def update
     if @batch.update(batch_params)
       redirect_to @batch, notice: t('notifications.batch_updated')
@@ -60,7 +54,6 @@ class BatchesController < ApplicationController
     end
   end
 
-  # DELETE /batches/:id
   def destroy
     @batch.products.update_all(perishable: false)
     @batch.destroy
