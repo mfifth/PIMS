@@ -4,31 +4,28 @@ class BatchesController < ApplicationController
 
   # GET /batches
   def index
+    @batches = Current.account.batches.left_joins(:products).distinct
+  
     if params[:query].present?
-      @batches = Current.account.batches
-                 .left_joins(:products)
-                 .where("products.name LIKE ? OR batch_number LIKE ? OR expiration_date LIKE ?", 
-                 "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
-                 .page(params[:page]).per(5).distinct
+      query = "%#{params[:query]}%"
+      adapter = ActiveRecord::Base.connection.adapter_name.downcase
+      like = adapter.include?("postgresql") ? "ILIKE" : "LIKE"
+  
+      @batches = @batches.where(
+        "products.name #{like} :q OR batch_number #{like} :q OR expiration_date::text #{like} :q",
+        q: query
+      )
     else
-      @batches = Current.account.batches.left_joins(:products)
-      .order(expiration_date: :asc).page(params[:page]).per(5).distinct
+      @batches = @batches.order(expiration_date: :asc)
     end
-
+  
+    @batches = @batches.page(params[:page]).per(5)
+  
     respond_to do |format|
       format.html
-      format.turbo_stream do
-        if @batches.any?
-          render turbo_stream: [
-            turbo_stream.append("batches", partial: "batches/batch", collection: @batches),
-            turbo_stream.replace("infinite-scroll-metadata", partial: "batches/next_page_metadata", locals: { next_page: @batches.next_page })
-          ]
-        else
-          render turbo_stream: ""
-        end
-      end
+      format.turbo_stream
     end
-  end
+  end  
 
   # GET /batches/:id
   def show
