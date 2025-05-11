@@ -3,22 +3,29 @@ class ProductsController < ApplicationController
   before_action :require_admin!, only: [:create, :update, :destroy, :edit]
 
   def index
+    @products = Current.account.products.left_joins(:category)
+  
     if params[:query].present?
-      @products = Current.account.products
-      .left_joins(:category)
-      .where("products.name LIKE ? OR products.sku LIKE ? OR categories.name LIKE ?", 
-             "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
-             .page(params[:page]).per(5)
+      query = "%#{params[:query]}%"
+      adapter = ActiveRecord::Base.connection.adapter_name.downcase
+  
+      like_operator = adapter.include?("postgresql") ? "ILIKE" : "LIKE"
+  
+      @products = @products.where(
+        "products.name #{like_operator} :q OR products.sku #{like_operator} :q OR categories.name #{like_operator} :q",
+        q: query
+      )
     else
-      @products = Current.account.products.left_joins(:category)
-      .order("products.name ASC").page(params[:page]).per(5)
+      @products = @products.order("products.name ASC")
     end
-
+  
+    @products = @products.page(params[:page]).per(5)
+  
     respond_to do |format|
       format.html
       format.turbo_stream
     end
-  end
+  end  
 
   def show
     @batches = Batch.where(id: @product.batch_id)
