@@ -343,7 +343,7 @@ en:
     failed_fetch: "Failed to fetch Square locations."
     free_trial_end: "Your free trial has ended. Please choose a plan to continue."
     account_created: "Account successfully created."
-    check_email: "Please check your email to confirm your account."
+    check_email: Check your inbox or spam folder for a confirmation email from info@pimsco.com
     updated_settings: "Settings successfully updated."
     email_test: "This is a test email."
     email_notice: "Test email sent successfully!"

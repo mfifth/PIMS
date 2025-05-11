@@ -349,7 +349,7 @@ es:
     inventory_synced: "Inventario sincronizado desde Square, %{size} artículos sincronizados"
     failed_fetch: "No se pudieron obtener las ubicaciones de Square."
     account_created: "Cuenta creada con éxito"
-    check_email: "Por favor, revisa tu correo electrónico para confirmar tu cuenta"
+    check_email: Revisa tu bandeja de entrada o la carpeta de spam para encontrar un correo de confirmación de info@pimsco.com
     updated_settings: "Configuración actualizada con éxito."
     email_test: "Este es un correo de prueba"
     email_notice: "¡Correo de prueba enviado con éxito!"
