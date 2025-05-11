@@ -356,7 +356,7 @@ es:
     failed_email_test: "No se pudo enviar el correo de prueba."
     test_text: "Esto es una prueba."
     test_text_notification: "Esta es una prueba de notificaciones por mensaje de texto"
-    congrats_message: "¡Felicidades por configurar tu cuenta! Asegúrate de que tu correo electrónico y número de teléfono sean correctos para recibir notificaciones directamente."
+    congrats_message: ¡Felicidades por configurar tu cuenta! Comienza agregando tus productos, luego sincroniza con Square para importar tus artículos del menú. Enlázalos en la página de Recetas y observa cómo tu inventario se actualiza en tiempo real, incluyendo cuántos puedes preparar en cada ubicación.
     user_limit: "Has alcanzado el límite máximo de %{limit} usuarios para tu suscripción."
     user_already_registered: "ya está registrado. Por favor, inicia sesión o intenta recuperar tu contraseña."
     blank_email: "El correo electrónico no puede estar en blanco"
