@@ -1,9 +1,11 @@
-<% if @batches.any? %>
-  <%= turbo_stream.append "batches" do %>
-    <%= render partial: "batches/batch", collection: @batches %>
+<%= turbo_stream.replace "batches" do %>
+  <%= turbo_frame_tag "batches" do %>
+    <div id="batches-list">
+      <%= render @batches %>
+    </div>
   <% end %>
+<% end %>
 
-  <%= turbo_stream.replace "infinite-scroll-metadata" do %>
-    <%= render partial: "batches/next_page_metadata", locals: { next_page: @batches.next_page } %>
-  <% end %>
+<%= turbo_stream.replace "infinite-scroll-metadata" do %>
+  <%= render partial: "batches/next_page_metadata", locals: { next_page: @batches.next_page } %>
 <% end %>
