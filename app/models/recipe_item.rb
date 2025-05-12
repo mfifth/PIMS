@@ -146,7 +146,7 @@ class RecipeItem < ApplicationRecord
     (volume_units?(unit) && volume_units?(from_unit)) ||
     (unit == 'units' && from_unit == 'units')
   end
-
+  
   private
   
   def metric_weight_units?(unit)
@@ -155,6 +155,10 @@ class RecipeItem < ApplicationRecord
   
   def imperial_weight_units?(unit)
     %w[ounces pounds].include?(unit)
+  end
+
+  def volume_units?(unit)
+    %w[liters gallons fluid_oz milliliters].include?(unit)
   end
 
   def conversion_rate(from_unit, to_unit)
