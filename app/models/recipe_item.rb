@@ -64,13 +64,13 @@ class RecipeItem < ApplicationRecord
   def self.unit_compatibility_map
     {
       'units' => ['units'],
+      'kilograms' => ['grams', 'kilograms'],
       'grams' => ['grams', 'ounces', 'pounds'],
       'ounces' => ['grams', 'ounces', 'pounds'],
       'pounds' => ['grams', 'ounces', 'pounds'],
-      'kilograms' => ['grams', 'kilograms', 'ounces', 'pounds'],
       'liters' => ['liters', 'fluid_oz', 'milliliters'],
-      'gallons' => ['liters', 'gallons', 'fluid_oz', 'milliliters'],
       'fluid_oz' => ['liters', 'fluid_oz', 'milliliters'],
+      'gallons' => ['liters', 'gallons', 'fluid_oz', 'milliliters'],
       'milliliters' => ['liters', 'gallons', 'fluid_oz', 'milliliters']
     }
   end
@@ -141,19 +141,20 @@ class RecipeItem < ApplicationRecord
   end
 
   def convertible_units?(from_unit)
-    (weight_units?(unit) && weight_units?(from_unit)) ||
+    (metric_weight_units?(unit) && metric_weight_units?(from_unit)) ||
+    (imperial_weight_units?(unit) && imperial_weight_units?(from_unit)) ||
     (volume_units?(unit) && volume_units?(from_unit)) ||
     (unit == 'units' && from_unit == 'units')
   end
 
   private
-
-  def weight_units?(unit)
-    %w[grams kilograms ounces pounds].include?(unit)
+  
+  def metric_weight_units?(unit)
+    %w[grams kilograms].include?(unit)
   end
-
-  def volume_units?(unit)
-    %w[liters gallons fluid_oz milliliters].include?(unit)
+  
+  def imperial_weight_units?(unit)
+    %w[ounces pounds].include?(unit)
   end
 
   def conversion_rate(from_unit, to_unit)
