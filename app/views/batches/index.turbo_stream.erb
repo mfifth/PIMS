@@ -1,8 +1,14 @@
-<%= turbo_stream.replace "batches" do %>
-  <%= turbo_frame_tag "batches" do %>
-    <div id="batches-list">
-      <%= render @batches %>
-    </div>
+<% if params[:page].present? %>
+  <%= turbo_stream.append "batches-list" do %>
+    <%= render @batches %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace "batches" do %>
+    <%= turbo_frame_tag "batches" do %>
+      <div id="batches-list">
+        <%= render @batches %>
+      </div>
+    <% end %>
   <% end %>
 <% end %>
 
