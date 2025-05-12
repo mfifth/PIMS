@@ -84,4 +84,13 @@ class Subscription < ApplicationRecord
   def base_plan_name
     plan.humanize
   end
+
+  def upgrade_to_trial!
+    update!(
+      plan: 'trial',
+      status: 'active',
+      started_at: Time.current,
+      ends_at: 1.month.from_now
+    )
+  end
 end
