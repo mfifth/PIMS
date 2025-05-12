@@ -13,4 +13,19 @@ class Batch < ApplicationRecord
   end
 
   scope :not_expired, -> { where('expiration_date >= ?', Date.today) }
+
+  scope :search, -> (term) {
+    return all if term.blank?
+
+    query = "%#{term.downcase}%"
+    adapter = ActiveRecord::Base.connection.adapter_name.downcase
+
+    condition = if adapter.include?('postgresql')
+      "LOWER(products.name) LIKE :q OR LOWER(batch_number) LIKE :q OR TO_CHAR(expiration_date, 'YYYY-MM-DD') LIKE :q"
+    else
+      "LOWER(products.name) LIKE :q OR LOWER(batch_number) LIKE :q OR strftime('%Y-%m-%d', expiration_date) LIKE :q"
+    end
+
+    left_joins(:products).distinct.where(condition, q: query)
+  }
 end

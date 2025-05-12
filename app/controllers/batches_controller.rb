@@ -3,33 +3,15 @@ class BatchesController < ApplicationController
   before_action :require_admin!, only: [:create, :update, :destroy, :edit, :new]
 
   def index
-    @batches = Current.account.batches.left_joins(:products).distinct
-  
-    if params[:query].present?
-      query = "%#{params[:query].downcase}%"
-      
-      if ActiveRecord::Base.connection.adapter_name.downcase.include?('postgresql')
-        @batches = @batches.where(
-          "LOWER(products.name) LIKE LOWER(:q) OR LOWER(batch_number) LIKE LOWER(:q) OR TO_CHAR(expiration_date, 'YYYY-MM-DD') LIKE :q",
-          q: query
-        )
-      else
-        @batches = @batches.where(
-          "LOWER(products.name) LIKE :q OR LOWER(batch_number) LIKE :q OR strftime('%Y-%m-%d', expiration_date) LIKE :q",
-          q: query
-        )
-      end
-    else
-      @batches = @batches.order(expiration_date: :asc)
-    end
-  
+    @batches = Current.account.batches.search(params[:query])
+    @batches = @batches.order(expiration_date: :asc) if params[:query].blank?
     @batches = @batches.page(params[:page]).per(5)
   
     respond_to do |format|
       format.html
       format.turbo_stream
     end
-  end
+  end  
 
   def show
   end
