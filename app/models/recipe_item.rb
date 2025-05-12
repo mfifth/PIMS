@@ -12,9 +12,7 @@ class RecipeItem < ApplicationRecord
     },
     'kilograms' => {
       'grams' => 1000,
-      'kilograms' => 1,
-      'ounces' => 35.274,
-      'pounds' => 2.20462
+      'kilograms' => 1
     },
     'ounces' => {
       'grams' => 28.3495,
