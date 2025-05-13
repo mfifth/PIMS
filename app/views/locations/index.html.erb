@@ -23,7 +23,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span>Recipes</span>
+                <span><%= t('sidebar.recipes') %></span>
               </button>
             </div>
                           
@@ -42,14 +42,14 @@
                 <svg class="-ml-0.5 mr-1 h-3 w-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
                 </svg>
-                <%= t(".synced") %>
+                <%= t("locations.synced") %>
               </span>
             <% else %>
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                 <svg class="-ml-0.5 mr-1 h-3 w-3 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
                 </svg>
-                <%= t(".not_synced", default: "Not Synced") %>
+                <%= t("locations.not_synced") %>
               </span>
             <% end %>
           <% end %>
@@ -144,7 +144,7 @@
         <!-- Back of Card (Recipes) -->
         <div class="absolute inset-0 bg-white rounded-lg shadow-sm border border-gray-200 p-4 hidden flex flex-col h-full" data-flip-target="back">
           <div class="flex justify-between items-center mb-4">
-            <h2 class="text-lg font-semibold text-gray-800"><%= location.name %> Recipes</h2>
+            <h2 class="text-lg font-semibold text-gray-800"><%= location.name %> <%= t('sidebar.recipes') %></h2>
             <button class="text-gray-500 hover:text-gray-700" data-action="click->flip#flip">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
@@ -179,7 +179,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              <span>Back to Location</span>
+              <span><%= t('locations.back') %></span>
             </button>
           </div>
         </div>

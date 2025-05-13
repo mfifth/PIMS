@@ -79,6 +79,7 @@ es:
         location: "Ubicación"
         quantity: "Cantidad"
         notification_days: "Días de aviso antes del vencimiento"
+        unit_type: "Tipo De Unidad"
       edit: "Editar"
       back: "Volver a los lotes"
     errors:
@@ -204,10 +205,10 @@ es:
     title: "Ubicaciones"
     new_location: "Nueva Ubicación"
     synced_with_square: "Sincronizado con Square"
-    not_synced: "No sincronizado"
     inventory: "Resumen de Inventario"
     perishable_items: "Artículos Perecederos"
     non_perishable_items: "Artículos No Perecederos"
+    back: "Detras"
     items: "artículos"
     categories: "Categorías"
     expiring_soon: "Expira pronto"
@@ -226,6 +227,7 @@ es:
     not_synced: "No Sincronizado"
     inventory_title: "Inventario"
     left: 'restantes'
+    products: productos
     csv_import_notice: "Importación iniciada - recibirás una notificación cuando se complete"
     csv_file_warning: "Por favor selecciona un archivo CSV"
     perishable:
@@ -264,6 +266,7 @@ es:
         low_stock: "Bajo stock"
         expiring: "Por caducar"
       low_stock: "Bajo stock (límite: %{threshold})"
+      unit_type: "Tipo de unidad"
       quantity: "Cantidad"
       perishable: "Perecedero"
       non_perishable: "No Perecedero"
@@ -284,6 +287,7 @@ es:
   account_settings:
     title: "Configuración de la cuenta"
     confirm_delete: "¿Estás seguro de que deseas eliminar tu cuenta?"
+    delete_account: Eliminar cuenta
     square:
       connected: "Cuenta de Square conectada"
       sync_locations: "Sincronizar ubicaciones"

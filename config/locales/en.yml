@@ -232,6 +232,7 @@ en:
       delete_confirm: "Are you sure you want to delete this recipe?"
   locations:
     title: "Locations"
+    back: "Back"
     new_location: "New Location"
     synced_with_square: "Synced with Square"
     not_synced: "Not Synced"
@@ -294,6 +295,7 @@ en:
         low_stock: "Low Stock"
         expiring: "Expiring"
       low_stock: "Stock alert (below %{threshold})"
+      unit_type: "Unit Type"
       quantity: "Quantity"
       perishable: "Perishable"
       non_perishable: "Non-Perishable"
