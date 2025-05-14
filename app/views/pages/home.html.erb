@@ -56,7 +56,7 @@
           <a href="#features" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.features') %></a>
           <a href="#screenshots" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.screenshots') %></a>
           <a href="#pricing" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.pricing') %></a>
-          <a href="https://youtu.be/oYS5NJD3nWA" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.demo') %></a>
+          <a href="<%= ENV['demo_video_link'] %>" class="text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium"><%= t('pims.nav.demo') %></a>
           <%= link_to t('pims.nav.contact_us'), 'contact_us', class: "text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium" %>
           <%= link_to t('pims.nav.login'), "signin?locale=#{params[:locale]}", class: "text-gray-700 hover:text-gray-900 px-3 py-2 text-sm font-medium" %>
           <%= link_to t('pims.nav.get_started'), "signup?locale=#{params[:locale]}", class: "bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
