@@ -66,6 +66,9 @@ es:
       select_products: "Seleccionar Productos"
       create: "Crear Lote"
       update: "Actualizar Lote"
+      selected_inventory_items: "Productos de inventario seleccionados"
+      search: "Buscar producto por nombre"
+      search_inventory_items: "Buscar productos de inventario"
     show:
       title: "Lote %{number}"
       manufactured_date: "Fecha de fabricación"
