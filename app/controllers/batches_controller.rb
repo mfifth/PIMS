@@ -14,34 +14,46 @@ class BatchesController < ApplicationController
   end  
 
   def show
+    @inventory_items = @batch.inventory_items.includes(:product, :location)
   end
 
   def new
     @batch = Batch.new
+    load_dependencies
+  end
+  
+  def edit
+    load_dependencies
+    @selected_inventory_items = @batch.inventory_items.pluck(:id)
   end
 
   def create
     @batch = Batch.new(batch_params.merge(account_id: Current.account.id))
+    
     if @batch.save
+      update_inventory_items
       redirect_to @batch, notice: t('notifications.batch_created')
     else
+      load_dependencies
+      @products = Current.account.products.perishable
       render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-  end
-
   def update
     if @batch.update(batch_params)
+      update_inventory_items
       redirect_to @batch, notice: t('notifications.batch_updated')
     else
+      load_dependencies
+      @products = Current.account.products.perishable
+      @selected_inventory_items = @batch.inventory_items.pluck(:id)
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @batch.products.update_all(perishable: false)
+    @batch.inventory_items.update_all(batch_id: nil)
     @batch.destroy
 
     respond_to do |format|
@@ -50,13 +62,64 @@ class BatchesController < ApplicationController
     end
   end
 
+  def search
+    query = params[:query].to_s.strip
+    batch = Batch.find_by(id: params[:batch_id])
+  
+    # Determine case-insensitive match operator
+    adapter = ActiveRecord::Base.connection.adapter_name.downcase
+    like_operator = adapter.include?("sqlite") ? "LIKE" : "ILIKE"
+  
+    inventory_items = Current.account.inventory_items
+      .includes(:product, :location)
+      .where("products.name #{like_operator} :q OR locations.name #{like_operator} :q", q: "%#{query}%")
+      .references(:product, :location)
+  
+    if batch
+      inventory_items = inventory_items.where.not(id: batch.inventory_item_ids)
+    end
+  
+    results = inventory_items.limit(10).map do |item|
+      {
+        id: item.id,
+        product_name: item.product.name,
+        location_name: item.location.name,
+        quantity: item.quantity
+      }
+    end
+  
+    render json: results
+  end  
+
   private
 
   def set_batch
-    @batch = Batch.includes(:account, products: :inventory_items).find(params[:id])
+    @batch = Batch.includes(:account, inventory_items: [:product, :location]).find(params[:id])
   end
 
   def batch_params
-    params.require(:batch).permit(:batch_number, :manufactured_date, :notification_days_before_expiration, :expiration_date, :supplier_id, product_ids: [])
+    params.require(:batch).permit(
+      :batch_number, 
+      :manufactured_date, 
+      :notification_days_before_expiration, 
+      :expiration_date, 
+      :supplier_id,
+      inventory_item_ids: []
+    )
+  end
+
+  def load_dependencies
+    @locations = Current.account.locations
+    @selected_location = Location.find_by(id: params[:location_id])
+    @products = Current.account.products
+    @selected_inventory_items = @batch.inventory_item_ids if @batch.persisted?
+  end
+
+  def update_inventory_items
+    InventoryItem.where(batch_id: @batch.id).update_all(batch_id: nil) if @batch.persisted?
+    
+    if params[:batch][:inventory_item_ids].present?
+      InventoryItem.where(id: params[:batch][:inventory_item_ids]).update_all(batch_id: @batch.id)
+    end
   end
 end

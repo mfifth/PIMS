@@ -1,7 +1,8 @@
 class Batch < ApplicationRecord
-  has_many :products
+  has_many :inventory_items
+  has_many :products, through: :inventory_items
+
   belongs_to :account
-  belongs_to :supplier, optional: true
 
   validates :batch_number, presence: true, uniqueness: true
   validates :expiration_date, presence: true

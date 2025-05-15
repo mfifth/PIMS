@@ -21,22 +21,23 @@
   </div>
 
   <div class="mt-4">
-    <% products = batch.products.where(account_id: Current.account.id) %>
+    <% products = batch.products.where(account_id: Current.account.id).distinct %>
 
-  <strong class="text-gray-700 text-sm"><%= t('batches.products_with_count', count: products.size) %>:</strong>
+    <strong class="text-gray-700 text-sm"><%= t('batches.products_with_count', count: products.size) %>:</strong>
     <% products.each do |product| %>
       <div class="mt-2 pl-2 border-l-2 border-gray-200">
         <p class="text-gray-700 font-semibold text-sm"><%= product.name %></p>
     
-        <% grouped_inventory = product.inventory_items.includes(:location).group_by(&:location_id) %>
+        <% inventory_items = product.inventory_items.includes(:location).where(batch_id: batch.id) %>
+        <% grouped_by_location = inventory_items.group_by { |item| item.location } %>
+        
         <ul class="ml-4 text-gray-600 text-xs">
-          <% grouped_inventory.each do |location_id, inventory_items| %>
-            <% location = inventory_items.first.location %>
+          <% grouped_by_location.each do |location, items| %>
             <li class="mt-1">
               <strong><%= location&.name || t('batches.no_location') %>:</strong> 
-              <% inventory_items.group_by(&:unit_type).each do |unit_type, items| %>
-                <%= items.sum(&:quantity) %> <%= unit_type.pluralize(items.sum(&:quantity)) %>
-                <% unless items.last == inventory_items.last %> | <% end %>
+              <% items.group_by(&:unit_type).each do |unit_type, unit_items| %>
+                <%= unit_items.sum(&:quantity) %> <%= unit_type.pluralize(unit_items.sum(&:quantity)) %>
+                <% unless unit_type == items.last.unit_type %> | <% end %>
               <% end %>
             </li>
           <% end %>

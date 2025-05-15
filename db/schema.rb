@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_07_073300) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_14_211837) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -88,6 +88,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_073300) do
     t.integer "low_threshold"
     t.integer "location_id"
     t.string "unit_type", default: "units"
+    t.integer "batch_id"
+    t.index ["batch_id"], name: "index_inventory_items_on_batch_id"
     t.index ["location_id"], name: "index_inventory_items_on_location_id"
     t.index ["product_id"], name: "index_inventory_items_on_product_id"
   end
@@ -168,11 +170,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_073300) do
     t.datetime "updated_at", null: false
     t.integer "user_id"
     t.integer "account_id"
-    t.integer "batch_id"
     t.integer "category_id"
     t.string "unit_type", default: "unit"
     t.index ["account_id"], name: "index_products_on_account_id"
-    t.index ["batch_id"], name: "index_products_on_batch_id"
     t.index ["category_id"], name: "index_products_on_category_id"
     t.index ["supplier_id"], name: "index_products_on_supplier_id"
     t.index ["user_id"], name: "index_products_on_user_id"

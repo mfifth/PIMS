@@ -4,37 +4,81 @@ class ExpirationNotificationJob < ApplicationJob
   def perform
     today = Date.current
 
-    Batch.where.not(expiration_date: nil, notification_days_before_expiration: 0)
-    .find_each do |batch|
-      notify_date = batch.expiration_date - batch.notification_days_before_expiration.days
+    # Find batches expiring soon with notification days set
+    Batch.joins(:inventory_items)
+         .where.not(expiration_date: nil)
+         .where("expiration_date >= ?", today) # Only future dates
+         .where("notification_days_before_expiration > 0")
+         .distinct
+         .find_each do |batch|
+      
+      notification_date = batch.expiration_date - batch.notification_days_before_expiration.days
+      next unless today >= notification_date
 
-      next unless today == notify_date
+      # Get all affected inventory items
+      inventory_items = batch.inventory_items.includes(:product, :location)
+      
+      # Skip if no active inventory
+      next if inventory_items.empty?
 
-      text = t('notifications.batch_expiry', 
-               batch_number: batch.batch_number, 
-               product_count: batch.products.count, 
-               expiration_date: batch.expiration_date)
-
-      accounts = batch.products.includes(:accounts).map(&:accounts).flatten.uniq
-      users = accounts.flat_map(&:users).uniq
-
-      accounts.each do |account|
-        Notification.create(
-          message: text,
-          notification_type: "Alert",
-          account_id: account.id
-        )
+      # Group by account
+      inventory_items.group_by { |i| i.product.account }.each do |account, items|
+        send_account_notifications(account, batch, items)
       end
+    end
+  end
 
-      users.each do |user|
-        if user.email_notification
-          NotificationMailer.upcoming_expiration_date(user, batch).deliver_later
-        end
+  private
 
-        if user.text_notification && user.phone
-          NotificationService.send_sms(user.phone, text)
-        end
-      end
+  def send_account_notifications(account, batch, inventory_items)
+    # Group items by location for better organization
+    items_by_location = inventory_items.group_by(&:location)
+
+    # Create notification message
+    message = build_notification_message(batch, items_by_location)
+
+    # Create account notification
+    Notification.create(
+      message: message,
+      notification_type: "batch_expiration",
+      account_id: account.id
+    )
+
+    # Notify users
+    account.users.each do |user|
+      send_user_notifications(user, batch, message)
+    end
+  end
+
+  def build_notification_message(batch, items_by_location)
+    locations_list = items_by_location.map do |location, items|
+      total_quantity = items.sum(&:quantity)
+      "#{location.name} (#{total_quantity} #{items.first.unit_type})"
+    end.join(", ")
+
+    I18n.t('notifications.batch_expiry',
+      batch_number: batch.batch_number,
+      expiration_date: batch.expiration_date.strftime("%m/%d/%Y"),
+      days_remaining: (batch.expiration_date - Date.current).to_i,
+      locations: locations_list,
+      product_count: inventory_items.map(&:product_id).uniq.count
+    )
+  end
+
+  def send_user_notifications(user, batch, message)
+    if user.email_notification
+      NotificationMailer.upcoming_expiration_date(
+        user: user,
+        batch: batch,
+        message: message
+      ).deliver_later
+    end
+
+    if user.text_notification && user.phone.present?
+      NotificationService.send_sms(
+        phone: user.phone,
+        message: "Expiration Alert: #{message.truncate(100)}"
+      )
     end
   end
 end

@@ -38,12 +38,17 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :batches
+  resources :batches do
+    collection do
+      get :search
+    end
+  end
+
   resources :products do
-    resources :batches, only: [:create, :update]
     member do
       delete :remove_category
       delete :delete_category
+      delete :remove_batch
     end
   end
 

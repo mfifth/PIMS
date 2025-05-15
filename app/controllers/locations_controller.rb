@@ -19,30 +19,31 @@ class LocationsController < ApplicationController
   end
 
   def show
-    @active_filters = {
+      @active_filters = {
       perishable: params[:perishable],
-      low_stock: params[:low_stock]
+      low_stock: params[:low_stock],
+      expiring: params[:expiring]
     }
 
     @inventory_items = @location.inventory_items
-                  .includes(product: [:category, :batch])
+                  .includes(:product, :batch, product: :category)
                   .order('products.name ASC')
-  
+
     if params[:perishable].present?
-      @inventory_items = @inventory_items.where(products: { perishable: params[:perishable] })
+      @inventory_items = @inventory_items.joins(:product).where(products: { perishable: params[:perishable] })
     end
-  
+
     if params[:low_stock] == 'true'
-      @inventory_items = @inventory_items.where('inventory_items.quantity <= inventory_items.low_threshold')
+      @inventory_items = @inventory_items.where('quantity <= low_threshold')
     end
 
     if params[:expiring] == 'true'
-      @inventory_items = @inventory_items.joins(product: :batch)
-                                         .where("batches.expiration_date BETWEEN ? AND ?", 
-                                          Date.current, 
-                                          1.week.from_now.to_date)
+      @inventory_items = @inventory_items.joins(:batch)
+                                        .where("batches.expiration_date BETWEEN ? AND ?", 
+                                              Date.current, 
+                                              1.week.from_now.to_date)
     end
-  
+
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -91,30 +92,29 @@ class LocationsController < ApplicationController
   end
 
   def update_inventory
-    Product.find(params[:product_id]).update(batch_id: params[:batch_id], category_id: params[:category_id])
-    InventoryItem.find_by(location_id: params[:location_id], product_id: params[:product_id])
-    .update(quantity: params[:quantity])
-
+    inventory_item = InventoryItem.find_by(location_id: params[:location_id], product_id: params[:product_id])
+    inventory_item.update(
+      quantity: params[:quantity],
+      batch_id: params[:batch_id]
+    )
+    
     redirect_back fallback_location: '/', notice: t('notifications.inventory_updated')
   end
 
   def inventory_data
     location = Location.find(params[:location_id])
-    products = location.products
-                       .includes(:batch, :inventory_items)
-                       .where(inventory_items: { location_id: location.id })
-                       .references(:inventory_items)
+    inventory_items = location.inventory_items
+                       .includes(:product, :batch)
   
     render json: {
-      products: products.map do |product|
-        inventory_item = product.inventory_items.find_by(location_id: location.id)
+      products: inventory_items.map do |item|
         {
-          id: product.id,
-          name: product.name,
-          quantity: inventory_item&.quantity || 0,
-          category_id: product.category_id,
-          batch_id: product.batch_id,
-          unit_type: inventory_item.unit_type.titleize
+          id: item.product_id,
+          name: item.product.name,
+          quantity: item.quantity,
+          category_id: item.product.category_id,
+          batch_id: item.batch_id,
+          unit_type: item.unit_type.titleize
         }
       end
     }
@@ -130,10 +130,10 @@ class LocationsController < ApplicationController
       .select(
         'categories.id as category_id',
         'categories.name as category_name',
-        'SUM(inventory_items.quantity) as total_quantity',
-        'SUM(inventory_items.quantity * products.price) as total_value'
+        'SUM(quantity) as total_quantity',
+        'SUM(quantity * products.price) as total_value'
       )
-      .order(Arel.sql('SUM(inventory_items.quantity * products.price) DESC'))
+      .order(Arel.sql('SUM(quantity * products.price) DESC'))
       .page(@page)
       .per(@per_page)
     
@@ -211,27 +211,27 @@ class LocationsController < ApplicationController
 
   def generate_csv(items)
     CSV.generate(headers: true) do |csv|
-      csv << ['SKU', 'product_name', 'Unit Type' 'Category', 'Quantity', 'Low Stock Alert', 'Unit Price', 
-              'Total Value', 'Perishable', 'Batch Number', 'Expiration Date', 'Notification Days Before Expiration']
+      csv << ['SKU', 'Product Name', 'Unit Type', 'Category', 'Quantity', 'Low Stock Alert', 'Unit Price', 
+              'Total Value', 'Perishable', 'Batch Number', 'Manufactured Date', 'Expiration Date', 'Notification Days']
 
       items.each do |item|
         product = item.product
-        batch = product.batch
+        batch = item.batch
 
         csv << [
           product.sku,
           product.name,
-          product.unit_type,
+          item.unit_type,
           product.category&.name || 'N/A',
           item.quantity,
-          item.low_threshold,
+          item.low_threshold || 'N/A',
           product.price,
           item.quantity * product.price,
           product.perishable? ? 'Yes' : 'No',
-          product.perishable? ? (batch&.batch_number || 'N/A') : 'N/A',
-          product.perishable? ? (batch&.manufactured_date&.strftime("%Y-%m-%d") || 'Not set') : 'N/A',
-          product.perishable? ? (batch&.expiration_date&.strftime("%Y-%m-%d") || 'Not set') : 'N/A',
-          product.perishable? ? (batch&.notification_days_before_expiration || 'Not set') : 'N/A'
+          batch&.batch_number || 'N/A',
+          batch&.manufactured_date&.strftime("%Y-%m-%d") || 'N/A',
+          batch&.expiration_date&.strftime("%Y-%m-%d") || 'N/A',
+          batch&.notification_days_before_expiration || 'N/A'
         ]
       end
     end

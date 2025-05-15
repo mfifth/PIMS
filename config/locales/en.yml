@@ -101,6 +101,7 @@ en:
       select_products: "Select Products"
       create: "Create Batch"
       update: "Update Batch"
+      search: "Search for product by name"
     show:
       title: "Batch %{number}"
       manufactured_date: "Manufactured Date"
@@ -313,6 +314,7 @@ en:
       import_products: Import Products
       export_products: Export Products
       download_sample: "Download Sample"
+      notifications_enabled: "Notifications Enabled"
   notifications:
     batch_updated: "The batch was successfully updated."
     batch_created: "The batch was successfully created."
@@ -361,7 +363,11 @@ en:
     recipe_limit_warning: "You have reached the maximum limit of %{limit} products for your subscription."
     location_limit_warning: "You have reached the maximum limit of %{limit} locations for your subscription."
     low_limit_warning: "%{product} is running low at %{location_name} (only %{quantity} left)."
-    batch_expiry: "Batch %{batch_number} with %{product_count} products will expire soon (%{expiration_date})."
+    batch_expiry: |
+      Batch Alert: %{batch_number}
+      Expires: %{expiration_date} (%{days_remaining} days)
+      Locations: %{locations}
+      Products: %{product_count}
     title: "Notifications"
     mark_all_as_read: "Mark all as read."
     ago: "%{time} ago"

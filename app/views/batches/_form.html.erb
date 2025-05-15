@@ -1,11 +1,11 @@
-<turbo-frame id='main'>
+<turbo-frame id="main">
   <h1 class="text-3xl font-semibold text-center text-gray-700 mb-6">
-    <%= @batch.new_record? ? t('batches.new_title') : t('batches.edit_title') %>
+    <%= @batch.new_record? ? t("batches.new_title") : t("batches.edit_title") %>
   </h1>
 
   <% if @batch.errors.any? %>
     <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded-lg">
-      <strong><%= t('errors.batch_header', count: @batch.errors.count) %></strong>
+      <strong><%= t("errors.batch_header", count: @batch.errors.count) %></strong>
       <ul class="mt-2">
         <% @batch.errors.full_messages.each do |message| %>
           <li>- <%= message %></li>
@@ -15,39 +15,79 @@
   <% end %>
 
   <%= form_with(model: @batch, local: true, class: "space-y-6 bg-white p-8 rounded-lg shadow-xl border border-gray-300") do |form| %>
-
     <div class="space-y-4">
       <div>
-        <%= form.label :batch_number, t('batches.form.batch_number'), class: "block text-sm font-medium text-gray-700" %>
+        <%= form.label :batch_number, t("batches.form.batch_number"), class: "block text-sm font-medium text-gray-700" %>
         <%= form.text_field :batch_number, required: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
       </div>
 
       <div class="grid grid-cols-2 gap-4">
         <div>
-          <%= form.label :manufactured_date, t('batches.form.manufactured_date'), class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :manufactured_date, t("batches.form.manufactured_date"), class: "block text-sm font-medium text-gray-700" %>
           <%= form.date_field :manufactured_date, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
         </div>
         <div>
-          <%= form.label :expiration_date, t('batches.form.expiration_date'), class: "block text-sm font-medium text-gray-700" %>
+          <%= form.label :expiration_date, t("batches.form.expiration_date"), class: "block text-sm font-medium text-gray-700" %>
           <%= form.date_field :expiration_date, required: true, min: Date.today.to_s, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
         </div>
       </div>
 
       <div>
-        <%= form.label :notification_days_before_expiration, t('batches.form.notification_days'), class: "block text-sm font-medium text-gray-700" %>
+        <%= form.label :notification_days_before_expiration, t("batches.form.notification_days"), class: "block text-sm font-medium text-gray-700" %>
         <%= form.number_field :notification_days_before_expiration, min: 0, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" %>
       </div>
     </div>
 
-    <div>
-      <%= form.label :product_ids, t('batches.form.select_products'), class: "block text-sm font-medium text-gray-700" %>
-      <%= form.collection_select :product_ids, Current.account.products, :id, :name, {}, { multiple: true, class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" } %>
+    <!-- Inventory Search Section -->
+    <div
+      data-controller="inventory-search"
+      data-inventory-search-batch-id-value="<%= @batch.id %>"
+      class="space-y-4"
+    >
+      <%= form.label :inventory_item_ids, t("batches.form.search_inventory_items"), class: "block text-sm font-medium text-gray-700" %>
+      <%= text_field_tag :inventory_search,
+        "",
+        placeholder: t("batches.form.search"),
+        autocomplete: "off",
+        data: {
+          inventory_search_target: "input",
+          action: "input->inventory-search#search"
+        },
+        class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+      %>
+
+      <ul
+        data-inventory-search-target="results"
+        class="border border-gray-300 rounded mt-1 max-h-48 overflow-auto bg-white"
+      ></ul>
+
+      <h3 class="text-lg font-semibold mt-4"><%= t("batches.form.selected_inventory_items") %></h3>
+      <ul data-inventory-search-target="itemsList" class="list-disc list-inside space-y-1 border border-gray-200 rounded p-4 max-h-48 overflow-auto bg-gray-50">
+        <% @batch.inventory_items.includes(:product, :location).each do |item| %>
+          <li data-item-id="<%= item.id %>">
+            <%= item.product.name %> — <%= item.location.name %> (Qty: <%= item.quantity %>)
+            <button type="button" class="ml-2 text-red-600 hover:underline" data-action="click->inventory-search#removeItem" data-item-id="<%= item.id %>">✕</button>
+          </li>
+        <% end %>
+      </ul>
+
+      <div data-inventory-search-target="hiddenInputs">
+        <% @batch.inventory_item_ids.each do |id| %>
+          <%= hidden_field_tag "batch[inventory_item_ids][]", id %>
+        <% end %>
+      </div>
     </div>
 
     <div class="mt-6 flex space-x-4">
-      <%= form.submit @batch.new_record? ? t('batches.form.create') : t('batches.form.update'), class: "bg-blue w-full py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition" %>
-      <%= link_to t('actions.cancel'), batches_path, class: "w-full py-2 px-4 text-center text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition" %>
+      <%= form.submit(
+        @batch.new_record? ? t("batches.form.create") : t("batches.form.update"),
+        class: "bg-blue w-full py-2 px-4 text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition"
+      ) %>
+      <%= link_to(
+        t("actions.cancel"),
+        batches_path,
+        class: "w-full py-2 px-4 text-center text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-lg transition"
+      ) %>
     </div>
-
   <% end %>
 </turbo-frame>

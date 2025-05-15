@@ -2,65 +2,60 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
   static targets = ["batchFields", "newBatchFields"];
+  static values = {
+    batchFieldIds: { type: Array, default: ["product_batch_number", "product_expiration_date"] },
+    productId: String
+  };
 
   connect() {
-    this.toggleBatchFields();
-    this.toggleNewBatchFields();
+    this.setupEventListeners();
+    this.updateFieldsVisibility();
+  }
 
-    // Listen to changes for dynamic behavior
-    document.getElementById("perishable_checkbox")?.addEventListener("change", () => {
-      this.toggleBatchFields();
-      this.toggleNewBatchFields();
-    });
+  setupEventListeners() {
+    const perishableCheckbox = document.getElementById("perishable_checkbox");
+    const batchSelect = document.getElementById("batch_select");
 
-    document.getElementById("batch_select")?.addEventListener("change", () => {
-      this.toggleNewBatchFields();
-    });
+    if (perishableCheckbox) {
+      perishableCheckbox.addEventListener("change", this.updateFieldsVisibility.bind(this));
+    }
+
+    if (batchSelect) {
+      batchSelect.addEventListener("change", this.updateNewBatchFields.bind(this));
+    }
   }
 
   toggleBatchFields() {
-    const perishableCheckbox = document.getElementById("perishable_checkbox");
-    if (perishableCheckbox?.checked) {
-      this.batchFieldsTarget.style.display = "block";
-    } else {
-      this.batchFieldsTarget.style.display = "none";
-      // Clean up validations when hidden
-      this.setFieldRequirements([
-        "product_batch_number",
-        "product_expiration_date"
-      ], false);
+    const isPerishable = document.getElementById("perishable_checkbox")?.checked;
+    this.batchFieldsTarget.style.display = isPerishable ? "block" : "none";
+    
+    if (!isPerishable) {
+      this.setFieldsRequired(this.batchFieldIdsValue, false);
     }
   }
 
-  toggleNewBatchFields() {
+  updateFieldsVisibility() {
+    this.toggleBatchFields();
+    this.updateNewBatchFields();
+  }
+
+  updateNewBatchFields() {
+    const isPerishable = document.getElementById("perishable_checkbox")?.checked;
     const batchSelect = document.getElementById("batch_select");
-    const perishableCheckbox = document.getElementById("perishable_checkbox");
+    const hasExistingBatch = batchSelect?.value;
+    
+    if (!isPerishable || !batchSelect) return;
 
-    const fieldIds = [
-      "product_batch_number",
-      "product_expiration_date"
-    ];
-
-    if (!perishableCheckbox?.checked) return;
-
-    if (batchSelect?.value) {
-      this.newBatchFieldsTarget.style.display = "none";
-      this.setFieldRequirements(fieldIds, false);
-    } else {
-      this.newBatchFieldsTarget.style.display = "block";
-      this.setFieldRequirements(fieldIds, true);
-    }
+    const shouldShowNewBatchFields = !hasExistingBatch;
+    this.newBatchFieldsTarget.style.display = shouldShowNewBatchFields ? "block" : "none";
+    this.setFieldsRequired(this.batchFieldIdsValue, shouldShowNewBatchFields);
   }
 
-  setFieldRequirements(ids, required) {
-    ids.forEach((id) => {
+  setFieldsRequired(fieldIds, required) {
+    fieldIds.forEach((id) => {
       const field = document.getElementById(id);
       if (field) {
-        if (required) {
-          field.setAttribute("required", "required");
-        } else {
-          field.removeAttribute("required");
-        }
+        field.toggleAttribute("required", required);
       }
     });
   }

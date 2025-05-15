@@ -109,25 +109,21 @@ class RecipeItem < ApplicationRecord
   def earliest_expiration(location)
     return nil unless product.perishable?
     
-    # Check if there's any inventory for this product at the location
-    has_inventory = product.inventory_items.where(location: location).exists?
-    return nil unless has_inventory
-    
-    product.batch&.expiration_date
+    product.inventory_items
+           .joins(:batch)
+           .where(location: location)
+           .minimum('batches.expiration_date')
   end
 
   def compatible_unit_options
-    # Get the product's base unit (first check inventory, then fall back to product.unit_type)
     base_unit = if product.inventory_items.any?
                   product.inventory_items.first.unit_type
                 else
                   product.unit_type || 'units'
                 end
   
-    # Get all compatible units from the compatibility map
     compatible_units = self.class.unit_compatibility_map[base_unit] || [base_unit]
   
-    # Format for select dropdown
     compatible_units.map do |unit|
       display_name = case unit
                     when 'fluid_oz' then 'Fluid Oz'

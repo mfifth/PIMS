@@ -1,0 +1,40 @@
+<div id="inventory_items_selection">
+  <% if inventory_items.present? %>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700">
+          <%= t('batches.form.select_inventory') %>
+        </label>
+        
+        <% products.each do |product| %>
+          <% items = inventory_items[product] || [] %>
+          <% if items.any? %>
+            <details class="mb-4 p-4 border border-gray-200 rounded-lg" open>
+              <summary class="cursor-pointer font-medium text-gray-800 mb-2">
+                <%= product.name %> (<%= product.sku %>)
+              </summary>
+
+              <div class="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% items.each do |item| %>
+                  <div class="flex items-center">
+                    <%= check_box_tag "batch[inventory_item_ids][]", 
+                          item.id, 
+                          batch.inventory_items.include?(item),
+                          class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+                    <%= label_tag "batch_inventory_item_ids_#{item.id}", 
+                          "#{item.quantity} #{item.unit_type}", 
+                          class: "ml-2 text-sm text-gray-700" %>
+                  </div>
+                <% end %>
+              </div>
+            </details>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <p class="text-sm text-gray-500 py-4">
+      <%= t('batches.form.no_inventory_for_location') %>
+    </p>
+  <% end %>
+</div>

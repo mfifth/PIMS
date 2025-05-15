@@ -5,14 +5,25 @@
       <%= t('products.sku_title') %>: <%= product.sku %> |
       <%= t('products.category') %>: <%= product.category&.name&.titleize || t('products.na') %> |
       <%= show_price(product) %>
-      <%= show_batch_info(product) %>
     </div>
   </div>
 
   <div class="mt-2 text-sm text-gray-700">
     <strong><%= t('products.stock_locations') %>:</strong>
-    <% product.inventory_items.includes(:location).each do |inventory_item| %>
-      <p><%= inventory_item.location.name %>: <%= "#{inventory_item.quantity} #{inventory_item.unit_type.titleize}" %> <%= t('products.in_stock') %></p>
+    <% product.inventory_items.includes(:location, :batch).each do |inventory_item| %>
+      <div class="mt-1 pl-2 border-l-2 border-gray-200">
+        <p class="font-medium">
+          <%= inventory_item.location.name %>: 
+          <%= "#{inventory_item.quantity} #{inventory_item.unit_type.titleize}" %> <%= t('products.in_stock') %>
+        </p>
+        <% if inventory_item.batch.present? %>
+          <p class="text-xs text-gray-500 mt-1">
+            <%= t('products.batch_number') %>: <%= inventory_item.batch.batch_number %> |
+            <%= t('products.mfg') %>: <%= inventory_item.batch.manufactured_date %> |
+            <%= t('products.exp') %>: <%= inventory_item.batch.expiration_date %>
+          </p>
+        <% end %>
+      </div>
     <% end %>
   </div>
 

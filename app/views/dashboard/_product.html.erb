@@ -3,24 +3,48 @@
     <a href="<%= product_path(product) %>" class="text-gray-800 font-medium hover:underline">
       <%= product.name.titleize %>
     </a>
+    <span class="text-xs text-gray-500"><%= product.sku %></span>
   </div>
 
-  <% if product.earliest_expiration %>
-    <% expiration_date = product.earliest_expiration.to_date rescue nil %>
-    <% if expiration_date %>
-      <% color_class = expiration_date <= Date.today + 7 ? "text-red-500" : "text-green-500" %>
-      <span class="<%= color_class %> text-xs">
-        <%= t("products.expiration", date: l(expiration_date, format: :long)) %>
-      </span>
-    <% end %>
-  <% end %>
+  <div class="locations-container mt-2">
+    <% product.inventory_items.each do |inventory_item| %>
+      <div class="location-item mb-3 p-2 border rounded">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-gray-700 text-sm font-medium">
+              <%= inventory_item.location.name %>
+            </p>
+            <p class="text-gray-500 ml-2">
+              <%= inventory_item.quantity %> <%= inventory_item.unit_type %>
+            </p>
+            
+            <% if inventory_item.batch.present? %>
+              <div class="mt-1 text-xs">
+                <span class="text-gray-600 font-medium">Batch:</span>
+                <span class="text-gray-500 ml-1"><%= inventory_item.batch.batch_number %></span>
+              </div>
 
-  <div class="locations-container">
-    <% product.locations.each do |location| %>
-      <div style='margin-bottom: 10px;' class="location-item">
-        <p class="text-gray-500 text-xs"><%= t("products.qty", count: location.inventory_items.detect { |i| i.product_id == product.id }&.quantity) %></p>
-        <p class="text-gray-500 text-xs"><%= t("products.unit_type", type: location.inventory_items.detect { |i| i.product_id == product.id }&.unit_type&.titleize) %></p>
-        <p class="text-gray-500 text-xs"><%= t("products.location_with_name", name: location.name) %></p>
+              <% if inventory_item.batch.expiration_date.present? %>
+              <% expiration_date = inventory_item.batch.expiration_date.to_date %>
+              <% days_remaining = (expiration_date - Date.today).to_i %>
+              <% color_class = days_remaining <= 0 ? "text-red-600" : (days_remaining <= 3 ? "text-orange-500" : "text-green-600") %>
+              
+              <span class="text-xs <%= color_class %> ml-2">
+                Exp: <%= expiration_date.strftime('%m/%d') %>
+                <% if days_remaining <= 0 %>
+                  (Expired)
+                <% end %>
+              </span>
+            <% end %>
+            <% end %>
+          </div>
+          
+          <% if inventory_item.quantity < (inventory_item.low_threshold || 0) %>
+            <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+              Low Stock
+            </span>
+          <% end %>
+        </div>
       </div>
     <% end %>
   </div>

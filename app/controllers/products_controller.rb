@@ -28,9 +28,11 @@ class ProductsController < ApplicationController
   end  
 
   def show
-    @batches = Batch.where(id: @product.batch_id)
-    @inventory_items = InventoryItem.where(product_id: @product.id)
-    @locations = Location.includes(:inventory_items).where(inventory_items: { product_id: @product.id })
+    @batches = @product.batches.distinct
+    @inventory_items = @product.inventory_items.includes(:batch, :location)
+    @locations = Location.joins(:inventory_items)
+                         .where(inventory_items: { product_id: @product.id })
+                         .distinct
 
     respond_to do |format|
       format.html
@@ -57,10 +59,6 @@ class ProductsController < ApplicationController
   def create
     @product = Product.new(product_params.merge(account_id: Current.account.id))
 
-    if @product.perishable?
-      assign_or_create_batch
-    end
-
     if @product.save
       assign_or_create_category
       create_inventory_item if inventory_item_params.present?
@@ -74,7 +72,6 @@ class ProductsController < ApplicationController
     if @product.update(product_params)
       assign_or_create_category
       update_inventory_item if update_inventory?
-      assign_or_create_batch if @product.perishable?
       redirect_to @product, notice: 'Product was successfully updated.'
     else
       render :edit
@@ -82,7 +79,6 @@ class ProductsController < ApplicationController
   end
 
   def destroy
-    @product = Product.find(params[:id])
     @product.destroy
   
     respond_to do |format|
@@ -92,10 +88,8 @@ class ProductsController < ApplicationController
   end
 
   def remove_category
-    @product = Product.find(params[:id])
     @product.update(category_id: nil)
 
-    # If it's a Turbo Stream request, return a Turbo Stream response to remove the category.
     respond_to do |format|
       format.turbo_stream
       format.html { redirect_to edit_product_path(@product), notice: t('notifications.category_removed') }
@@ -103,7 +97,6 @@ class ProductsController < ApplicationController
   end
 
   def delete_category
-    @product = Product.find(params[:id])
     @product.category.destroy
 
     respond_to do |format|
@@ -112,18 +105,43 @@ class ProductsController < ApplicationController
     end
   end
 
+  def remove_batch
+    @product = Product.find(params[:id])
+    @batch = Batch.find(params[:batch_id])
+    
+    @product.inventory_items.where(batch_id: @batch.id).each do |inventory_item| 
+      inventory_item.update!(batch_id: nil) 
+    end
+    
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.remove("batch_#{@batch.id}")
+      end
+      format.html { redirect_to edit_product_path(@product), notice: 'Batch was successfully removed' }
+    end
+  end
+
   private
 
   def set_product
-    @product = Product.includes(:batch).find(params[:id])
+    @product = Product.includes(:inventory_items, :batches).find(params[:id])
   end
 
   def product_params
-    params.require(:product).permit(:name, :sku, :unit_type, :category_name, :category_id, :description, :price, :perishable, :supplier_id, :user_id, :account_id, :batch_id)
+    params.require(:product).permit(
+      :name, :sku, :unit_type, :category_name, :category_id, 
+      :description, :price, :perishable, :supplier_id, 
+      :user_id, :account_id
+    )
   end
 
   def inventory_item_params
-    params.require(:product).permit(:quantity, :location_id, :unit_type, :daily_usage, :low_threshold)
+    params.require(:product).permit(
+      :quantity, :location_id, :unit_type, 
+      :daily_usage, :low_threshold,
+      :batch_number, :manufactured_date,
+      :expiration_date, :notification_days_before_expiration
+    )
   end
 
   def update_inventory?
@@ -131,52 +149,69 @@ class ProductsController < ApplicationController
   end
 
   def update_inventory_item
-    InventoryItem.find_or_create_by(location_id: inventory_item_params[:location_id], 
-    product_id: @product.id).update!(inventory_item_params)
+    inventory_item = InventoryItem.find_or_initialize_by(
+      location_id: inventory_item_params[:location_id],
+      product_id: @product.id
+    )
+
+    if params[:product][:selected_batch_id].present?
+      inventory_item.update(batch_id: params[:product][:selected_batch_id])
+    elsif inventory_item_params[:batch_number] && inventory_item_params[:expiration_date].present?
+      batch = Batch.find_or_initialize_by(
+        account_id: Current.account.id,
+        batch_number: inventory_item_params[:batch_number]
+      )
+      
+      batch.update!(
+        manufactured_date: inventory_item_params[:manufactured_date],
+        expiration_date: inventory_item_params[:expiration_date],
+        notification_days_before_expiration: inventory_item_params[:notification_days_before_expiration]
+      )
+      
+      inventory_item.update(batch_id: batch.id)
+    end
+
+    inventory_item.update!(
+      quantity: inventory_item_params[:quantity],
+      unit_type: inventory_item_params[:unit_type],
+      low_threshold: inventory_item_params[:low_threshold]
+    )
 
     Location.find(inventory_item_params[:location_id]).update(updated_at: Time.current)
-  end
-
-  def assign_or_create_batch
-    return unless !!params[:product][:perishable]
-
-    if params[:product][:batch_id].present?
-      @product.batch_id = params[:product][:batch_id]
-    else
-      batch = Batch.create!(
-        account_id: Current.account.id,
-        batch_number: params[:product][:batch_number],
-        manufactured_date: params[:product][:manufactured_date],
-        expiration_date: params[:product][:expiration_date],
-        notification_days_before_expiration: params[:product][:notification_days_before_expiration]
-      )
-      @product.batch = batch
-      @product.save
-    end
   end
 
   def assign_or_create_category
     if product_params[:category_name].present? 
       category = Current.account.categories.find_or_create_by(name: product_params[:category_name].downcase)
-      @product.category = category
+      @product.update(category: category)
     elsif product_params[:category_id].present?
       category = Category.find(product_params[:category_id])
-      @product.category = category
+      @product.update(category: category)
     end
-
-    @product.save
   end
 
   def create_inventory_item
-    InventoryItem.find_or_create_by!(
+    inventory_item = InventoryItem.new(
+      product: @product,
       location_id: inventory_item_params[:location_id],
-      low_threshold: params[:product][:low_threshold],
-      unit_type: params[:product][:unit_type],
-      product_id: @product.id,
       quantity: inventory_item_params[:quantity],
-      daily_usage: inventory_item_params[:daily_usage]
-      )
+      unit_type: inventory_item_params[:unit_type],
+      daily_usage: inventory_item_params[:daily_usage],
+      low_threshold: inventory_item_params[:low_threshold]
+    )
 
+    if @product.perishable? && inventory_item_params[:batch_number].present?
+      batch = Batch.create!(
+        account_id: Current.account.id,
+        batch_number: inventory_item_params[:batch_number],
+        manufactured_date: inventory_item_params[:manufactured_date],
+        expiration_date: inventory_item_params[:expiration_date],
+        notification_days_before_expiration: inventory_item_params[:notification_days_before_expiration]
+      )
+      inventory_item.batch = batch
+    end
+
+    inventory_item.save!
     Location.find(inventory_item_params[:location_id]).update(updated_at: Time.current)
   end
 end

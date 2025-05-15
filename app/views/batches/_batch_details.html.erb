@@ -5,16 +5,28 @@
 
     <!-- Batch Details -->
     <div class="bg-gray-100 p-4 rounded-lg shadow-sm mb-6">
-      <p class="text-gray-700">
-        <strong><%= t("batches.show.manufactured_date") %>:</strong> <%= @batch.manufactured_date || t("batches.show.na") %>
-      </p>
-      <p class="text-gray-700">
-        <strong><%= t("batches.show.expiration_date") %>:</strong> <%= @batch.expiration_date || t("batches.show.na") %>
-      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="text-gray-700">
+            <strong><%= t("batches.show.manufactured_date") %>:</strong> 
+            <%= @batch.manufactured_date&.strftime('%B %d, %Y') || t("batches.show.na") %>
+          </p>
+          <p class="text-gray-700">
+            <strong><%= t("batches.show.expiration_date") %>:</strong> 
+            <%= @batch.expiration_date&.strftime('%B %d, %Y') || t("batches.show.na") %>
+          </p>
+        </div>
+        <div>
+          <p class="text-gray-700">
+            <strong><%= t("batches.show.notification_days") %>:</strong> 
+            <%= @batch.notification_days_before_expiration || t("batches.show.na") %>
+          </p>
+        </div>
+      </div>
     </div>
 
-    <!-- Products in Batch -->
-    <h2 class="text-2xl font-semibold text-gray-800 mb-4"><%= t("batches.show.products_in_batch") %></h2>
+    <!-- Inventory Items in Batch -->
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4"><%= t("batches.show.inventory_in_batch") %></h2>
 
     <div class="overflow-x-auto">
       <table class="w-full bg-gray-50 rounded-lg shadow-md">
@@ -25,21 +37,44 @@
             <th class="py-3 px-4 text-left"><%= t("batches.show.table.unit_type") %></th>
             <th class="py-3 px-4 text-left"><%= t("batches.show.table.location") %></th>
             <th class="py-3 px-4 text-left"><%= t("batches.show.table.quantity") %></th>
-            <th class="py-3 px-4 text-left"><%= t("batches.show.table.notification_days") %></th>
+            <th class="py-3 px-4 text-left"><%= t("batches.show.table.status") %></th>
           </tr>
         </thead>
         <tbody class="divide-y">
-          <% @batch.products.each do |product| %>
-            <% product.inventory_items.each do |inventory_item| %>
-              <tr class="bg-white hover:bg-gray-100 transition">
-                <td class="py-3 px-4 font-medium text-gray-800"><%= product.name %></td>
-                <td class="py-3 px-4 font-medium text-gray-800"><%= product.sku %></td>
-                <td class="py-3 px-4 font-medium text-gray-800"><%= inventory_item.unit_type.titleize %></td>
-                <td class="py-3 px-4 text-gray-700"><%= inventory_item.location&.name || t("batches.show.no_location") %></td>
-                <td class="py-3 px-4 font-medium text-blue-600"><%= inventory_item.quantity %></td>
-                <td class="py-3 px-4 font-medium text-gray-800"><%= product.batch.notification_days_before_expiration %></td>
-              </tr>
-            <% end %>
+          <% @batch.inventory_items.includes(:product, :location).each do |inventory_item| %>
+            <tr class="bg-white hover:bg-gray-100 transition">
+              <td class="py-3 px-4 font-medium text-gray-800">
+                <%= link_to inventory_item.product.name, product_path(inventory_item.product), class: "text-blue-600 hover:text-blue-800" %>
+              </td>
+              <td class="py-3 px-4 font-medium text-gray-800"><%= inventory_item.product.sku %></td>
+              <td class="py-3 px-4 font-medium text-gray-800"><%= inventory_item.unit_type.titleize %></td>
+              <td class="py-3 px-4 text-gray-700">
+                <%= link_to inventory_item.location.name, location_path(inventory_item.location), class: "text-blue-600 hover:text-blue-800" %>
+              </td>
+              <td class="py-3 px-4 font-medium text-blue-600"><%= inventory_item.quantity %></td>
+              <td class="py-3 px-4">
+                <% if @batch.expiration_date %>
+                  <% days_remaining = (@batch.expiration_date - Date.today).to_i %>
+                  <% if days_remaining <= 0 %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <%= t("batches.show.expired") %>
+                    </span>
+                  <% elsif @batch.notification_days_before_expiration && days_remaining <= @batch.notification_days_before_expiration %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                      <%= t("batches.show.expiring_soon", days: days_remaining) %>
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <%= t("batches.show.active") %>
+                    </span>
+                  <% end %>
+                <% else %>
+                  <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    <%= t("batches.show.no_expiration") %>
+                  </span>
+                <% end %>
+              </td>
+            </tr>
           <% end %>
         </tbody>
       </table>
@@ -47,8 +82,13 @@
 
     <!-- Action Buttons -->
     <div class="mt-8 flex space-x-4">
-      <%= link_to t("batches.show.edit"), edit_batch_path(@batch), class: "bg-blue bg-yellow-600 text-white px-5 py-2 rounded hover:bg-yellow-700 transition" %>
-      <%= link_to t("batches.show.back"), batches_path, class: "bg-gray bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition" %>
+      <%= link_to t("batches.show.edit"), edit_batch_path(@batch), 
+          class: "bg-yellow-600 text-white px-5 py-2 rounded hover:bg-yellow-700 transition" %>
+      <%= link_to t("batches.show.back"), batches_path, 
+          class: "bg-gray-600 text-white px-5 py-2 rounded hover:bg-gray-700 transition" %>
+      <%= link_to t("batches.show.delete"), batch_path(@batch), 
+          data: { turbo_method: :delete, turbo_confirm: t("batches.show.confirm_delete") },
+          class: "bg-red-600 text-white px-5 py-2 rounded hover:bg-red-700 transition" %>
     </div>
   </div>
 </turbo-frame>

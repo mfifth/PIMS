@@ -4,11 +4,10 @@ class Product < ApplicationRecord
 
   belongs_to :supplier, optional: true
   belongs_to :account
-  belongs_to :batch, optional: true
   belongs_to :category, optional: true
 
   has_many :inventory_items, dependent: :destroy
-  has_many :location_product_capacities, dependent: :destroy
+  has_many :batches, through: :inventory_items, dependent: :destroy
   has_many :locations, through: :inventory_items
   has_many :recipe_items, dependent: :destroy
 
@@ -19,7 +18,7 @@ class Product < ApplicationRecord
 
   scope :perishable, -> { where(perishable: true) }
 
-  before_save :update_perishable_status, if: :will_save_change_to_batch_id?
+  before_save :update_perishable_status
   validate :check_recipe_usage_before_deletion, on: :destroy
 
   def self.unit_options
@@ -38,7 +37,7 @@ class Product < ApplicationRecord
   end
 
   def update_perishable_status
-    self.perishable = batch.present?
+    self.perishable = inventory_items.joins(:batch).any?
   end
 
   def check_recipe_usage_before_deletion

@@ -96,90 +96,128 @@
         </div>
 
         <% total_inventory_value = 0 %>
-        <% @inventory_items.group_by(&:product).each do |product, items| %>
-          <% items.each do |item| %>
-            <% is_low_stock = item.low_threshold.present? && item.quantity <= item.low_threshold %>
-            <% expiration_notification = product.batch&.notification_days_before_expiration.to_i.positive? %>
-            <% days_until_expiry = product.batch ? (product.batch.expiration_date - Date.today).to_i : nil %>
-            <% expiring_soon = expiration_notification && days_until_expiry && days_until_expiry <= product.batch.notification_days_before_expiration %>
+        <% @inventory_items.each do |item| %>
+          <% product = item.product %>
+          <% is_low_stock = item.low_threshold.present? && item.quantity <= item.low_threshold %>
+          <% expiration_notification = item.batch&.notification_days_before_expiration.to_i.positive? %>
+          <% days_until_expiry = item.batch ? (item.batch.expiration_date - Date.today).to_i : nil %>
+          <% expiring_soon = expiration_notification && days_until_expiry && days_until_expiry <= item.batch.notification_days_before_expiration %>
 
-            <%= link_to product_path(product), class: "block hover:no-underline", data: { turbo_frame: '_top' } do %>
-              <div class="bg-gray-50 p-6 rounded-lg shadow hover:shadow-lg transition-all <%= is_low_stock ? 'border-l-4 border-red-500' : '' %>">
-                <!-- Product Header with Stock Alert -->
-                <div class="flex justify-between items-start">
-                  <div>
-                    <span class="font-semibold text-lg"><%= product.name %></span>
-                    <h5 class="text-sm text-gray-500"><%= product.sku %></h5>
-                    <% if is_low_stock %>
-                      <span style='margin-top: 10px;' class="mt-5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                        <svg class="mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
-                          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                        </svg>
-                        <%= t("locations.show.low_stock", threshold: item.low_threshold) %>
-                      </span>
-                    <% end %>
-                  </div>
-                  <span class="text-gray-600 text-sm"><%= t("locations.show.quantity") %>: <%= item.quantity %></span>
-                </div>
-
-                <!-- Unit Type Display -->
-                <% if product.unit_type.present? %>
-                  <div class="mt-2">
-                    <span class="text-sm text-gray-600"><%= t("locations.show.unit_type") %>: <%= item.unit_type.titleize %></span>
-                  </div>
-                <% end %>
-
-                <!-- Category and Perishable Badge -->
-                <div class="mt-2 flex items-center space-x-3">
-                  <% if product.category.present? %>
-                    <span style='background-color: azure!important;' class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-azure text-gray-800">
-                      <%= product.category.name&.capitalize %>
+          <%= link_to product_path(product), class: "block hover:no-underline", data: { turbo_frame: '_top' } do %>
+            <div class="bg-gray-50 p-6 rounded-lg shadow hover:shadow-lg transition-all <%= is_low_stock ? 'border-l-4 border-red-500' : '' %>">
+              <!-- Product Header with Stock Alert -->
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="font-semibold text-lg"><%= product.name %></span>
+                  <h5 class="text-sm text-gray-500"><%= product.sku %></h5>
+                  <% if is_low_stock %>
+                    <span style='margin-top: 10px;' class="mt-5 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      <svg class="mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                      </svg>
+                      <%= t("locations.show.low_stock", threshold: item.low_threshold) %>
                     </span>
                   <% end %>
-
-                  <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= product.perishable? ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
-                    <%= product.perishable? ? t("locations.show.perishable") : t("locations.show.non_perishable") %>
-                  </span>
                 </div>
-
-                <!-- Price and Total Value -->
-                <div class="mt-4 grid grid-cols-2 gap-4">
-                  <div>
-                    <p class="text-sm text-gray-500"><%= t("locations.show.unit_price") %></p>
-                    <p class="font-medium"><%= number_to_currency(product.price) %></p>
-                  </div>
-                  <div>
-                    <p class="text-sm text-gray-500"><%= t("locations.show.total_value") %></p>
-                    <p class="font-medium">
-                      <% item_value = item.quantity * product.price %>
-                      <% total_inventory_value += item_value %>
-                      <%= number_to_currency(item_value) %>
-                    </p>
-                  </div>
-                </div>
-
-                <!-- Batch Information -->
-                <% if product.perishable? && product.batch %>
-                  <div class="mt-4">
-                    <p class="text-sm font-medium text-gray-700"><%= t("locations.show.batch_details") %>:</p>
-                    <div class="mt-2 text-sm text-gray-600">
-                      <p><%= t("locations.show.batch_number", number: product.batch.batch_number) %></p>
-                      <p class="flex items-center">
-                        <%= t("locations.show.expiration") %>: <%= product.batch.expiration_date.strftime("%b %d, %Y") %>
-                        <% if expiration_notification %>
-                          <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <svg class="mr-1 h-3 w-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                            </svg>
-                            <%= expiring_soon ? t("locations.show.expiring_soon", days: days_until_expiry) : t("locations.show.notifications_enabled") %>
-                          </span>
-                        <% end %>
-                      </p>
-                    </div>
-                  </div>
-                <% end %>
+                <span class="text-gray-600 text-sm"><%= t("locations.show.quantity") %>: <%= item.quantity %></span>
               </div>
-            <% end %>
+
+              <!-- Unit Type Display -->
+              <% if item.unit_type.present? %>
+                <div class="mt-2">
+                  <span class="text-sm text-gray-600"><%= t("locations.show.unit_type") %>: <%= item.unit_type.titleize %></span>
+                </div>
+              <% end %>
+
+              <!-- Category and Perishable Badge -->
+              <div class="mt-2 flex items-center space-x-3">
+                <% if product.category.present? %>
+                  <span style='background-color: azure!important;' class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-azure text-gray-800">
+                    <%= product.category.name&.capitalize %>
+                  </span>
+                <% end %>
+
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= product.perishable? ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %>">
+                  <%= product.perishable? ? t("locations.show.perishable") : t("locations.show.non_perishable") %>
+                </span>
+              </div>
+
+              <!-- Price and Total Value -->
+              <div class="mt-4 grid grid-cols-2 gap-4">
+                <div>
+                  <p class="text-sm text-gray-500"><%= t("locations.show.unit_price") %></p>
+                  <p class="font-medium"><%= number_to_currency(product.price) %></p>
+                </div>
+                <div>
+                  <p class="text-sm text-gray-500"><%= t("locations.show.total_value") %></p>
+                  <p class="font-medium">
+                    <% item_value = item.quantity * product.price %>
+                    <% total_inventory_value += item_value %>
+                    <%= number_to_currency(item_value) %>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Batch Information -->
+              <% if product.perishable? %>
+                <div class="mt-4">
+                  <p class="text-sm font-medium text-gray-700"><%= t("locations.show.batch_details") %>:</p>
+                  <div class="mt-2 space-y-3">
+                    <% product.inventory_items.joins(:batch)
+                              .where(location_id: @location.id)
+                              .where.not(batch_id: nil)
+                              .order('batches.expiration_date ASC')
+                              .each do |inv_item| %>
+                      <% next unless inv_item.batch %>
+                      <% batch = inv_item.batch %>
+                      <% days_until_expiry = (batch.expiration_date - Date.today).to_i %>
+                      <% expiring_soon = batch.notification_days_before_expiration.to_i.positive? && 
+                                        days_until_expiry <= batch.notification_days_before_expiration %>
+
+                      <div class="pl-4 border-l-2 <%= inv_item.id == item.id ? 'border-blue-400' : 'border-gray-300' %>">
+                        <div class="flex justify-between items-start">
+                          <div>
+                            <p class="text-sm text-gray-600">
+                              <span class="font-medium"><%= t("locations.show.batch_number", number: batch.batch_number) %></span>
+                            </p>
+                          </div>
+                          <p class="text-sm text-gray-600">
+                            <%= t("locations.show.expiration") %>: <%= batch.expiration_date.strftime("%b %d, %Y") %>
+                          </p>
+                        </div>
+                        
+                        <% if batch.notification_days_before_expiration.to_i.positive? %>
+                          <p class="flex items-center mt-1 text-xs">
+                            <% if days_until_expiry <= 0 %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full font-medium bg-red-100 text-red-800">
+                                <svg class="mr-1 h-3 w-3 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                <%= t("locations.show.expired") %>
+                              </span>
+                            <% elsif expiring_soon %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full font-medium bg-yellow-100 text-yellow-800">
+                                <svg class="mr-1 h-3 w-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                                </svg>
+                                <%= t("locations.show.expiring_soon", days: days_until_expiry) %>
+                              </span>
+                            <% else %>
+                              <span class="inline-flex items-center px-2 py-0.5 rounded-full font-medium bg-green-100 text-green-800">
+                                <svg class="mr-1 h-3 w-3 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                <%= t("locations.show.notifications_enabled") %>
+                              </span>
+                            <% end %>
+                          </p>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
           <% end %>
         <% end %>
       </div>
