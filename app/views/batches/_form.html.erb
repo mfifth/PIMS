@@ -58,15 +58,20 @@
 
       <ul
         data-inventory-search-target="results"
-        class="border border-gray-300 rounded mt-1 max-h-48 overflow-auto bg-white"
-      ></ul>
+        class="border border-gray-300 rounded mt-1 max-h-48 overflow-auto bg-white">
+      </ul>
 
       <h3 class="text-lg font-semibold mt-4"><%= t("batches.form.selected_inventory_items") %></h3>
       <ul data-inventory-search-target="itemsList" class="list-disc list-inside space-y-1 border border-gray-200 rounded p-4 max-h-48 overflow-auto bg-gray-50">
         <% @batch.inventory_items.includes(:product, :location).each do |item| %>
           <li data-item-id="<%= item.id %>">
-            <%= item.product.name %> — <%= item.location.name %> (Qty: <%= item.quantity %>)
-            <button type="button" class="ml-2 text-red-600 hover:underline" data-action="click->inventory-search#removeItem" data-item-id="<%= item.id %>">✕</button>
+            <%= item.product.name %> (SKU: <%= item.product.sku %>, Unit Type: <%= item.unit_type %>) — <%= item.location.name %> (Qty: <%= item.quantity %>)
+            <button type="button"
+                    class="ml-2 text-red-600 hover:underline"
+                    data-action="click->inventory-search#removeItem"
+                    data-item-id="<%= item.id %>">
+              ✕
+            </button>
           </li>
         <% end %>
       </ul>

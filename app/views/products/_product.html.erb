@@ -19,7 +19,7 @@
         <% if inventory_item.batch.present? %>
           <p class="text-xs text-gray-500 mt-1">
             <%= t('products.batch_number') %>: <%= inventory_item.batch.batch_number %> |
-            <%= t('products.mfg') %>: <%= inventory_item.batch.manufactured_date %> |
+            <%= t('products.mfg') %>: <%= inventory_item.batch.manufactured_date || 'N/A' %> |
             <%= t('products.exp') %>: <%= inventory_item.batch.expiration_date %>
           </p>
         <% end %>

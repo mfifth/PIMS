@@ -66,25 +66,25 @@ class BatchesController < ApplicationController
     query = params[:query].to_s.strip
     batch = Batch.find_by(id: params[:batch_id])
   
-    # Determine case-insensitive match operator
     adapter = ActiveRecord::Base.connection.adapter_name.downcase
-    like_operator = adapter.include?("sqlite") ? "LIKE" : "ILIKE"
+    like_op = adapter.include?("sqlite") ? "LIKE" : "ILIKE"
+    pattern = "%#{query}%"
   
-    inventory_items = Current.account.inventory_items
-      .includes(:product, :location)
-      .where("products.name #{like_operator} :q OR locations.name #{like_operator} :q", q: "%#{query}%")
-      .references(:product, :location)
+    inventory_items = InventoryItem
+      .joins(:product, :location)
+      .where(products: { account_id: Current.account.id })
+      .where("products.name #{like_op} :q OR locations.name #{like_op} :q", q: pattern)
   
-    if batch
-      inventory_items = inventory_items.where.not(id: batch.inventory_item_ids)
-    end
+    inventory_items = inventory_items.where.not(id: batch.inventory_item_ids) if batch
   
-    results = inventory_items.limit(10).map do |item|
+    results = inventory_items.limit(5).map do |item|
       {
-        id: item.id,
-        product_name: item.product.name,
+        id:            item.id,
+        product_name:  item.product.name,
+        sku:            item.product.sku,
+        unit_type:     item.unit_type,
         location_name: item.location.name,
-        quantity: item.quantity
+        quantity:      item.quantity
       }
     end
   
