@@ -88,6 +88,7 @@ Rails.application.routes.draw do
   post 'update_inventory', to: 'locations#update_inventory'
 
   get 'inventory_items/lookup', to: 'inventory_items#lookup'
+  delete 'inventory_items/:id', to: 'inventory_items#destroy'
 
   get 'subscriptions/success', to: 'subscriptions#success'
   get 'subscriptions/cancel', to: 'subscriptions#cancel'

@@ -8,4 +8,13 @@ class InventoryItemsController < ApplicationController
       unit_type: item&.unit_type
     }
   end
+
+  def destroy
+    @inventory_item = InventoryItem.find(params[:id])
+    @inventory_item.destroy
+  
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.remove(@inventory_item) }
+    end
+  end  
 end

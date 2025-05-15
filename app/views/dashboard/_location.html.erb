@@ -16,7 +16,7 @@
     <% total_value = all_items.sum { |item| item.quantity * (item.product.price || 0) } %>
 
     <p class="text-md text-gray-500">
-      <%= t("locations.items_count", count: perishable_count + non_perishable_count) %>
+      <%= t("locations.products_count", count: location.products.size) %>
     </p>
     <p class="text-md text-gray-500">
       <%= t("locations.total_value", value: number_with_precision(total_value, precision: 2)) %>

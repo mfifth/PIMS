@@ -160,6 +160,7 @@ es:
     delete_category: "Eliminar Categoría"
     confirm_remove_category: "¿Está seguro de que desea eliminar esta categoría?"
     confirm_delete_category_from_all: "¿Está seguro de que desea eliminar esta categoría de todos los productos?"
+    confirm_delete_item: "¿Estás seguro de que deseas eliminar esto de tu inventario?"
     expiration: "F.venc: %{date}"
     qty: "Cantidad: %{count}"
     location_with_name: "Ubicación: %{name}"
