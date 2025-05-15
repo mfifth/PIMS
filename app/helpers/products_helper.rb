@@ -1,7 +1,7 @@
 module ProductsHelper
   def show_price(product)
     return unless product.price.positive?
-    "#{I18n.t('products.price')}: #{product.price}"
+    "| #{I18n.t('products.price')}: #{product.price}"
   end
 
   def show_batch_info(item)

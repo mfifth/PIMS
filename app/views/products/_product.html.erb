@@ -3,7 +3,7 @@
     <div class="text-lg font-semibold text-gray-800"><%= product.name.titleize %></div>
     <div class="text-sm text-gray-600">
       <%= t('products.sku_title') %>: <%= product.sku %> |
-      <%= t('products.category') %>: <%= product.category&.name&.titleize || t('products.na') %> |
+      <%= t('products.category') %>: <%= product.category&.name&.titleize || t('products.na') %>
       <%= show_price(product) %>
     </div>
   </div>
