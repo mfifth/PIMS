@@ -174,7 +174,7 @@
                       <% expiring_soon = batch.notification_days_before_expiration.to_i.positive? && 
                                         days_until_expiry <= batch.notification_days_before_expiration %>
 
-                      <div class="pl-4 border-l-2 <%= inv_item.id == item.id ? 'border-blue-400' : 'border-gray-300' %>">
+                      <div class="border-l-2 <%= inv_item.id == item.id ? 'border-blue-400' : 'border-gray-300' %>">
                         <div class="flex justify-between items-start">
                           <div>
                             <p class="text-sm text-gray-600">
