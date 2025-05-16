@@ -159,7 +159,12 @@
               
               <div class="border-b border-gray-100 pb-4 mb-4 last:border-0">
                 <div class="flex justify-between items-center">
-                  <h3 class="font-medium text-gray-800"><%= recipe.name %></h3>
+                  <div>
+                    <h3 class="font-medium text-gray-800"><%= recipe.name %></h3>
+                    <p class="text-sm font-medium text-green-600">
+                      <%= number_to_currency(recipe.price * quantity) %> total
+                    </p>
+                  </div>
                   <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                     <%= quantity %> can make
                   </span>

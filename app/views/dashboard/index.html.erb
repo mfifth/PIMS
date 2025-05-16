@@ -3,27 +3,6 @@
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <!-- Locations Card -->
-    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.locations') %></h2>
-      <p class="text-4xl font-bold text-green-600"><%= @locations.total_count %></p>
-
-      <div id="locations-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container">
-        <ul class="space-y-3" id="locations-list">
-          <% @locations.each do |location| %>
-            <%= render 'dashboard/location', location: location %>
-          <% end %>
-        </ul>
-        
-        <% if @locations.next_page %>
-          <div id="locations-pagination" class="hidden">
-            <%= link_to "Next page", dashboard_path(locations_page: @locations.next_page, card: 'locations'), 
-                        rel: 'next', data: { turbo_frame: "_top" } %>
-          </div>
-        <% end %>
-      </div>
-    </div>
-
     <!-- Products Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('products.index.title') %></h2>
@@ -65,5 +44,26 @@
         <% end %>
       </div>
     </div> 
+
+    <!-- Recipes Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.recipes') %></h2>
+      <p class="text-4xl font-bold text-green-600"><%= @recipes.size %></p>
+
+      <div id="recipes-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container">
+        <ul class="space-y-3" id="recipes-list">
+          <% @recipes.each do |recipe| %>
+            <%= render 'dashboard/recipe', recipe: recipe %>
+          <% end %>
+        </ul>
+        
+        <% if @recipes.next_page %>
+          <div id="recipes-pagination" class="hidden">
+            <%= link_to "Next page", dashboard_path(recipes_page: @recipes.next_page, card: 'recipes'), 
+                        rel: 'next', data: { turbo_frame: "_top" } %>
+          </div>
+        <% end %>
+      </div>
+    </div>
   </div>
 </div>

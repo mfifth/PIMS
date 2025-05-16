@@ -24,6 +24,9 @@
 
             <%= form.label :uid, t("recipes.form.uid_label"), class: "block font-semibold text-gray-700 mt-4" %>
             <%= form.text_field :uid, autocomplete: "off", class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
+
+            <%= form.label :price, t("recipes.form.price"), class: "block font-semibold text-gray-700 mt-4" %>
+            <%= form.number_field :price, step: 0.01, min: 0, class: "w-full border rounded px-3 py-2 mt-1 focus:ring-blue-500 focus:border-blue-500" %>
           </div>
 
           <div class="mb-4 relative">

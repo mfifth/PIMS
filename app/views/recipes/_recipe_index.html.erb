@@ -36,6 +36,9 @@
               <div>
                 <h2 class="text-xl font-semibold"><%= recipe.name %></h2>
                 <p class="text-sm text-gray-500 mt-1"><%= t("recipes.index.recipe_id", id: recipe.uid) %></p>
+                <p class="text-sm font-medium text-gray-500 mt-1">
+                  <%= t("recipes.index.price") %>: <%= number_to_currency(recipe.price) %>
+                </p>
               </div>
               <div class="text-blue-500 hover:text-blue-700">
                 <%= t("recipes.index.edit") %>

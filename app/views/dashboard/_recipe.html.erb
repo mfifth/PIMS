@@ -1,0 +1,31 @@
+<li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition flex flex-col">
+  <div class="flex justify-between items-center">
+    <a href="<%= edit_recipe_path(recipe) %>" class="text-green-600 font-medium">
+      <%= recipe.name %>
+    </a>
+    <span class="text-sm font-medium text-gray-700">
+      <%= number_to_currency(recipe.price) %>
+    </span>
+  </div>
+
+  <div class="mt-2 text-sm text-gray-700">
+    <p class="text-xs text-gray-500 mb-2">
+      <%= t("recipes.index.recipe_id", id: recipe.uid) %>
+    </p>
+
+    <h3 class="text-sm font-medium text-gray-800 mb-1">
+      <%= t("recipes.index.ingredients") %>:
+    </h3>
+    
+    <ul class="space-y-1">
+      <% recipe.recipe_items.each do |item| %>
+        <li class="flex justify-between">
+          <span class="text-gray-700"><%= item.product.name %></span>
+          <span class="text-gray-500">
+            <%= item.quantity %> <%= item.unit.humanize %>
+          </span>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</li>

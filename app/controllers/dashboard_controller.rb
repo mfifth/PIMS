@@ -1,14 +1,12 @@
 class DashboardController < ApplicationController
   def index
     load_batches if should_load?('batches')
-    load_locations if should_load?('locations')
+    load_recipes if should_load?('recipes')
     load_products if should_load?('products')
   
     @low_stock_items = {}
     load_low_stock_items
-  
-    @recipes = Current.account.recipes.includes(:recipe_items)
-  
+    
     respond_to do |format|
       format.html
       format.turbo_stream
@@ -28,11 +26,8 @@ class DashboardController < ApplicationController
                   .page(params[:batches_page]).per(5)
   end
 
-  def load_locations
-    @locations = Current.account.locations
-                    .includes(inventory_items: [:product, :batch])
-                    .order(created_at: :asc)
-                    .page(params[:locations_page]).per(5)
+  def load_recipes
+    @recipes = Current.account.recipes.includes(:recipe_items).page(params[:recipes_page]).per(5)
   end
 
   def load_products
