@@ -4,7 +4,6 @@
     <div class="text-sm text-gray-600">
       <%= t('products.sku_title') %>: <%= product.sku %> |
       <%= t('products.category') %>: <%= product.category&.name&.titleize || t('products.na') %>
-      <%= show_price(product) %>
     </div>
   </div>
 
@@ -17,7 +16,8 @@
             <div>
               <p class="font-medium">
                 <%= inventory_item.location.name %>: 
-                <%= "#{inventory_item.quantity} #{inventory_item.unit_type.titleize}" %> <%= t('products.in_stock') %>
+                <%= "#{inventory_item.quantity} #{inventory_item.unit_type.titleize}" %>
+                <%= "| Unit Price: #{inventory_item.price}" if inventory_item.price.present? %>
               </p>
     
               <% if inventory_item.batch.present? %>

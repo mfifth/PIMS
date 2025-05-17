@@ -133,7 +133,7 @@ en:
   products:
     sku_title: "SKU"
     category: "Category"
-    price: "Price"
+    price: "Price Per Unit"
     mfg: "MFG"
     exp: "EXP"
     na: "N/A"
@@ -146,7 +146,6 @@ en:
     sku: "SKU/Barcode (Use this as a unique external ID)"
     select_existing_category: "Select Existing Category"
     create_new_category: "Or Create New Category"
-    price: "Price"
     description: "Description"
     is_perishable: "Is this product perishable?"
     batch_info: "Batch Information"

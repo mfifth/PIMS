@@ -130,7 +130,7 @@ class ProductsController < ApplicationController
   def product_params
     params.require(:product).permit(
       :name, :sku, :unit_type, :category_name, :category_id, 
-      :description, :price, :perishable, :supplier_id, 
+      :description, :perishable, :supplier_id, 
       :user_id, :account_id
     )
   end
@@ -138,7 +138,7 @@ class ProductsController < ApplicationController
   def inventory_item_params
     params.require(:product).permit(
       :quantity, :location_id, :unit_type, 
-      :daily_usage, :low_threshold,
+      :daily_usage, :low_threshold, :price,
       :batch_number, :manufactured_date,
       :expiration_date, :notification_days_before_expiration
     )
@@ -161,7 +161,7 @@ class ProductsController < ApplicationController
         account_id: Current.account.id,
         batch_number: inventory_item_params[:batch_number]
       )
-      
+
       batch.update!(
         manufactured_date: inventory_item_params[:manufactured_date],
         expiration_date: inventory_item_params[:expiration_date],
@@ -174,7 +174,8 @@ class ProductsController < ApplicationController
     inventory_item.update!(
       quantity: inventory_item_params[:quantity],
       unit_type: inventory_item_params[:unit_type],
-      low_threshold: inventory_item_params[:low_threshold]
+      low_threshold: inventory_item_params[:low_threshold],
+      price: inventory_item_params[:price]
     )
 
     Location.find(inventory_item_params[:location_id]).update(updated_at: Time.current)
@@ -197,7 +198,8 @@ class ProductsController < ApplicationController
       quantity: inventory_item_params[:quantity],
       unit_type: inventory_item_params[:unit_type],
       daily_usage: inventory_item_params[:daily_usage],
-      low_threshold: inventory_item_params[:low_threshold]
+      low_threshold: inventory_item_params[:low_threshold],
+      price: inventory_item_params[:price]
     )
 
     if @product.perishable? && inventory_item_params[:batch_number].present?

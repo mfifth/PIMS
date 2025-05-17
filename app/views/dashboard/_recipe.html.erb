@@ -21,9 +21,6 @@
       <% recipe.recipe_items.each do |item| %>
         <li class="flex justify-between">
           <span class="text-gray-700"><%= item.product.name %></span>
-          <span class="text-gray-500">
-            <%= item.quantity %> <%= item.unit.humanize %>
-          </span>
         </li>
       <% end %>
     </ul>
