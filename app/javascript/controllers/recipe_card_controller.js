@@ -65,7 +65,10 @@ export default class extends Controller {
 
   recalculate() {
     const selectedLocationId = this.locationSelectTarget.value;
-    if (!selectedLocationId) return;
+    if (!selectedLocationId) {
+      this.resetTotals();
+      return;
+    }
 
     let totalCost = 0;
     let ingredientsHTML = '';
@@ -75,19 +78,48 @@ export default class extends Controller {
         opt => opt.locationId === selectedLocationId
       );
 
-      if (!inventoryOption) return;
+      if (!inventoryOption) {
+        ingredientsHTML += `
+          <div class="flex justify-between items-center py-2 border-b text-red-500">
+            <div class="w-2/3">
+              ${item.product} (${item.quantity} ${item.unit})
+              <div class="text-xs">Not available at this location</div>
+            </div>
+            <div class="w-1/3 text-right font-mono">-</div>
+          </div>
+        `;
+        return;
+      }
 
       const conversionRate = this.getConversionRate(item.unit, inventoryOption.unitType);
-      if (!conversionRate) return;
+      if (!conversionRate) {
+        ingredientsHTML += `
+          <div class="flex justify-between items-center py-2 border-b text-yellow-600">
+            <div class="w-2/3">
+              ${item.product} (${item.quantity} ${item.unit})
+              <div class="text-xs">Cannot convert ${item.unit} to ${inventoryOption.unitType}</div>
+            </div>
+            <div class="w-1/3 text-right font-mono">-</div>
+          </div>
+        `;
+        return;
+      }
 
       const adjustedQty = item.quantity * conversionRate;
       const cost = adjustedQty * inventoryOption.price;
       totalCost += cost;
 
+      // Calculate price per inventory unit (shows actual purchase price)
+      const unitPrice = inventoryOption.price;
+
       ingredientsHTML += `
         <div class="flex justify-between items-center py-2 border-b">
           <div class="w-2/3">
             ${item.product} (${item.quantity} ${item.unit})
+            <div class="text-xs text-gray-500">
+              From: ${inventoryOption.locationName} 
+              <span class="font-mono">@ $${unitPrice.toFixed(2)}/${inventoryOption.unitType}</span>
+            </div>
           </div>
           <div class="w-1/3 text-right font-mono">$${cost.toFixed(2)}</div>
         </div>
@@ -103,6 +135,12 @@ export default class extends Controller {
     this.totalCostTarget.textContent = totalCost.toFixed(2);
     this.profitTarget.textContent = profit.toFixed(2);
     this.marginPctTarget.textContent = margin;
+  }
+
+  resetTotals() {
+    this.totalCostTarget.textContent = "0.00";
+    this.profitTarget.textContent = "0.00";
+    this.marginPctTarget.textContent = "0.00";
   }
 
   getConversionRate(fromUnit, toUnit) {

@@ -201,6 +201,7 @@ en:
         low_stock: "Low Stock Alert"
         none: "No inventory data for this location."
         no_locations: "No inventory locations found for this product."
+        price: "Unit Price"
       actions:
         edit: "Edit Product"
         back: "Back to Products"
