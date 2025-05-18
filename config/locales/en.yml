@@ -217,7 +217,7 @@ en:
     confirm_remove_category: "Are you sure you want to remove this category?"
     confirm_delete_category_from_all: "Are you sure you want to delete this category from all products?"
     confirm_remove_batch: "Are you sure you want to remove the batch from this product?"
-    confirm_delete_item: "Are you sure you want to delete this from your inventory?"
+    confirm_delete_item: "Are you sure you want to delete this item from your location?"
     expiration: "EXP: %{date}"
     qty: "Qty: %{count}"
     location_with_name: "Location: %{name}"
