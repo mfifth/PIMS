@@ -48,7 +48,7 @@ class CsvImporter
     )
 
     if row_data['batch_number'].present? && row_data['expiration_date'].present?
-      product.batch_id = find_or_create_batch(row_data['batch_number'], row_data).id
+      inventory_item.batch = find_or_create_batch(row_data['batch_number'], row_data)
     end
 
     product.save!
