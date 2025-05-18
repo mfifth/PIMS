@@ -4,8 +4,7 @@ class CsvImporter
     @location = location
     @file_contents = file_contents
     @account = user.account
-    @failed_products = []
-    @batch_cache = {}
+    @failed_rows = []
   end
 
   def import
@@ -17,7 +16,7 @@ class CsvImporter
   private
 
   def preload_caches
-    skus = CSV.parse(@file_contents, headers: true).map { |row| row['sku'] }
+    skus = CSV.parse(@file_contents, headers: true).map { |row| row['sku'] }.compact
     @product_cache = Product.where(sku: skus, account: @account).index_by(&:sku)
     @category_cache = @account.categories.index_by(&:name)
   end
@@ -25,26 +24,31 @@ class CsvImporter
   def process_csv
     CSV.parse(@file_contents, headers: true) do |row|
       begin
-        ActiveRecord::Base.transaction do
-          import_row(row.to_h)
-        end
-      rescue ActiveRecord::RecordInvalid => e
-        @failed_products << { name: row['name'], errors: e.record.errors.full_messages.join(", ") }
-      rescue StandardError => e
-        Rails.logger.error "Unexpected error with row #{row['sku']}: #{e.message}"
-        @failed_products << { name: row['name'], errors: I18n.t("csv_import.errors.unexpected", message: e.message) }
+        import_row(row.to_h)
+      rescue => e
+        @failed_rows << {
+          name: row['name'] || 'Unknown',
+          sku: row['sku'],
+          errors: e.message,
+          row: row.to_h
+        }
+        Rails.logger.error "Error processing row #{row.to_h}: #{e.message}\n#{e.backtrace.join("\n")}"
       end
     end
   end
 
   def import_row(row_data)
+    unless row_data['sku'].present? && row_data['name'].present?
+      raise "Missing required fields: SKU and Name are required"
+    end
+
     product = find_or_initialize_product(row_data)
     inventory_item = @location.inventory_items.find_or_initialize_by(product: product)
 
     inventory_item.assign_attributes(
-      quantity: row_data['quantity'].presence || inventory_item.quantity,
-      low_threshold: row_data['low_stock_alert'].presence || inventory_item.low_threshold,
-      unit_type: row_data['unit_type'].presence || 'units'
+      quantity: row_data['quantity'].to_f,
+      low_threshold: row_data['low_stock_alert'].to_f,
+      unit_type: row_data['unit_type'] || 'units'
     )
 
     if row_data['batch_number'].present? && row_data['expiration_date'].present?
@@ -60,8 +64,8 @@ class CsvImporter
 
     product.assign_attributes(
       name: row['name'],
-      price: row['price'],
-      perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'])
+      price: row['price'].to_f,
+      perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'] || false)
     )
 
     if row['category'].present?
@@ -73,20 +77,28 @@ class CsvImporter
   end
 
   def find_or_create_batch(batch_number, row)
-    @batch_cache[batch_number] ||= Batch.find_or_create_by!(account: @account, batch_number: batch_number) do |batch|
+    Batch.find_or_create_by!(account: @account, batch_number: batch_number) do |batch|
       batch.manufactured_date = row['manufactured_date']
       batch.expiration_date = row['expiration_date']
-      batch.notification_days_before_expiration = row['notification_days_before_expiration'] || 0
+      batch.notification_days_before_expiration = row['notification_days_before_expiration'].to_i || 0
     end
   end
 
   def notify_results
-    if @failed_products.any?
-      notify(I18n.t("csv_import.completed_with_errors"), :alert)
+    if @failed_rows.any?
+      notify_summary = I18n.t("csv_import.completed_with_errors", 
+        success_count: CSV.parse(@file_contents, headers: true).count - @failed_rows.count,
+        error_count: @failed_rows.count
+      )
+      notify(notify_summary, :alert)
 
-      @failed_products.each do |failed_product|
+      @failed_rows.each do |failed_row|
         notify(
-          I18n.t("csv_import.failed_product", name: failed_product[:name], errors: failed_product[:errors]),
+          I18n.t("csv_import.failed_row", 
+            name: failed_row[:name],
+            sku: failed_row[:sku],
+            errors: failed_row[:errors]
+          ),
           :alert
         )
       end

@@ -429,9 +429,9 @@ en:
     ago: "%{time} ago"
     sync_complete: "Now that your menu items have been synced you can add products/ingredients and link them to your recipes to see your inventory update in real time."
   csv_import:
-    success: "CSV import completed successfully!"
     completed_with_errors: "CSV import completed with errors. Some products failed to import."
-    failed_product: "Failed to import product: %{name} - Errors: %{errors}"
+    failed_row: "Failed to import %{name} (SKU: %{sku}): %{errors}"
+    success: "Import completed successfully"
     errors:
       malformed: "Failed, Data malformed: %{error}"
       unexpected: "Unexpected error: %{message}"
