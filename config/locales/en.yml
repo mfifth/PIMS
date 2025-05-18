@@ -464,7 +464,7 @@ en:
           title: "Batch Tracking"
           description: "Track perishable products through batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
         recipes:
-          title: "Recipe Management"
+          title: "Recipe Cost & Analysis"
           description: "Link products to recipes as ingredients to see what's currently available and calculate profit margins ahead of time."
         reporting:
           title: "Advanced Reporting"
