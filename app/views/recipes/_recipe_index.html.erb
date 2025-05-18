@@ -5,7 +5,7 @@
   </div>
 
   <%= form_with url: recipes_path, method: :get, local: true, class: "mb-6" do |f| %>
-    <div class="relative">
+    <div class="relative rounded-lg bg-white">
       <%= f.text_field :search, 
             placeholder: t("recipes.index.search_placeholder"),
             value: params[:search], autocomplete: "off",
