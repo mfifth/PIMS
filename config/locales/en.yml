@@ -286,6 +286,16 @@ en:
     products: "products"
     csv_import_notice: "Import started - you'll receive a notification when complete"
     csv_file_warning: "Please select a CSV file"
+    recipes_for_location: "Recipes for %{location}"
+    close: "Close"
+    total_value: "total value"
+    can_make_count:
+      one: "can make 1"
+      other: "can make %{count}"
+    available_until: "Available until %{date}"
+    no_recipes_title: "No recipes available"
+    no_recipes_description: "No recipes with ingredients available at this location"
+    back_to_location: "Back to location details"
     perishable:
       title: "Perishable"
       items: "%{count} items"

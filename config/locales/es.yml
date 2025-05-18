@@ -254,6 +254,16 @@ es:
     products: productos
     csv_import_notice: "Importación iniciada - recibirás una notificación cuando se complete"
     csv_file_warning: "Por favor selecciona un archivo CSV"
+    recipes_for_location: "Recetas para %{location}"
+    close: "Cerrar"
+    total_value: "valor total"
+    can_make_count:
+      one: "puede hacer 1"
+      other: "puede hacer %{count}"
+    available_until: "Disponible hasta %{date}"
+    no_recipes_title: "No hay recetas disponibles"
+    no_recipes_description: "No hay recetas con ingredientes disponibles en esta ubicación"
+    back_to_location: "Volver a detalles de ubicación"
     perishable:
       title: "Perecedero"
       items: "%{count} artículos"
