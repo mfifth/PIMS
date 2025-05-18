@@ -1,5 +1,5 @@
 <turbo-frame id='main'>
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md" data-controller='batches'>
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md" data-controller="product-form" data-product-form-product-id-value="<%= @product.id %>">
     <h1 class="text-3xl font-semibold text-center text-gray-800 mb-6">
       <%= @product.new_record? ? t('products.create_new') : t('products.edit') %>
     </h1>
@@ -59,7 +59,7 @@
         </div>
 
         <div class="mt-4 flex items-center">
-          <%= form.check_box :perishable, class: "h-5 w-5 text-green-600", id: "perishable_checkbox", data: { action: "change->batches#toggleBatchFields" } %>
+          <%= form.check_box :perishable, class: "h-5 w-5 text-green-600", id: "perishable_checkbox", data: { action: "change->product-form#updateFieldsVisibility" } %>
           <%= form.label :perishable, t('products.is_perishable'), class: "ml-2 text-sm font-medium text-gray-700" %>
         </div>
       </div>
@@ -104,7 +104,7 @@
       <% end %>
 
       <!-- Batch Information -->
-      <div id="batch_fields" class="border-b pb-4" data-batches-target="batchFields" style="<%= @product.perishable? ? '' : 'display: none;' %>">
+      <div id="batch_fields" class="border-b pb-4" data-product-form-target="batchFields" style="<%= @product.perishable? ? '' : 'display: none;' %>">
         <h2 class="text-lg font-medium text-gray-700 mb-2"><%= @product.batches.any? ? t('products.add_another_batch') : t('products.batch_info') %></h2>
 
         <div>
@@ -114,11 +114,13 @@
                 :id, :batch_info, 
                 { include_blank: t('products.create_new_batch') }, 
                 { class: "w-full px-4 py-2 border rounded-lg", 
-                  id: "batch_select", 
-                  data: { action: "change->batches#toggleNewBatchFields" } } %>
+                  data: { 
+                    product_form_target: "batchSelect",
+                    action: "change->product-form#updateNewBatchFields"
+                  } } %>
         </div>
 
-        <div id="new_batch_fields" data-batches-target="newBatchFields" style="<%= @product.batches.any? && params[:selected_batch_id].blank? ? 'display: none;' : '' %>">
+        <div id="new_batch_fields" data-product-form-target="newBatchFields" style="<%= @product.batches.any? && params[:selected_batch_id].blank? ? 'display: none;' : '' %>">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
             <div>
               <%= form.label :batch_number, t('products.batch_number'), id: 'batch-number', class: "block text-sm font-medium text-gray-700" %>
@@ -148,7 +150,7 @@
       </div>
 
       <!-- Inventory & Price Per Unit Section -->
-      <div class="border-b pb-4" data-controller="lookup" data-lookup-product-id-value="<%= @product.id %>">
+      <div class="border-b pb-4">
         <h2 class="text-lg font-medium text-gray-700 mb-4"><%= t('products.inventory_info') %></h2>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -158,22 +160,25 @@
                   Location.where(account_id: Current.account.id).pluck(:name, :id),
                   { include_blank: t('products.select_location') }, 
                   { class: "w-full px-3 py-2 border rounded-md",
-                    data: { lookup_target: "locationSelect", action: "change->lookup#fetchInventory" } } %>
+                    data: { 
+                      product_form_target: "locationSelect",
+                      action: "change->product-form#fetchInventory"
+                    } } %>
           </div>
 
           <div>
             <%= form.label :quantity, t('products.quantity'), class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :quantity, required: true, step: 1, min: 0, class: "w-full px-3 py-2 border rounded-md", data: { lookup_target: "quantity" } %>
+            <%= form.number_field :quantity, required: true, step: 1, min: 0, class: "w-full px-3 py-2 border rounded-md", data: { product_form_target: "quantity" } %>
           </div>
 
           <div>
             <%= form.label :price, t('products.price_per_unit'), class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :price, step: 0.01, min: 0, class: "w-full px-3 py-2 border rounded-md", data: { lookup_target: "price" } %>
+            <%= form.number_field :price, step: 0.01, min: 0, class: "w-full px-3 py-2 border rounded-md", data: { product_form_target: "price" } %>
           </div>
 
           <div>
             <%= form.label :low_threshold, t('products.low_stock_alert'), class: "block text-sm font-medium text-gray-700" %>
-            <%= form.number_field :low_threshold, class: "w-full px-3 py-2 border rounded-md", data: { lookup_target: "lowThreshold" } %>
+            <%= form.number_field :low_threshold, class: "w-full px-3 py-2 border rounded-md", data: { product_form_target: "lowThreshold" } %>
           </div>
 
           <div>
@@ -182,7 +187,7 @@
                 Product::VALID_UNITS.map { |u| [u.humanize, u] },
                 { selected: @product.unit_type.presence || 'units', include_blank: false },
                 { class: "w-full px-4 py-2 border rounded-lg",
-                  data: { lookup_target: "unitType" },
+                  data: { product_form_target: "unitType" },
                   prompt: false } %>
           </div>
         </div>

@@ -6,7 +6,8 @@ class InventoryItemsController < ApplicationController
       quantity: item&.quantity,
       low_threshold: item&.low_threshold,
       unit_type: item&.unit_type,
-      price: item&.price
+      price: item&.price,
+      batch_id: item&.batch.try(:id)
     }
   end
 
