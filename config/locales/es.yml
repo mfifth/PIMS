@@ -484,8 +484,8 @@ es:
           title: "Seguimiento de Lotes"
           description: "Sigue los productos perecederos a través de lotes con fechas de caducidad y números de lote. Recibe alertas automáticas por mensaje de texto o correo electrónico."
         recipes:
-          title: "Gestión de Recetas"
-          description: "Crea y gestiona recetas con listas de ingredientes para ver lo que está disponible y rastrear instantáneamente el uso del inventario después de cada venta."
+          title: "Costo y Análisis de Recetas"
+          description: "Vincula productos a recetas como ingredientes para ver qué está disponible y calcular los márgenes de ganancia con anticipación."
         reporting:
           title: "Reportes Avanzados"
           description: "Genera reportes detallados sobre niveles de inventario, información de lotes y movimiento de productos."
