@@ -76,7 +76,7 @@
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('products.batch_number') %></th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('products.manufactured_date') %></th>
                   <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('products.expiration_date') %></th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('location') %></th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><%= t('products.location') %></th>
                   <th class="px-6 py-3"></th>
                 </tr>
               </thead>
@@ -91,7 +91,7 @@
                       <%= inventory_item&.location&.name || 'N/A' %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= link_to t('remove'), remove_batch_product_path(@product, batch_id: batch.id), 
+                      <%= link_to t('products.remove'), remove_batch_product_path(@product, batch_id: batch.id), 
                           data: { turbo_method: :delete, turbo_confirm: t('products.confirm_remove_batch') },
                           class: "text-red-500 hover:text-red-700" %>
                     </td>
@@ -184,11 +184,12 @@
           <div>
             <%= form.label :unit_type, t('products.unit_type_title'), class: "block text-sm font-medium text-gray-700" %>
             <%= form.select :unit_type, 
-                Product::VALID_UNITS.map { |u| [u.humanize, u] },
+                Product::VALID_UNITS.map { |u| [I18n.t("units.#{u}"), u] },
                 { selected: @product.unit_type.presence || 'units', include_blank: false },
                 { class: "w-full px-4 py-2 border rounded-lg",
                   data: { product_form_target: "unitType" },
                   prompt: false } %>
+
           </div>
         </div>
       </div>

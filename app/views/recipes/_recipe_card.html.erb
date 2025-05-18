@@ -1,4 +1,11 @@
-<div data-controller="recipe-card" class="bg-white rounded-lg shadow p-6 hover:bg-gray-50 transition-colors duration-200">
+<div
+  data-controller="recipe-card"
+  data-recipe-card-i18n-missing-inventory-value="<%= t('recipes.margin_calculator.missing_inventory', product: '%{product}') %>"
+  data-recipe-card-i18n-invalid-price-value="<%= t('recipes.margin_calculator.invalid_price') %>"
+  data-recipe-card-i18n-from-location-price-value="<%= t('recipes.margin_calculator.from_location_price', location: '%{location}', price: '%{price}', unit: '%{unit}') %>"
+  data-recipe-card-i18n-select-location-value="<%= t('recipes.margin_calculator.select_location') %>"
+  class="bg-white rounded-lg shadow p-6 hover:bg-gray-50 transition-colors duration-200"
+>
   <!-- Header -->
   <div class="flex justify-between items-start">
     <div>
@@ -22,15 +29,19 @@
         <li class="recipe-item flex flex-col gap-1 text-sm"
             data-product-name="<%= product.name %>"
             data-quantity="<%= item.quantity %>"
-            data-unit="<%= item.unit %>">
-          <span class="font-medium"><%= product.name %> - <%= item.quantity %> <%= t("units.#{item.unit}", default: item.unit.humanize) %></span>
+            data-unit="<%= item.unit %>"
+            data-translated-unit="<%= t("units.#{item.unit}", default: item.unit.humanize) %>">
+          <span class="font-medium">
+            <%= product.name %> – <%= item.quantity %> <%= t("units.#{item.unit}", default: item.unit.humanize) %>
+          </span>
           
           <% product.inventory_items.each do |inv| %>
             <div class="inventory-option hidden"
-                 data-inventory-unit="<%= inv.unit_type %>"
-                 data-price-per-unit="<%= inv.price %>"
-                 data-location-id="<%= inv.location_id %>"
-                 data-location-name="<%= inv.location&.name || t('recipes.location.unknown') %>">
+                data-inventory-unit="<%= inv.unit_type %>"
+                data-translated-unit="<%= t("units.#{inv.unit_type}", default: inv.unit_type.humanize) %>"
+                data-price-per-unit="<%= inv.price %>"
+                data-location-id="<%= inv.location_id %>"
+                data-location-name="<%= inv.location&.name || t('recipes.location.unknown') %>">
             </div>
           <% end %>
         </li>
@@ -47,26 +58,30 @@
 
     <!-- Location Selector -->
     <div class="mb-6">
-      <label class="block text-sm font-medium mb-1"><%= t("recipes.margin_calculator.available_locations") %></label>
-      <select 
+      <label class="block text-sm font-medium mb-1">
+        <%= t("recipes.margin_calculator.available_locations") %>
+      </label>
+      <select
         class="w-full border px-3 py-2 rounded"
         data-action="change->recipe-card#recalculate"
         data-recipe-card-target="locationSelect"
       >
         <option value=""><%= t("recipes.margin_calculator.select_location") %></option>
-        <!-- Options will be populated by JavaScript -->
+        <!-- Options populated by JS -->
       </select>
     </div>
 
     <!-- Ingredients Cost Breakdown -->
     <div class="space-y-4 mb-6" data-recipe-card-target="ingredientsList">
-      <!-- Will be populated by JavaScript -->
+      <!-- Populated by JS -->
     </div>
 
     <!-- Selling Price + Totals -->
     <div class="space-y-4 bg-gray-50 p-4 rounded-lg">
       <div>
-        <label class="block text-sm font-medium mb-1"><%= t("recipes.margin_calculator.selling_price") %></label>
+        <label class="block text-sm font-medium mb-1">
+          <%= t("recipes.margin_calculator.selling_price") %>
+        </label>
         <input
           type="number" step="0.01"
           value="<%= recipe.price %>"
@@ -92,7 +107,8 @@
       </div>
     </div>
 
-    <button data-action="click->recipe-card#toggle" class="mt-4 text-sm text-gray-500 hover:text-gray-700 w-full py-2 border border-gray-200 rounded-md">
+    <button data-action="click->recipe-card#toggle"
+            class="mt-4 text-sm text-gray-500 hover:text-gray-700 w-full py-2 border border-gray-200 rounded-md">
       ← <%= t("recipes.margin_calculator.back_to_ingredients") %>
     </button>
   </div>

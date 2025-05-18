@@ -12,17 +12,26 @@ export default class extends Controller {
     "marginPct"
   ]
 
+  static values = {
+    i18nMissingInventory: String,
+    i18nInvalidPrice: String,
+    i18nFromLocationPrice: String,
+    i18nSelectLocation: String
+  }
+
   connect() {
     this.recipeItems = Array.from(this.element.querySelectorAll('.recipe-item')).map(item => ({
       element: item,
       product: item.dataset.productName,
       quantity: parseFloat(item.dataset.quantity) || 0,
       unit: item.dataset.unit,
+      translatedUnit: item.dataset.translatedUnit || item.dataset.unit,
       inventoryOptions: Array.from(item.querySelectorAll('.inventory-option')).map(opt => ({
         element: opt,
         locationId: opt.dataset.locationId,
         locationName: opt.dataset.locationName || 'Unknown Location',
         unitType: opt.dataset.inventoryUnit,
+        translatedUnit: opt.dataset.translatedUnit || opt.dataset.inventoryUnit,
         price: parseFloat(opt.dataset.pricePerUnit) || 0
       }))
     }));
@@ -41,6 +50,13 @@ export default class extends Controller {
     }
   }
 
+  formatFromLocationPrice(locationName, unitPrice, unitType, translatedUnit) {
+    return this.i18nFromLocationPriceValue
+      .replace("%{location}", locationName)
+      .replace("%{price}", unitPrice.toFixed(2))
+      .replace("%{unit}", translatedUnit || unitType);
+  }
+
   initializeLocationOptions() {
     const allLocations = {};
     this.recipeItems.forEach(item => {
@@ -56,7 +72,7 @@ export default class extends Controller {
     });
 
     this.locationSelectTarget.innerHTML = `
-      <option value="">Select a location</option>
+      <option value="">${this.i18nSelectLocationValue}</option>
       ${completeLocations.map(locationId => `
         <option value="${locationId}">${allLocations[locationId]}</option>
       `).join('')}
@@ -74,6 +90,7 @@ export default class extends Controller {
     let ingredientsHTML = '';
 
     this.recipeItems.forEach(item => {
+      const displayUnit = item.translatedUnit || item.unit;
       const inventoryOption = item.inventoryOptions.find(
         opt => opt.locationId === selectedLocationId
       );
@@ -82,8 +99,8 @@ export default class extends Controller {
         ingredientsHTML += `
           <div class="flex justify-between items-center py-2 border-b text-red-500">
             <div class="w-2/3">
-              ${item.product} (${item.quantity} ${item.unit})
-              <div class="text-xs">Not available at this location</div>
+              ${item.product} (${item.quantity} ${displayUnit})
+              <div class="text-xs">${this.i18nMissingInventoryValue.replace("%{product}", item.product)}</div>
             </div>
             <div class="w-1/3 text-right font-mono">-</div>
           </div>
@@ -96,8 +113,8 @@ export default class extends Controller {
         ingredientsHTML += `
           <div class="flex justify-between items-center py-2 border-b text-yellow-600">
             <div class="w-2/3">
-              ${item.product} (${item.quantity} ${item.unit})
-              <div class="text-xs">Cannot convert ${item.unit} to ${inventoryOption.unitType}</div>
+              ${item.product} (${item.quantity} ${displayUnit})
+              <div class="text-xs">${this.i18nInvalidPriceValue}</div>
             </div>
             <div class="w-1/3 text-right font-mono">-</div>
           </div>
@@ -109,15 +126,19 @@ export default class extends Controller {
       const cost = adjustedQty * inventoryOption.price;
       totalCost += cost;
 
-      const unitPrice = inventoryOption.price;
+      const fromLocationText = this.formatFromLocationPrice(
+        inventoryOption.locationName,
+        inventoryOption.price,
+        inventoryOption.unitType,
+        inventoryOption.translatedUnit
+      );
 
       ingredientsHTML += `
         <div class="flex justify-between items-center py-2 border-b">
           <div class="w-2/3">
-            ${item.product} (${item.quantity} ${item.unit})
+            ${item.product} (${item.quantity} ${displayUnit})
             <div class="text-xs text-gray-500">
-              From: ${inventoryOption.locationName} 
-              <span class="font-mono">@ $${unitPrice.toFixed(2)}/${inventoryOption.unitType}</span>
+              ${fromLocationText}
             </div>
           </div>
           <div class="w-1/3 text-right font-mono">$${cost.toFixed(2)}</div>
