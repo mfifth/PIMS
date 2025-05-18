@@ -147,7 +147,7 @@
             <h2 class="text-lg font-semibold text-gray-800">
               <%= t('locations.recipes_for_location', location: location.name) %>
             </h2>
-            <button class="text-gray-500 hover:text-gray-700" data-action="click->flip#flip" aria-label="<%= t('locations.close') %>">
+            <button class="text-gray-500 hover:text-gray-700" data-action="click->flip#flip">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
               </svg>
@@ -155,34 +155,32 @@
           </div>
 
           <div class="flex-grow overflow-y-auto scroll-container">
-            <% has_recipes = false %>
-            <% @recipes.each do |recipe| %>
-              <% quantity, expiration = max_quantity_and_expiration(location, recipe) %>
-              <% next if quantity == 0 %>
-              <% has_recipes = true %>
-              
-              <div class="border-b border-gray-100 pb-4 mb-4 last:border-0">
-                <div class="flex justify-between items-center">
-                  <div>
-                    <h3 class="font-medium text-gray-800"><%= recipe.name %></h3>
-                    <p class="text-sm font-medium text-green-600">
-                      <%= number_to_currency(recipe.price * quantity) %> <%= t('locations.total_value') %>
-                    </p>
+            <% available_recipes = @recipes.select { |recipe| max_quantity_and_expiration(location, recipe)[0] > 0 } %>
+            
+            <% if available_recipes.any? %>
+              <% available_recipes.each do |recipe| %>
+                <% quantity, expiration = max_quantity_and_expiration(location, recipe) %>
+                <div class="border-b border-gray-100 pb-4 mb-4 last:border-0">
+                  <div class="flex justify-between items-center">
+                    <div>
+                      <h3 class="font-medium text-gray-800"><%= recipe.name %></h3>
+                      <p class="text-sm font-medium text-green-600">
+                        <%= number_to_currency(recipe.price * quantity) %> <%= t('locations.total_value') %>
+                      </p>
+                    </div>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <%= t('locations.can_make_count', count: quantity) %>
+                    </span>
                   </div>
-                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                    <%= t('locations.can_make_count', count: quantity) %>
-                  </span>
+                  
+                  <% if expiration %>
+                    <p class="text-sm text-gray-600 mt-1">
+                      <%= t('locations.available_until', date: l(expiration, format: :short)) %>
+                    </p>
+                  <% end %>
                 </div>
-                
-                <% if expiration %>
-                  <p class="text-sm text-gray-600 mt-1">
-                    <%= t('locations.available_until', date: l(expiration, format: :short)) %>
-                  </p>
-                <% end %>
-              </div>
-            <% end %>
-
-            <% unless has_recipes %>
+              <% end %>
+            <% else %>
               <div class="text-center py-8">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />

@@ -7,14 +7,14 @@ module DashboardHelper
 
     recipe.recipe_items.each do |recipe_item|
       max_for_item = recipe_item.max_possible_quantity(location)
+      return [0, nil] if max_for_item.zero?
+      
       min_quantity = [min_quantity, max_for_item].min
 
       if recipe_item.product.perishable?
         item_expiration = recipe_item.earliest_expiration(location)
         earliest_expiration = [earliest_expiration, item_expiration].compact.min
       end
-
-      break if min_quantity == 0
     end
 
     [min_quantity, earliest_expiration]

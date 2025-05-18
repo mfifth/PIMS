@@ -12,7 +12,9 @@ class RecipeItem < ApplicationRecord
     },
     'kilograms' => {
       'grams' => 1000,
-      'kilograms' => 1
+      'kilograms' => 1,
+      'ounces' => 35.274,
+      'pounds' => 2.20462
     },
     'ounces' => {
       'grams' => 28.3495,
@@ -59,6 +61,34 @@ class RecipeItem < ApplicationRecord
   validates :unit, presence: true, inclusion: { in: VALID_UNITS }
   validates :product_id, presence: true
 
+  # MAIN FIXED METHODS
+  def max_possible_quantity(location)
+    inventory_items = product.inventory_items.where(location: location)
+    return 0 if inventory_items.empty? || quantity <= 0
+
+    total_available = inventory_items.sum do |item|
+      if can_convert?(item.unit_type)
+        converted = convert_quantity(item.quantity, item.unit_type)
+        round_for_unit(converted, unit)
+      else
+        0
+      end
+    end
+
+    (total_available / quantity).floor
+  end
+
+  def earliest_expiration(location)
+    return nil unless product.perishable?
+    
+    product.inventory_items
+           .where(location: location)
+           .joins(:batch)
+           .where.not(batches: { expiration_date: nil })
+           .minimum('batches.expiration_date')
+  end
+
+  # PRESERVED ORIGINAL METHODS
   def self.unit_compatibility_map
     {
       'units' => ['units'],
@@ -88,31 +118,8 @@ class RecipeItem < ApplicationRecord
     return inventory_quantity if unit == inventory_unit
     return 0 unless convertible_units?(inventory_unit)
 
-    (inventory_quantity * conversion_rate(inventory_unit, unit)).round(4)
-  end
-
-  def max_possible_quantity(location)
-    inventory_items = product.inventory_items.where(location: location)
-    return 0 if inventory_items.empty? || quantity <= 0
-
-    total = inventory_items.sum do |item|
-      if convertible_units?(item.unit_type)
-        converted_quantity(item.quantity, item.unit_type)
-      else
-        0
-      end
-    end
-
-    (total / quantity).floor
-  end
-
-  def earliest_expiration(location)
-    return nil unless product.perishable?
-    
-    product.inventory_items
-           .joins(:batch)
-           .where(location: location)
-           .minimum('batches.expiration_date')
+    converted = inventory_quantity * conversion_rate(inventory_unit, unit)
+    round_for_unit(converted, unit)
   end
 
   def compatible_unit_options
@@ -141,6 +148,7 @@ class RecipeItem < ApplicationRecord
     (unit == 'units' && from_unit == 'units')
   end
   
+  # PRESERVED PRIVATE METHODS
   private
   
   def metric_weight_units?(unit)
@@ -165,5 +173,20 @@ class RecipeItem < ApplicationRecord
     when 'ounces', 'pounds', 'gallons', 'fluid_oz' then quantity.round(2)
     else quantity.round
     end
+  end
+
+  # NEW HELPER METHODS
+  def can_convert?(from_unit)
+    return true if unit == from_unit
+    CONVERSION_RATES.dig(from_unit, unit).present?
+  end
+
+  def convert_quantity(amount, from_unit)
+    return amount if unit == from_unit
+    
+    conversion_rate = CONVERSION_RATES.dig(from_unit, unit)
+    return 0 unless conversion_rate
+
+    amount * conversion_rate
   end
 end
