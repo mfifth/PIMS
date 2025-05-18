@@ -51,7 +51,7 @@ es:
     na: "N/D"
     title: "Lotes"
     new: "Nuevo Lote"
-    search_placeholder: "Buscar por número de lote, fecha de vencimiento o nombre del producto"
+    search_placeholder: "Buscar por número de lote, fecha de vencimiento, nombre del producto, o nombre de ubicación"
     loading: "Cargando más lotes..."
     new_title: "Crear Nuevo Lote"
     edit_title: "Editar Lote"

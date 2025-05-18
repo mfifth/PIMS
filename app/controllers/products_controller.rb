@@ -3,7 +3,10 @@ class ProductsController < ApplicationController
   before_action :require_admin!, only: [:create, :update, :destroy, :edit]
 
   def index
-    @products = Current.account.products.left_joins(:category)
+    @products = Current.account.products
+                               .left_joins(:category)
+                               .includes(inventory_items: :location)
+                               .joins(inventory_items: :location)
   
     if params[:query].present?
       query = "%#{params[:query]}%"
@@ -12,7 +15,8 @@ class ProductsController < ApplicationController
       like_operator = adapter.include?("postgresql") ? "ILIKE" : "LIKE"
   
       @products = @products.where(
-        "products.name #{like_operator} :q OR products.sku #{like_operator} :q OR categories.name #{like_operator} :q",
+        "products.name #{like_operator} :q OR products.sku #{like_operator} :q 
+        OR categories.name #{like_operator} :q OR locations.name #{like_operator} :q",
         q: query
       )
     else

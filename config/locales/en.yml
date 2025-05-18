@@ -176,7 +176,7 @@ en:
     index:
       title: "Products"
       new_product: "New Product"
-      search_placeholder: "Search by name, SKU or Category"
+      search_placeholder: "Search by Name, SKU, Category Or Location"
       search_button: "Search"
     details:
       title: "Product Details"
