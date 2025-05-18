@@ -22,6 +22,46 @@ es:
     fluid_oz: "onzas líquidas"
     milliliters: "mililitros"
     units: "unidades"
+  mailers:
+    greeting: "Hola %{name}"
+    automated_message: "Este es un mensaje automático. Por favor no responda."
+    confirmation_instructions:
+      welcome: "¡Bienvenido a %{app_name}, %{user_name}!"
+      one_step_away: "Estás a un paso de activar tu cuenta. Por favor confirma tu dirección de email haciendo clic en el enlace:"
+      confirm_button: "Confirmar mi dirección de email"
+      expiration_notice: "Este enlace expirará en %{hours} horas."
+      ignore_if_not_requested: "Si no solicitaste esto, por favor ignora este correo."
+    invite:
+      title: "¡Has sido invitado!"
+      instruction: "Haz clic abajo para aceptar tu invitación."
+      accept_button: "Aceptar Invitación"
+    signature: |
+      Gracias,
+      El equipo de %{app_name}
+    low_inventory_alert:
+      title: "Alerta de inventario bajo"
+      description: "El siguiente producto tiene bajo stock:"
+      product: "Producto"
+      quantity: "Cantidad actual"
+      location: "Ubicación"
+      action_required: "Por favor reabastezca lo antes posible."
+    test_email:
+      title: "Prueba de correo"
+      message: "Esta es una prueba, esperamos que le guste"
+    expiration_alert:
+      title: "Alerta de fecha de vencimiento próxima"
+      notification: "Queremos notificarle que el lote %{batch_number} está próximo a su fecha de vencimiento."
+      expiration_date: "Fecha de vencimiento"
+      products_in_batch: "Productos en este lote:"
+      product: "Producto"
+      locations_quantities: "Ubicaciones y cantidades"
+      sku: "SKU"
+      units: "unidades"
+      follow_up: "Si necesita tomar alguna acción, por favor revise los detalles del lote en su cuenta."
+      view_details: "Ver detalles del lote"
+    date:
+      formats:
+        default: "%d de %B de %Y"
   languages:
     english: "Inglés"
     spanish: "Español"

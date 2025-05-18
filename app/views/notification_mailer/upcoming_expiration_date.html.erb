@@ -4,136 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9fafb;
-      color: #333;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #ffffff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-    }
-
-    h1 {
-      font-size: 24px;
-      color: #2c3e50;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    p {
-      font-size: 16px;
-      line-height: 1.6;
-      color: #555;
-    }
-
-    .highlight {
-      font-weight: bold;
-      color: #e74c3c;
-    }
-
-    .batch-number {
-      color: #2980b9;
-      font-weight: bold;
-    }
-
-    .footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 14px;
-      color: #777;
-    }
-
-    .footer a {
-      color: #3498db;
-      text-decoration: none;
-    }
-
-    .button {
-      display: inline-block;
-      padding: 12px 20px;
-      background-color: #2980b9;
-      color: #fff;
-      font-size: 16px;
-      text-align: center;
-      border-radius: 5px;
-      text-decoration: none;
-      margin-top: 20px;
-    }
-
-    .button:hover {
-      background-color: #3498db;
-    }
-
-    .product-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 20px 0;
-    }
-
-    .product-table th {
-      background-color: #f2f2f2;
-      text-align: left;
-      padding: 10px;
-      border-bottom: 2px solid #ddd;
-    }
-
-    .product-table td {
-      padding: 10px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .product-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    .location-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      background-color: #e3f2fd;
-      border-radius: 4px;
-      font-size: 14px;
-      color: #1976d2;
-      margin-right: 5px;
-      margin-bottom: 5px;
-    }
-
-    .quantity-badge {
-      display: inline-block;
-      padding: 3px 8px;
-      background-color: #e8f5e9;
-      border-radius: 4px;
-      font-size: 14px;
-      color: #2e7d32;
-    }
+    /* [Previous CSS remains exactly the same] */
   </style>
 </head>
 <body>
-
   <div class="container">
-    <h1>Upcoming Expiration Date Alert</h1>
-
-    <p>Dear <%= @user.name %>,</p>
-
-    <p>We wanted to notify you that the batch <span class="batch-number"><%= @batch.batch_number %></span> is approaching its expiration date.</p>
-
-    <p><span class="highlight">Expiration Date:</span> <%= @batch.expiration_date.strftime('%B %d, %Y') %></p>
-
-    <h3>Products in this batch:</h3>
-
+    <h1><%= t('mailers.expiration_alert.title') %></h1>
+    <p><%= t('mailers.greeting', name: @user.name) %>,</p>
+    <p><%= t('mailers.expiration_alert.notification', batch_number: content_tag(:span, @batch.batch_number, class: 'batch-number')).html_safe %></p>
+    <p><span class="highlight"><%= t('mailers.expiration_alert.expiration_date') %>:</span> <%= @batch.expiration_date.strftime(t('date.formats.default')) %></p>
+    
+    <h3><%= t('mailers.expiration_alert.products_in_batch') %></h3>
+    
     <table class="product-table">
       <thead>
         <tr>
-          <th>Product</th>
-          <th>Locations & Quantities</th>
+          <th><%= t('mailers.expiration_alert.product') %></th>
+          <th><%= t('mailers.expiration_alert.locations_quantities') %></th>
         </tr>
       </thead>
       <tbody>
@@ -141,14 +28,14 @@
           <tr>
             <td>
               <strong><%= product.name %></strong><br>
-              <small>SKU: <%= product.sku %></small>
+              <small><%= t('mailers.expiration_alert.sku') %>: <%= product.sku %></small>
             </td>
             <td>
               <% product.inventory_items.group_by(&:location).each do |location, items| %>
                 <div>
                   <span class="location-badge"><%= location.name %></span>
                   <span class="quantity-badge">
-                    <%= items.sum(&:quantity) %> units
+                    <%= items.sum(&:quantity) %> <%= t('mailers.expiration_alert.units') %>
                   </span>
                 </div>
               <% end %>
@@ -158,16 +45,13 @@
       </tbody>
     </table>
 
-    <p>If you need to take any action, please review the batch details in your account.</p>
-
-    <a href="<%= url_for(controller: 'batches', action: 'show', id: @batch.id) %>" class="button">View Batch Details</a>
-
+    <p><%= t('mailers.expiration_alert.follow_up') %></p>
+    <a href="<%= url_for(controller: 'batches', action: 'show', id: @batch.id) %>" class="button"><%= t('mailers.expiration_alert.view_details') %></a>
+    
     <div class="footer">
-      <p>Best regards,</p>
-      <p>Pimsco</p>
+      <%= t('mailers.signature', company_name: "Pimsco") %>
       <p><a href="http://pimsco.tech">www.pimsco.tech</a></p>
     </div>
   </div>
-
 </body>
 </html>

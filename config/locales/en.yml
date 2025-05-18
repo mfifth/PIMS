@@ -22,6 +22,46 @@ en:
       fluid_oz: "fluid ounces"
       milliliters: "milliliters"
       units: "units"
+  mailers:
+    confirmation_instructions:
+      welcome: "Welcome to %{app_name}, %{user_name}!"
+      one_step_away: "You are just one step away from activating your account. Please confirm your email address by clicking the link below:"
+      confirm_button: "Confirm my email address"
+      expiration_notice: "This link will expire in %{hours} hours."
+      ignore_if_not_requested: "If you didn't request this, please ignore this email."
+    invite:
+      title: "You've been invited!"
+      instruction: "Click below to accept your invitation."
+      accept_button: "Accept Invitation"
+    signature: |
+      Thanks,
+      The %{app_name} Team
+    greeting: "Hello %{name}"
+    automated_message: "This is an automated message. Please do not reply."
+    low_inventory_alert:
+      title: "Low Inventory Alert"
+      description: "The following product is running low on stock:"
+      product: "Product"
+      quantity: "Current Quantity"
+      location: "Location"
+      action_required: "Please restock as soon as possible."
+    test_email:
+      title: "Test alert"
+      message: "This is a test I hope you like it"
+    expiration_alert:
+      title: "Upcoming Expiration Date Alert"
+      notification: "We wanted to notify you that the batch %{batch_number} is approaching its expiration date."
+      expiration_date: "Expiration Date"
+      products_in_batch: "Products in this batch:"
+      product: "Product"
+      locations_quantities: "Locations & Quantities"
+      sku: "SKU"
+      units: "units"
+      follow_up: "If you need to take any action, please review the batch details in your account."
+      view_details: "View Batch Details"
+    date:
+      formats:
+        default: "%B %d, %Y"
   account_settings:
     title: "Account Settings"
     delete_account: "Delete Account"

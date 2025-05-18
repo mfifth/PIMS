@@ -1,4 +1,4 @@
-<h1>"You've been invited!"</h1>
-<p>Click below to accept your invitation.</p>
+<h1><%= t('mailers.invite.title') %></h1>
+<p><%= t('mailers.invite.instruction') %></p>
 
-<%= link_to "Accept Invitation", @url, class: "button" %>
+<%= link_to t('mailers.invite.accept_button'), @url, class: "button" %>
