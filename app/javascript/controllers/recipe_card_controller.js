@@ -109,7 +109,6 @@ export default class extends Controller {
       const cost = adjustedQty * inventoryOption.price;
       totalCost += cost;
 
-      // Calculate price per inventory unit (shows actual purchase price)
       const unitPrice = inventoryOption.price;
 
       ingredientsHTML += `
