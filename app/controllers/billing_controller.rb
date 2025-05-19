@@ -8,6 +8,7 @@ class BillingController < ApplicationController
       portal_session = Stripe::BillingPortal::Session.create(
         {
           customer: Current.account.stripe_customer_id,
+          locale: I18n.locale.to_s,
           return_url: Rails.application.routes.url_helpers.settings_user_url(
             Current.user,
             host: ENV.fetch('APP_HOST', 'localhost:3000'),
