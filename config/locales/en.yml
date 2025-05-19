@@ -456,7 +456,7 @@ en:
     failed_email_test: "Failed to send the test email."
     test_text: "This is a test."
     test_text_notification: "This is a test of text notifications."
-    congrats_message: Start by adding your locations and products. Then, connect your Square account to import your menu items automatically. Link products to menu items on the Recipes page to see your inventory update in real time — including how many of each item you can make at every location.
+    basic_instructions: Start by adding your locations, then set up your products. Link products to recipes as ingredients to track availability, calculate how many servings you can prepare at each location, and view cost/profit analysis in real time.
     user_limit: "You have reached the maximum limit of %{limit} users for your subscription."
     user_already_registered: "is already registered. Please log in or try to reset your password."
     blank_email: "Email cannot be blank."

@@ -90,7 +90,7 @@ class User < ApplicationRecord
         )
     end
 
-    Notification.create(message: I18n.t('notifications.congrats_message'), 
+    Notification.create(message: I18n.t('notifications.basic_instructions'), 
     notification_type: "notice", account_id: account.id)
   end
 
