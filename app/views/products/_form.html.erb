@@ -81,14 +81,19 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <% @product.batches.each do |batch| %>
-                  <% inventory_item = @product.inventory_items.find_by(batch_id: batch.id) %>
-                  <tr id="batch_<%= batch.id %>">
+                  <% @product.inventory_items
+                    .includes(:batch, :location)
+                    .group_by { |ii| [ii.batch_id, ii.location_id] }
+                    .each do |(batch_id, location_id), grouped_items| 
+                      inventory_item = grouped_items.first
+                      batch = inventory_item.batch
+                  %>
+                  <tr id="batch_<%= batch.id %>_loc_<%= location_id %>">
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch.batch_number %></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch.manufactured_date %></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch.expiration_date %></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= inventory_item&.location&.name || 'N/A' %>
+                      <%= inventory_item.location&.name || 'N/A' %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <%= link_to t('products.remove'), remove_batch_product_path(@product, batch_id: batch.id), 
@@ -190,7 +195,6 @@
                   data: { product_form_target: "unitType" },
                   required: true,
                   prompt: false } %>
-
           </div>
         </div>
       </div>

@@ -131,7 +131,7 @@ class ProductsController < ApplicationController
   private
 
   def set_product
-    @product = Product.includes(:inventory_items, :batches).find(params[:id])
+    @product = Product.includes(:inventory_items, batches: { inventory_items: :location }).find(params[:id])
   end
 
   def product_params
