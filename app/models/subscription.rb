@@ -10,27 +10,27 @@ class Subscription < ApplicationRecord
   }.freeze
 
   USER_PLAN_LIMITS = {
-    'trial' => 2,
-    'free' => 1,
-    'starter' => 3,
-    'plus' => 3,
-    'premium' => 5
-  }.freeze
-
-  LOCATION_PLAN_LIMITS = {
-    'trial' => 2,
+    'trial' => 1,
     'free' => 1,
     'starter' => 2,
     'plus' => 3,
-    'premium' => 5
+    'premium' => 4
+  }.freeze
+
+  LOCATION_PLAN_LIMITS = {
+    'trial' => 1,
+    'free' => 1,
+    'starter' => 1,
+    'plus' => 2,
+    'premium' => 4
   }.freeze
 
   RECIPE_PLAN_LIMITS = {
-    'trial' => 15,
+    'trial' => 10,
     'free' => 5,
-    'starter' => 15,
-    'plus' => 25,
-    'premium' => 50
+    'starter' => 10,
+    'plus' => 15,
+    'premium' => 20
   }.freeze
 
   def expired?

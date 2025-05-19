@@ -609,9 +609,9 @@ en:
           price: "$30"
           period: "/mo"
           features:
-            - "Add up to 2 locations, 3 admins"
+            - "Add up to three admins with one location"
             - "25 products to track"
-            - "15 recipes to track"
+            - "10 recipes to track"
             - "Email Notifications for low stock or expiring dates"
             - "Sync with Square for real time updates"
         plus:
@@ -620,7 +620,7 @@ en:
           price: "$50"
           period: "/mo"
           features:
-            - "Up to 3 locations, 5 admins"
+            - "Up to two locations, three admins"
             - "50 products"
             - "25 recipes to track"
             - "Email & Text Notification Alerts"
@@ -631,10 +631,10 @@ en:
           price: "$99"
           period: "/mo"
           features:
-            - "Up to 5 locations"
+            - "Up to 4 locations"
             - "100 products"
-            - "50 Recipes"
-            - "10 users/admins"
+            - "20 Recipes"
+            - "4 users/admins"
             - "Priority Support"
             - "Email & Text Notifications"
             - "Sync with Square for real time updates"
