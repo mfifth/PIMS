@@ -40,6 +40,7 @@ class UsersController < ApplicationController
 
   def update
     if Current.user.update!(user_params)
+      session[:locale] = Current.user.locale
       respond_to do |format|
         format.html { redirect_back fallback_location: '/', notice: t('notifications.updated_settings') }
         format.turbo_stream
