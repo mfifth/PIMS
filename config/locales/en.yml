@@ -510,27 +510,27 @@ en:
     hero:
       title_line1: "Perishable Inventory"
       title_line2: "Management System"
-      description: Optimize ingredient usage, monitor items across multiple locations, and gain real-time insights into the meals you create — all from one easy-to-use dashboard.
+      description: Optimize ingredient usage, stay organized across locations, and gain real-time insights into the meals you create — all from one easy-to-use dashboard.
       cta: "Get Started for Free"
     features:
       title: "Features"
-      subtitle: "Everything you need to manage your kitchen"
+      subtitle: "Everything you need to manage your inventory"
       items:
         dashboard:
           title: "Comprehensive Dashboard"
-          description: "Get an instant overview of your inventory with key metrics for locations, items, and batches all in one place."
+          description: "Get an instant overview of your resources with key metrics for locations, items, and batches all in one place."
         locations:
           title: "Multi-Location Management"
           description: "Track inventory across multiple locations with detailed breakdowns of perishable and non-perishable items."
         products:
           title: "Product Catalog"
-          description: "Manage your entire item catalog with categories, pricing, and detailed tracking information."
+          description: "Manage your entire catalog with categories, pricing, and detailed tracking information."
         batches:
           title: "Batch Tracking"
-          description: "Track perishable products through batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
+          description: "Track perishable items through batches with expiration dates, and batch numbers. Get automatic alerts through text or email."
         recipes:
           title: "Recipe Cost & Analysis"
-          description: "Link products to recipes as ingredients to see what's currently available and calculate profit margins in real time."
+          description: "Link products to recipes as ingredients to see what's currently available and calculate profit margins ahead of time."
         reporting:
           title: "Advanced Reporting"
           description: "Generate detailed reports on inventory levels, batch information, & product movement."

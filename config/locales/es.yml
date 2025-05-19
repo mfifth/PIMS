@@ -533,30 +533,30 @@ es:
     hero:
       title_line1: "Inventario de productos perecederos"
       title_line2: "Sistema de Gestión"
-      description: Optimiza el uso de ingredientes, supervisa artículos en múltiples ubicaciones y obtén información en tiempo real sobre las comidas que preparas — todo desde un panel fácil de usar.
+      description: Optimiza el uso de ingredientes, mantén el orden en múltiples ubicaciones y obtén información en tiempo real sobre las comidas que preparas — todo desde un panel fácil de usar.
       cta: "Comience gratis"
     features:
-      title: "Características"
-      subtitle: "Todo lo que necesita para gestionar su inventario"
+      title: "Funciones"
+      subtitle: "Todo lo que necesitas para gestionar tu inventario"
       items:
         dashboard:
           title: "Panel Integral"
-          description: "Obtén una vista instantánea de tu inventario con métricas clave de ubicaciones, productos y lotes, todo en un solo lugar."
+          description: "Obtén una vista instantánea de tus recursos con métricas clave de ubicaciones, artículos y lotes, todo en un solo lugar."
         locations:
-          title: "Gestión Multisede"
-          description: "Supervisa el inventario en múltiples ubicaciones con desgloses detallados de productos perecederos y no perecederos."
+          title: "Gestión Multilocal"
+          description: "Supervisa el inventario en múltiples ubicaciones con desgloses detallados de artículos perecederos y no perecederos."
         products:
           title: "Catálogo de Productos"
-          description: "Administra todo tu catálogo de productos con categorías, precios y un seguimiento detallado del inventario."
+          description: "Gestiona todo tu catálogo con categorías, precios e información detallada de seguimiento."
         batches:
           title: "Seguimiento de Lotes"
-          description: "Sigue los productos perecederos a través de lotes con fechas de caducidad y números de lote. Recibe alertas automáticas por mensaje de texto o correo electrónico."
+          description: "Haz seguimiento de artículos perecederos por lotes con fechas de vencimiento y números de lote. Recibe alertas automáticas por mensaje de texto o correo electrónico."
         recipes:
           title: "Costo y Análisis de Recetas"
-          description: "Vincula productos a recetas como ingredientes para ver qué está disponible y calcular los márgenes de ganancia con anticipación."
+          description: "Vincula productos a recetas como ingredientes para ver qué hay disponible y calcular márgenes de ganancia con anticipación."
         reporting:
           title: "Reportes Avanzados"
-          description: "Genera reportes detallados sobre niveles de inventario, información de lotes y movimiento de productos."
+          description: "Genera informes detallados sobre niveles de inventario, información de lotes y movimiento de productos."
     screenshots:
       title: "En Acción"
       subtitle: "Vea PIMS en funcionamiento"
