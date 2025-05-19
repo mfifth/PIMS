@@ -81,24 +81,26 @@
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                  <% @product.inventory_items
+                <% @product.inventory_items
                     .includes(:batch, :location)
+                    .joins(:batch)
                     .group_by { |ii| [ii.batch_id, ii.location_id] }
                     .each do |(batch_id, location_id), grouped_items| 
                       inventory_item = grouped_items.first
                       batch = inventory_item.batch
-                  %>
-                  <tr id="batch_<%= batch.id %>_loc_<%= location_id %>">
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch.batch_number %></td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch.manufactured_date %></td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch.expiration_date %></td>
+                %>
+                  <tr id="batch_<%= batch&.id %>_loc_<%= location_id %>">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch&.batch_number %></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch&.manufactured_date %></td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"><%= batch&.expiration_date %></td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <%= inventory_item.location&.name || 'N/A' %>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      <%= link_to t('products.remove'), remove_batch_product_path(@product, batch_id: batch.id), 
-                          data: { turbo_method: :delete, turbo_confirm: t('products.confirm_remove_batch') },
-                          class: "text-red-500 hover:text-red-700" %>
+                      <%= link_to t('products.remove'), 
+                        remove_batch_product_path(@product, batch_id: batch&.id, location_id: inventory_item.location_id), 
+                        data: { turbo_method: :delete, turbo_confirm: t('products.confirm_remove_batch') },
+                        class: "text-red-500 hover:text-red-700" %>
                     </td>
                   </tr>
                 <% end %>

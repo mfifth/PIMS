@@ -114,19 +114,22 @@ class ProductsController < ApplicationController
 
   def remove_batch
     @product = Product.find(params[:id])
-    @batch = Batch.find(params[:batch_id])
+    batch_id = params[:batch_id]
+    location_id = params[:location_id]
+  
+    inventory_item = @product.inventory_items.find_by(batch_id: batch_id, location_id: location_id)
     
-    @product.inventory_items.where(batch_id: @batch.id).each do |inventory_item| 
-      inventory_item.update!(batch_id: nil) 
+    if inventory_item
+      inventory_item.update!(batch_id: nil)
     end
-    
+  
     respond_to do |format|
       format.turbo_stream do
-        render turbo_stream: turbo_stream.remove("batch_#{@batch.id}")
+        render turbo_stream: turbo_stream.remove("batch_#{batch_id}_loc_#{location_id}")
       end
-      format.html { redirect_to edit_product_path(@product), notice: 'Batch was successfully removed' }
+      format.html { redirect_to edit_product_path(@product), notice: 'Batch was successfully removed from the location.' }
     end
-  end
+  end  
 
   private
 
