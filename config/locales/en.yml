@@ -508,7 +508,7 @@ en:
       login: "Login"
       get_started: "Get Started"
     hero:
-      title_line1: "Product Inventory"
+      title_line1: "Perishable Inventory"
       title_line2: "Management System"
       description: Streamline your inventory management, track perishable goods across multiple locations, and get real time insights for the meals you create — all from one easy-to-use dashboard.
       cta: "Get Started for Free"

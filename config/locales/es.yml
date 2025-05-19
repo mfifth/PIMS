@@ -531,7 +531,7 @@ es:
       login: "Iniciar sesión"
       get_started: "Comenzar"
     hero:
-      title_line1: "Inventario de Productos"
+      title_line1: "Inventario de productos perecederos"
       title_line2: "Sistema de Gestión"
       description: "Optimice la gestión de sus productos, realice un seguimiento del inventario en múltiples ubicaciones y administre lotes con nuestra potente solución PIMS."
       cta: "Comience gratis"
