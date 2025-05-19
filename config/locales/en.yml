@@ -236,7 +236,7 @@ en:
     index:
       title: "Products"
       new_product: "New Product"
-      search_placeholder: "Search by Name, SKU, Location, or Recipe Title"
+      search_placeholder: "Search by Product Name, SKU, Location, or Recipe Title"
       search_button: "Search"
     details:
       title: "Product Details"

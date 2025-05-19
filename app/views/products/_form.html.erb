@@ -185,9 +185,10 @@
             <%= form.label :unit_type, t('products.unit_type_title'), class: "block text-sm font-medium text-gray-700" %>
             <%= form.select :unit_type, 
                 Product::VALID_UNITS.map { |u| [I18n.t("units.#{u}"), u] },
-                { selected: @product.unit_type.presence || 'units', include_blank: false },
+                { selected: @product.unit_type.presence || 'units'},
                 { class: "w-full px-4 py-2 border rounded-lg",
                   data: { product_form_target: "unitType" },
+                  required: true,
                   prompt: false } %>
 
           </div>

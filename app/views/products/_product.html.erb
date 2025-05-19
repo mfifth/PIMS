@@ -16,7 +16,7 @@
             <div>
               <p class="font-medium">
                 <%= inventory_item.location.name %>: 
-                <%= "#{inventory_item.quantity} #{inventory_item.unit_type.titleize}" %>
+                <%= "#{inventory_item.quantity} #{inventory_item.unit_type&.titleize}" %>
                 <%= "| Unit Price: #{inventory_item.price}" if inventory_item.price.present? %>
               </p>
     
