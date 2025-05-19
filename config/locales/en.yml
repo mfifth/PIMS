@@ -498,7 +498,7 @@ en:
   recipe_updated: Recipe updated successfully
   recipe_deleted: Recipe was removed successfully
   pims:
-    title: "PIMS - Product Inventory Management System"
+    title: "PIMS - Perishable Inventory Management System"
     nav:
       features: "Features"
       screenshots: "Screenshots"
@@ -628,7 +628,7 @@ en:
           features:
             - "Up to two locations, three admins"
             - "50 products"
-            - "25 recipes to track"
+            - "20 recipes to track"
             - "Email & Text Notification Alerts"
             - "Sync with Square for real time updates"
         premium:
@@ -639,7 +639,7 @@ en:
           features:
             - "Up to 4 locations"
             - "100 products"
-            - "20 Recipes"
+            - "30 Recipes"
             - "4 users/admins"
             - "Priority Support"
             - "Email & Text Notifications"

@@ -521,7 +521,7 @@ es:
       malformed: "Falló. Datos malformados: %{error}"
       unexpected: "Error inesperado: %{message}"
   pims:
-    title: "PIMS - Sistema de Gestión de Inventario de Productos"
+    title: "PIMS - Sistema de Gestión de Inventario de Productos Perecederos"
     nav:
       features: "Características"
       screenshots: "Capturas"
@@ -638,9 +638,9 @@ es:
           price: "$30"
           period: "/mes"
           features:
-            - "Hasta 2 ubicaciones, 3 administradores"
+            - "Hasta 1 ubicaciones, 2 administradores"
             - "25 productos para rastrear"
-            - "15 recetas para rastrear"
+            - "10 recetas para rastrear"
             - "Notificaciones por email para stock bajo o fechas de caducidad"
             - "Sincronización con Square o Clover para actualizaciones en tiempo real"
         plus:
@@ -649,9 +649,9 @@ es:
           price: "$50"
           period: "/mes"
           features:
-            - "Hasta 3 ubicaciones, 5 administradores"
+            - "Hasta 2 ubicaciones, 3 administradores"
             - "50 productos"
-            - "25 recetas para rastrear"
+            - "15 recetas para rastrear"
             - "Alertas por Email y Mensajes de Texto"
             - "Sincronización con Square o Clover para actualizaciones en tiempo real"
         premium:
@@ -660,10 +660,10 @@ es:
           price: "$99"
           period: "/mes"
           features:
-            - "Hasta 5 ubicaciones"
+            - "Hasta 4 ubicaciones"
             - "100 productos"
-            - "50 Recetas"
-            - "10 usuarios/administradores"
+            - "20 Recetas"
+            - "5 usuarios/administradores"
             - "Soporte Prioritario"
             - "Notificaciones por Email y Mensajes de Texto"
             - "Sincronización con Square o Clover"

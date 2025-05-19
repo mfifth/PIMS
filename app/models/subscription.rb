@@ -29,8 +29,8 @@ class Subscription < ApplicationRecord
     'trial' => 10,
     'free' => 5,
     'starter' => 10,
-    'plus' => 15,
-    'premium' => 20
+    'plus' => 20,
+    'premium' => 30
   }.freeze
 
   def expired?
