@@ -194,6 +194,7 @@ en:
     exp: "EXP"
     na: "N/A"
     stock_locations: "Stock Locations"
+    used_in_recipes: "Included in Recipes"
     in_stock: "in stock"
     create_new: "Create New Product"
     edit: "Edit Product"
@@ -235,7 +236,7 @@ en:
     index:
       title: "Products"
       new_product: "New Product"
-      search_placeholder: "Search by Name, SKU, Category Or Location"
+      search_placeholder: "Search by Name, SKU, Location, or Recipe Title"
       search_button: "Search"
     details:
       title: "Product Details"

@@ -157,7 +157,7 @@ es:
     index:
       title: "Recetas"
       new_recipe: "Nueva Receta"
-      search_placeholder: "Buscar por nombre o ID de receta"
+      search_placeholder: "Buscar por Nombre, SKU, Ubicación o Título de Receta"
       no_match: "No se encontraron recetas que coincidan con \"%{query}\""
       no_recipes: "Aún no has creado ninguna receta"
       create_first: "Crear tu primera receta"

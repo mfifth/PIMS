@@ -4,9 +4,11 @@ class ProductsController < ApplicationController
 
   def index
     @products = Current.account.products
-                               .left_joins(:category)
-                               .includes(inventory_items: :location)
-                               .joins(inventory_items: :location)
+                       .left_joins(:category)
+                       .left_joins(recipe_items: :recipe)
+                       .includes(inventory_items: :location)
+                       .joins(inventory_items: :location)
+                       .distinct
   
     if params[:query].present?
       query = "%#{params[:query]}%"
@@ -16,7 +18,8 @@ class ProductsController < ApplicationController
   
       @products = @products.where(
         "products.name #{like_operator} :q OR products.sku #{like_operator} :q 
-        OR categories.name #{like_operator} :q OR locations.name #{like_operator} :q",
+        OR categories.name #{like_operator} :q OR locations.name #{like_operator} :q
+        OR recipes.name #{like_operator} :q",
         q: query
       )
     else
@@ -29,7 +32,7 @@ class ProductsController < ApplicationController
       format.html
       format.turbo_stream
     end
-  end  
+  end
 
   def show
     @batches = @product.batches.distinct
