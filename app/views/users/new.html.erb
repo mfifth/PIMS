@@ -20,6 +20,8 @@
         <%= form.hidden_field :invitation_token, value: params[:invitation_token] %>
       <% end %>
 
+      <%= form.hidden_field :locale, value: params[:locale] %>
+
       <!-- Name Field -->
       <div>
         <%= form.text_field :name, 

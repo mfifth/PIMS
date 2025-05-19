@@ -18,6 +18,10 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def default_url_options
+    { locale: I18n.locale }
+  end
+
   def account_present?
     Current.account.present?
   end
