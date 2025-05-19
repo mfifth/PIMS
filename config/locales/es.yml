@@ -533,7 +533,7 @@ es:
     hero:
       title_line1: "Inventario de productos perecederos"
       title_line2: "Sistema de Gestión"
-      description: "Optimice la gestión de sus productos, realice un seguimiento del inventario en múltiples ubicaciones y administre lotes con nuestra potente solución PIMS."
+      description: Optimiza el uso de ingredientes, supervisa artículos en múltiples ubicaciones y obtén información en tiempo real sobre las comidas que preparas — todo desde un panel fácil de usar.
       cta: "Comience gratis"
     features:
       title: "Características"

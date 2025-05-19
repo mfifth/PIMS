@@ -502,35 +502,44 @@
 
       <!-- Recipes Card -->
       <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex justify-between items-center mb-6">
           <h2 class="text-xl font-semibold text-gray-800"><%= t('pims.dashboard.available_recipes') %></h2>
-          <span class="text-2xl font-bold text-purple-600">2</span>
         </div>
 
         <div class="space-y-4">
           <!-- Pancakes -->
-          <div class="border-b border-gray-100 pb-4">
+          <div class="border-b border-gray-100 pb-4 mb-4 last:border-0">
             <div class="flex justify-between items-center">
-              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.pancakes') %></h3>
+              <div>
+                <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.pancakes') %></h3>
+                <p class="text-sm font-medium text-green-600">
+                  <%= number_to_currency(32.50) %> <%= t('locations.total_value') %>
+                </p>
+              </div>
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                10 <%= t('pims.dashboard.can_make') %>
+                <%= t('locations.can_make_count', count: 10) %>
               </span>
             </div>
             <p class="text-sm text-gray-600 mt-1">
-              <%= t('pims.dashboard.until') %> May 13, 2025
+              <%= t('locations.available_until', date: l(Date.new(2025, 5, 13), format: :short)) %>
             </p>
           </div>
 
           <!-- Margherita Pizza -->
-          <div class="pb-4">
+          <div class="border-b border-gray-100 pb-4 mb-4 last:border-0">
             <div class="flex justify-between items-center">
-              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.margherita_pizza') %></h3>
+              <div>
+                <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.margherita_pizza') %></h3>
+                <p class="text-sm font-medium text-green-600">
+                  <%= number_to_currency(132.50) %> <%= t('locations.total_value') %>
+                </p>
+              </div>
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                53 <%= t('pims.dashboard.can_make') %>
+                <%= t('locations.can_make_count', count: 53) %>
               </span>
             </div>
             <p class="text-sm text-gray-600 mt-1">
-              <%= t('pims.dashboard.until') %> May 21, 2025
+              <%= t('locations.available_until', date: l(Date.new(2025, 5, 21), format: :short)) %>
             </p>
           </div>
 
