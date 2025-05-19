@@ -4,31 +4,57 @@
     <%= t("subscription.current_plan", plan: account.subscription.plan.titleize) %>
   </p>
 
+  <% if account.subscription.has_any_addons? %>
+    <div class="mt-3">
+      <h3 class="text-sm font-medium text-gray-700"><%= t("subscription.addons_title") %></h3>
+      <ul class="list-disc list-inside text-sm text-gray-600 mt-1">
+        <% if account.subscription.extra_products_count.to_i > 0 %>
+          <li><%= t("subscription.addons.extra_products", count: account.subscription.extra_products_count) %></li>
+        <% end %>
+        <% if account.subscription.extra_locations_count.to_i > 0 %>
+          <li><%= t("subscription.addons.extra_locations", count: account.subscription.extra_locations_count) %></li>
+        <% end %>
+        <% if account.subscription.extra_recipes_count.to_i > 0 %>
+          <li><%= t("subscription.addons.extra_recipes", count: account.subscription.extra_recipes_count) %></li>
+        <% end %>
+        <% if account.subscription.extra_users_count.to_i > 0 %>
+          <li><%= t("subscription.addons.extra_users", count: account.subscription.extra_users_count) %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
   <br>
 
   <p class="text-sm text-gray-600 mt-1">
-    <%= t("subscription.locations_used", count: account.locations.size, limit: location_limit(account)) %>
+    <%= t("subscription.locations_used", 
+          count: account.locations.size, 
+          limit: location_limit(account) + account.subscription.extra_locations_count.to_i) %>
   </p>
 
   <p class="text-sm text-gray-600 mt-1">
-    <%= t("subscription.products_used", count: account.products.size, limit: product_limit(account)) %>
+    <%= t("subscription.products_used", 
+          count: account.products.size, 
+          limit: product_limit(account) + account.subscription.extra_products_count.to_i) %>
   </p>
 
   <p class="text-sm text-gray-600 mt-1">
-    <%= t("subscription.users_used", count: account.users.size, limit: user_limit(account)) %>
+    <%= t("subscription.users_used", 
+          count: account.users.size, 
+          limit: user_limit(account) + account.subscription.extra_users_count.to_i) %>
   </p>
 
   <br>
 
-  <% if account.products.count >= product_limit(account) %>
+  <% if account.products.count >= (product_limit(account) + account.subscription.extra_products_count.to_i) %>
     <p class="text-sm text-red-500 mt-2"><%= t("subscription.limit_reached.products") %></p>
   <% end %>
 
-  <% if account.users.count >= user_limit(account) %>
+  <% if account.users.count >= (user_limit(account) + account.subscription.extra_users_count.to_i) %>
     <p class="text-sm text-red-500 mt-2"><%= t("subscription.limit_reached.users") %></p>
   <% end %>
 
-  <% if account.locations.count >= location_limit(account) %>
+  <% if account.locations.count >= (location_limit(account) + account.subscription.extra_locations_count.to_i) %>
     <p class="text-sm text-red-500 mt-2"><%= t("subscription.limit_reached.locations") %></p>
   <% end %>
 

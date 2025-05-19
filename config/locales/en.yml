@@ -125,6 +125,12 @@ en:
       users: "You have reached your user limit."
       locations: "You have reached your location limit."
     manage_link: "Manage Subscription"
+    addons_title: "Purchased Add-Ons"
+    addons:
+      extra_products: "Extra products (%{count})"
+      extra_locations: "Extra locations (%{count})"
+      extra_recipes: "Extra recipes (%{count})"
+      extra_users: "Extra users (%{count})"
   batches:
     expires_in: "Expires in %{count} days"
     alerts_before_expiry: "Alerts %{count} days before expiry"

@@ -81,6 +81,13 @@ class Subscription < ApplicationRecord
     [account.users.count - USER_PLAN_LIMITS[plan], 0].max
   end
 
+  def has_any_addons?
+    extra_products_count.to_i > 0 ||
+    extra_locations_count.to_i > 0 ||
+    extra_recipes_count.to_i > 0 ||
+    extra_users_count.to_i > 0
+  end
+
   def base_plan_name
     plan.humanize
   end
