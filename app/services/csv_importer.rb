@@ -65,7 +65,7 @@ class CsvImporter
     product.assign_attributes(
       name: row['name'],
       price: row['price'].to_f,
-      perishable: ActiveModel::Type::Boolean.new.cast(row['perishable'] || false)
+      perishable: cast_boolean(row['perishable'])
     )
 
     if row['category'].present?
@@ -74,6 +74,10 @@ class CsvImporter
     end
 
     product
+  end
+
+  def cast_boolean(value)
+    value.to_s.strip.downcase.in?(%w[true 1 yes y t])
   end
 
   def find_or_create_batch(batch_number, row)
