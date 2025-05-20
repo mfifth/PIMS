@@ -18,7 +18,6 @@ class Product < ApplicationRecord
 
   scope :perishable, -> { where(perishable: true) }
 
-  before_save :update_perishable_status
   validate :check_recipe_usage_before_deletion, on: :destroy
 
   def self.unit_options
@@ -34,10 +33,6 @@ class Product < ApplicationRecord
     if account.products.count >= current_limit
       errors.add(:base, t('notifications.product_limit_warning', limit: current_limit))
     end
-  end
-
-  def update_perishable_status
-    self.perishable = inventory_items.joins(:batch).any?
   end
 
   def check_recipe_usage_before_deletion
