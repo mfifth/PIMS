@@ -312,6 +312,7 @@ es:
     items_count: "%{count} artículos"
     total_value: "Valor total: $%{value}"
     low_stock_alert: "%{count} artículos necesitan reposición"
+    estimated_profit: "Ganancia Estimada"
     updated: "Actualizado hace %{time}"
     title: "Ubicaciones"
     new: "Nueva Ubicación"
