@@ -48,7 +48,8 @@ class CsvImporter
     inventory_item.assign_attributes(
       quantity: row_data['quantity'].to_f,
       low_threshold: row_data['low_stock_alert'].to_f,
-      unit_type: row_data['unit_type'] || 'units'
+      unit_type: row_data['unit_type'] || 'units',
+      price: row['price'].to_f
     )
 
     if row_data['batch_number'].present? && row_data['expiration_date'].present?
@@ -64,7 +65,6 @@ class CsvImporter
 
     product.assign_attributes(
       name: row['name'],
-      price: row['price'].to_f,
       perishable: cast_boolean(row['perishable'])
     )
 
