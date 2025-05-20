@@ -164,8 +164,12 @@
                   <div class="flex justify-between items-center">
                     <div>
                       <h3 class="font-medium text-gray-800"><%= recipe.name %></h3>
+                      <% cost_per_recipe = recipe.estimated_cost(location) %>
+                      <% profit_per_recipe = recipe.price - cost_per_recipe %>
+                      <% total_profit = profit_per_recipe * quantity %>
+
                       <p class="text-sm font-medium text-green-600">
-                        <%= number_to_currency((recipe.price - recipe.estimated_cost(location)) * quantity) %> 
+                        <%= number_to_currency(total_profit) %>
                         <%= t('locations.estimated_profit') %>
                       </p>
                     </div>

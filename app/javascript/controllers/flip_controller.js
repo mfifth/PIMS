@@ -7,12 +7,10 @@ export default class extends Controller {
     event.preventDefault()
     event.stopPropagation()
     
-    // Toggle visibility
     this.frontTarget.classList.toggle("hidden")
     this.backTarget.classList.toggle("hidden")
   }
 
-  // Ensure cards start in correct state
   connect() {
     this.backTarget.classList.add("hidden")
   }
