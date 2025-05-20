@@ -61,7 +61,6 @@ class RecipeItem < ApplicationRecord
   validates :unit, presence: true, inclusion: { in: VALID_UNITS }
   validates :product_id, presence: true
 
-  # MAIN FIXED METHODS
   def max_possible_quantity(location)
     inventory_items = product.inventory_items.where(location: location)
     return 0 if inventory_items.empty? || quantity <= 0
@@ -78,6 +77,27 @@ class RecipeItem < ApplicationRecord
     (total_available / quantity).floor
   end
 
+  def cost_per_recipe_unit(location)
+    inventory_items = product.inventory_items.where(location: location)
+    return 0 if inventory_items.empty?
+
+    total_cost = 0
+    total_quantity_available = 0
+
+    inventory_items.each do |item|
+      next unless can_convert?(item.unit_type)
+      
+      converted_qty = convert_quantity(item.quantity, item.unit_type)
+      next if converted_qty <= 0
+
+      cost_per_unit = item.price.to_f / converted_qty
+      total_cost += cost_per_unit * quantity
+      total_quantity_available += quantity
+    end
+
+    total_quantity_available > 0 ? total_cost : 0
+  end
+
   def earliest_expiration(location)
     return nil unless product.perishable?
     
@@ -88,7 +108,6 @@ class RecipeItem < ApplicationRecord
            .minimum('batches.expiration_date')
   end
 
-  # PRESERVED ORIGINAL METHODS
   def self.unit_compatibility_map
     {
       'units' => ['units'],
@@ -148,7 +167,6 @@ class RecipeItem < ApplicationRecord
     (unit == 'units' && from_unit == 'units')
   end
   
-  # PRESERVED PRIVATE METHODS
   private
   
   def metric_weight_units?(unit)
@@ -175,7 +193,6 @@ class RecipeItem < ApplicationRecord
     end
   end
 
-  # NEW HELPER METHODS
   def can_convert?(from_unit)
     return true if unit == from_unit
     CONVERSION_RATES.dig(from_unit, unit).present?

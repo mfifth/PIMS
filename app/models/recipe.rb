@@ -9,6 +9,10 @@ class Recipe < ApplicationRecord
   validates :name, presence: true, uniqueness: { scope: :account_id }
   validate :recipe_limit_not_exceeded, on: :create
 
+  def estimated_cost(location)
+    recipe_items.sum { |item| item.cost_per_recipe_unit(location) }
+  end
+
   private
 
   def recipe_limit_not_exceeded

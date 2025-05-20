@@ -41,20 +41,20 @@ class CsvImporter
     unless row_data['sku'].present? && row_data['name'].present?
       raise "Missing required fields: SKU and Name are required"
     end
-
+  
     product = find_or_initialize_product(row_data)
     inventory_item = @location.inventory_items.find_or_initialize_by(product: product)
-
+  
     inventory_item.assign_attributes(
       quantity: row_data['quantity'].to_f,
       low_threshold: row_data['low_stock_alert'].to_f,
       unit_type: row_data['unit_type'] || 'units'
     )
-
+  
     if row_data['batch_number'].present? && row_data['expiration_date'].present?
       inventory_item.batch = find_or_create_batch(row_data['batch_number'], row_data)
     end
-
+  
     product.save!
     inventory_item.save!
   end

@@ -4,10 +4,8 @@ class Batch < ApplicationRecord
 
   belongs_to :account
 
-  validates :batch_number, presence: true, uniqueness: true
   validates :expiration_date, presence: true
-
-  validates :batch_number, uniqueness: { scope: :account_id }
+  validates :batch_number, presence: true, uniqueness: { scope: :account_id }
 
   def batch_info
     "#{batch_number} - MFG: #{manufactured_date || 'N/A'} | EXP: #{expiration_date || 'N/A'}"

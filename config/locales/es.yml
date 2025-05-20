@@ -642,7 +642,7 @@ es:
             - "Controlar hasta 25 productos"
             - "Gestionar hasta 10 recetas"
             - "Recibir notificaciones por correo electrónico sobre bajo inventario y productos por vencer"
-            - "Usar un calculador de margen para optimizar el precio de los platillos"
+            - "Calcula márgenes y maximiza ganancias de tus platillos"
             - "Sincronizar con Square para actualizaciones en tiempo real"
         plus:
           name: "Plus"
@@ -653,7 +653,7 @@ es:
             - "Administrar hasta 2 ubicaciones con 3 administradores"
             - "Controlar hasta 50 productos"
             - "Gestionar hasta 15 recetas"
-            - "Usar el calculador de margen para un precio preciso de los platillos"
+            - "Calcula márgenes y maximiza ganancias de tus platillos"
             - "Recibir alertas por correo electrónico y mensajes de texto"
             - "Sincronizar con Square para actualizaciones en tiempo real"
         premium:
@@ -668,7 +668,7 @@ es:
             - "Soporte para 4 administradores"
             - "Soporte prioritario para mantener tu operación sin interrupciones"
             - "Recibir notificaciones por correo electrónico y mensajes de texto"
-            - "Utilizar el calculador de margen para un precio exacto de los platillos"
+            - "Calcula márgenes y maximiza ganancias de tus platillos"
             - "Sincronizar con Square para actualizaciones en tiempo real"
       addons:
         title: "¿Necesita más? Tenemos lo que necesita"

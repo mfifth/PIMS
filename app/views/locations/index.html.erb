@@ -165,7 +165,8 @@
                     <div>
                       <h3 class="font-medium text-gray-800"><%= recipe.name %></h3>
                       <p class="text-sm font-medium text-green-600">
-                        <%= number_to_currency(recipe.price * quantity) %> <%= t('locations.total_value') %>
+                        <%= number_to_currency((recipe.price - recipe.estimated_cost(location)) * quantity) %> 
+                        <%= t('locations.estimated_profit') %>
                       </p>
                     </div>
                     <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
