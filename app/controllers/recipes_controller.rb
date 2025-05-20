@@ -42,35 +42,35 @@ class RecipesController < ApplicationController
 
   def product_search
     query = params[:query].to_s.strip
-    selected_ids = params[:selected_ids] || []
-    
-    @products = if query.present?
-      base_scope = Current.account.products
-                    .left_joins(:inventory_items)
-                    .where.not(id: selected_ids)
-                    .where(perishable: true)
-                    .select('products.*, inventory_items.unit_type as inventory_unit_type')
-                    .distinct
-      
-      if ActiveRecord::Base.connection.adapter_name.downcase.include?("sqlite")
-        base_scope.where("LOWER(products.name) LIKE ?", "%#{query.downcase}%").limit(5)
-      else
-        base_scope.where("products.name ILIKE ?", "%#{query}%").limit(10)
-      end
+    selected_ids = Array(params[:selected_ids])
+  
+    if query.blank?
+      @products = []
     else
-      []
+      base_scope = Current.account.products
+                            .left_joins(:inventory_items)
+                            .where.not(id: selected_ids)
+                            .where(perishable: true)
+                            .select("products.*, inventory_items.unit_type AS inventory_unit_type")
+                            .distinct
+  
+      Rails.logger.debug "ProductSearch SQL: #{base_scope.to_sql}"
+  
+      @products = base_scope
+                    .where("LOWER(products.name) LIKE LOWER(?)", "%#{query}%")
+                    .limit(5)
     end
   
     respond_to do |format|
-      format.turbo_stream {
+      format.turbo_stream do
         render turbo_stream: turbo_stream.update(
           "product_search_results",
-          partial: "recipes/product_search_results",
-          locals: { products: @products }
+          partial:     "recipes/product_search_results",
+          locals:      { products: @products }
         )
-      }
+      end
     end
-  end
+  end  
 
   def update
     if @recipe.update(recipe_params)
