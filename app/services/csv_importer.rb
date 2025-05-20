@@ -77,8 +77,11 @@ class CsvImporter
   end
 
   def cast_boolean(value)
-    value.to_s.strip.downcase.in?(%w[true 1 yes y t])
-  end
+    return false if value.nil?
+  
+    normalized = value.to_s.strip.downcase
+    %w[true 1 yes y t].include?(normalized)
+  end  
 
   def find_or_create_batch(batch_number, row)
     Batch.find_or_create_by!(account: @account, batch_number: batch_number) do |batch|
