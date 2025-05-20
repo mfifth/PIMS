@@ -7,9 +7,13 @@
       data-action="click->recipe-items#selectProduct"
       data-product-id="<%= product.id %>"
       data-product-name="<%= product.name %>"
+      data-product-sku="<%= product.sku %>"
       data-unit-type="<%= product.inventory_unit_type %>"
       data-unit-options="<%= unit_options.to_h.to_json %>">
-      <%= product.name %>
+      <div class="flex justify-between">
+        <span><%= product.name %></span>
+        <span class="text-gray-500 text-sm"><%= product.sku %></span>
+      </div>
     </button>
   <% end %>
 <% elsif params[:query].present? %>
