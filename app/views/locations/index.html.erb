@@ -10,9 +10,9 @@
 
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
     <% @locations.each do |location| %>
-      <div class="relative h-full" data-controller="flip">
+      <div class="relative h-full"" data-controller="flip">
         <!-- Front of Card -->
-        <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden flex flex-col h-full" data-flip-target="front">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-colors duration-200 flex flex-col h-full" data-flip-target="front">
           <div class="p-4 border-b border-gray-100">
             <div class="flex justify-between items-start gap-2">
               <h2 class="text-lg font-semibold text-gray-800 truncate"><%= location.name %></h2>
@@ -26,7 +26,7 @@
                 <span><%= t('sidebar.recipes') %></span>
               </button>
             </div>
-                          
+
             <div class="mt-2 flex items-center text-gray-600 text-sm">
               <svg style='width: 20px;' xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -142,7 +142,7 @@
         </div>
 
         <!-- Back of Card (Recipes) -->
-        <div class="absolute inset-0 bg-white rounded-lg shadow-sm border border-gray-200 p-4 hidden flex flex-col h-full" data-flip-target="back">
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hidden flex flex-col h-full min-h-[25rem]" data-flip-target="back">
           <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-semibold text-gray-800">
               <%= t('locations.recipes_for_location', location: location.name) %>
