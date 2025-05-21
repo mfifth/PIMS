@@ -609,6 +609,8 @@ en:
       mfg: "MFG"
       low_stock: "Low Stock"
       expired: "Expired"
+      avocado_toast: "Avocado Toast"
+      chicken_stir_fry: "Chicken Stir Fry"
     pricing:
       title: "Pricing"
       subtitle: "Simple, transparent pricing"
@@ -700,3 +702,5 @@ en:
     fruits: "Fruits"
     baking: "Baking"
     pantry: "Pantry"
+    vegetables: "Vegetables"
+    organic: "Organic"
