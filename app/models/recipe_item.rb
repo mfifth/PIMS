@@ -93,7 +93,7 @@ class RecipeItem < ApplicationRecord
       end
     end
   
-    price_per_recipe_unit * converted_quantity
+    price_per_recipe_unit || 0 * converted_quantity
   end
 
   def earliest_expiration(location)
