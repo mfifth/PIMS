@@ -463,7 +463,7 @@ es:
     failed_email_test: "No se pudo enviar el correo de prueba."
     test_text: "Esto es una prueba."
     test_text_notification: "Esta es una prueba de notificaciones por mensaje de texto"
-    basic_instructions: Comienza agregando tus ubicaciones y luego configura tus productos. Vincula los productos a las recetas como ingredientes para seguir su disponibilidad, calcular cuántas porciones puedes preparar en cada ubicación y ver un análisis de costo/beneficio en tiempo real.
+    basic_instructions: Comience agregando sus ubicaciones. Luego, configure sus productos subiendo un archivo CSV para la ubicación que desea actualizar o usando el formulario para nuevos productos. Vincule los productos a las recetas como ingredientes para hacer seguimiento de la disponibilidad, calcular cuántas porciones puede preparar en cada ubicación y ver el análisis de costos y ganancias en tiempo real.
     user_limit: "Has alcanzado el límite máximo de %{limit} usuarios para tu suscripción."
     user_already_registered: "ya está registrado. Por favor, inicia sesión o intenta recuperar tu contraseña."
     blank_email: "El correo electrónico no puede estar en blanco"
