@@ -196,7 +196,7 @@
         <!-- Locations Screenshot -->
         <div class="bg-white rounded-lg shadow-xl overflow-hidden">
           <div class="p-4 bg-gray-100 border-b border-gray-200">
-            <h3 class="text-lg font-medium text-gray-900"><%= t('pims.screenshots.location_management') %></h3>
+            <h3 class="text-lg font-medium text-gray-900"><%= t('pims.screenshots.location_inventory') %></h3>
           </div>
           <div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
             <div class="bg-white p-6 rounded-lg shadow-sm">
@@ -469,33 +469,112 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Locations Card -->
-      <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-semibold text-gray-800"><%= t('pims.dashboard.locations') %></h2>
-          <span class="text-2xl font-bold text-green-600">2</span>
-        </div>
-
-        <div class="space-y-4">
-          <!-- Main Restaurant -->
-          <div class="border-b border-gray-100 pb-4">
-            <div class="flex justify-between items-center">
-              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.main_restaurant') %></h3>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                <%= t('pims.dashboard.synced') %>
-              </span>
+      <!-- Locations Screenshot -->
+      <div class="bg-white rounded-lg shadow-xl overflow-hidden">
+        <div class="p-4 h-96 overflow-y-auto scroll-container">
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-colors duration-200">
+            <div class="p-4 border-b border-gray-100">
+              <div class="flex justify-between items-start gap-2">
+                <h2 class="text-lg font-semibold text-gray-800 truncate"><%= t('pims.screenshots.main_warehouse') %></h2>
+              </div>
+              <div class="mt-2 flex items-center text-gray-600 text-sm">
+                <svg style='width: 20px;' xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Springfield</span>
+              </div>
             </div>
-            <p class="text-sm text-gray-600 mt-1">
-              433 <%= t('pims.dashboard.items') %> • <%= t('pims.dashboard.total_value') %>: $1,299.00
-            </p>
-          </div>
+      
+            <!-- Card Body -->
+            <div class="p-4 space-y-4">
+              <div class="space-y-2">
+                <h3 class="font-medium text-gray-800 text-sm flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1.5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                  <%= t("locations.inventory", default: "Inventory") %>
+                </h3>
+      
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="bg-blue-50 p-2 rounded space-y-0.5">
+                    <p class="text-blue-800 font-medium"><%= t("locations.perishable_items") %></p>
+                    <p class="text-gray-700">
+                      24 <%= t("locations.products") %>
+                    </p>
+                  </div>
+                  <div class="bg-green-50 p-2 rounded space-y-0.5">
+                    <p class="text-green-800 font-medium"><%= t("locations.non_perishable_items") %></p>
+                    <p class="text-gray-700">
+                      18 <%= t("locations.products") %>
+                    </p>
+                  </div>
+                </div>
+              </div>
+      
+              <div class="space-y-2">
+                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <%= t("locations.categories", default: "Categories") %>
+                </h4>
 
-          <!-- Second Location -->
-          <div class="pb-4">
-            <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.second_location') %></h3>
-            <p class="text-sm text-gray-600 mt-1">
-              2,486 <%= t('pims.dashboard.items') %> • <%= t('pims.dashboard.total_value') %>: $1,515.74
-            </p>
+                <div class="relative h-[200px]">
+                  <div class="absolute inset-0 overflow-y-auto scroll-container">
+                    
+                    <% [
+                      { name: "Fruits", count: 8, value: 23.92 },
+                      { name: "Baking", count: 3, value: 83.76 },
+                      { name: "Pantry", count: 2, value: 41.22 }
+                    ].each do |category| %>
+                      <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                        <div class="flex items-center space-x-3">
+                          <div>
+                            <p class="text-sm font-medium text-gray-800">
+                              <%= t("categories.#{category[:name].parameterize(separator: '_')}", default: category[:name]) %>
+                            </p>
+                            <p class="text-xs text-gray-500">
+                              <%= t("products.count", count: category[:count]) %>
+                            </p>
+                          </div>
+                        </div>
+                        <div class="text-right">
+                          <p class="text-sm font-medium text-gray-800">
+                            <%= number_to_currency(category[:value]) %>
+                          </p>
+                          <p class="text-xs text-gray-500">
+                            <%= t("locations.total_value", default: "Total value") %>
+                          </p>
+                        </div>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            <!-- Card Footer -->
+            <div class="bg-gray-50 px-4 py-3 flex justify-between border-t border-gray-100">
+              <a href="#" class="text-xs text-blue-600 hover:text-blue-800 font-medium flex items-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                <span><%= t("locations.view", default: "View") %></span>
+              </a>
+      
+              <a href="#" class="text-xs text-yellow-600 hover:text-yellow-800 font-medium flex items-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                <span><%= t("locations.edit", default: "Edit") %></span>
+              </a>
+      
+              <a href="#" class="text-xs text-red-600 hover:text-red-800 font-medium flex items-center space-x-1">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                <span><%= t("locations.delete", default: "Delete") %></span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

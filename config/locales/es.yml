@@ -252,6 +252,9 @@ es:
     remove: "Eliminar"
     price_per_unit: "Precio Por Unidad"
     unit_type_title: "Tipo De Unidad"
+    count:
+      one: "1 producto"
+      other: "%{count} productos"
     index:
       title: "Productos"
       new_product: "Nuevo producto"
@@ -713,3 +716,7 @@ es:
       submit_button: "Iniciar Sesión"
     forgot_password: "¿Olvidaste tu contraseña?"
     sign_up_link: "Registrarse"
+  categories:
+    fruits: "Frutas"
+    baking: "Repostería"
+    pantry: "Despensa"

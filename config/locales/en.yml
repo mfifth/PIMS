@@ -233,6 +233,9 @@ en:
     current_batches: "Current Batches"
     remove: "Remove"
     price_per_unit: "Price Per Unit"
+    count:
+      one: "1 product"
+      other: "%{count} products"
     index:
       title: "Products"
       new_product: "New Product"
@@ -540,7 +543,7 @@ en:
       title: "In Action"
       subtitle: "See PIMS in action"
       description: "Our intuitive interface makes inventory management simple and efficient."
-      location_management: "Location Management"
+      location_inventory: "Location Inventory"
       main_warehouse: "Main Warehouse"
       city: "City"
       inventory: "Inventory"
@@ -691,3 +694,7 @@ en:
       submit_button: "Sign In"
     forgot_password: "Forgot your password?"
     sign_up_link: "Sign Up"
+  categories:
+    fruits: "Fruits"
+    baking: "Baking"
+    pantry: "Pantry"
