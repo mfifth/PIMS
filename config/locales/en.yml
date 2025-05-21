@@ -279,6 +279,7 @@ en:
       no_recipes: "You have not created any recipes yet"
       create_first: "Create your first recipe"
       recipe_id: "ID: %{id}"
+      price_set: "Price: %{price}"
       edit: "Edit"
       ingredients: "Ingredients"
       updated_ago: "Updated %{time} ago"

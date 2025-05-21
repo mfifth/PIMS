@@ -162,6 +162,7 @@ es:
       no_recipes: "Aún no has creado ninguna receta"
       create_first: "Crear tu primera receta"
       recipe_id: "ID: %{id}"
+      price_set: "Precio: %{price}"
       edit: "Editar"
       ingredients: "Ingredientes"
       updated_ago: "Actualizado hace %{time}"
