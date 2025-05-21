@@ -344,20 +344,45 @@
             <h3 class="text-lg font-medium text-gray-900"><%= t('pims.screenshots.product_catalog') %></h3>
           </div>
           <div class="p-4 h-96 overflow-y-auto scroll-container bg-gray-800">
-            <div class="space-y-6">
+            <ul class="divide-y divide-gray-200">
               <!-- Organic Apples -->
-              <div class="bg-white p-6 rounded-lg shadow">
+              <li style='list-style-type: none;' class="py-6 bg-white p-6 rounded-lg shadow">
                 <div>
                   <div class="text-lg font-semibold text-gray-800"><%= t('pims.screenshots.organic_apples') %></div>
                   <div class="text-sm text-gray-600">
-                    <%= t('pims.screenshots.sku') %>: APP-ORG-001 | <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.fruits') %> | <%= t('pims.screenshots.price') %>: $2.99
+                    <%= t('pims.screenshots.sku') %>: APP-ORG-001 | 
+                    <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.fruits') %>
                   </div>
                 </div>
 
                 <div class="mt-2 text-sm text-gray-700">
                   <strong><%= t('pims.screenshots.stock_locations') %>:</strong>
-                  <p><%= t('pims.screenshots.main_warehouse') %>: 8 <%= t('pims.screenshots.units_in_stock') %></p>
-                  <p><%= t('pims.screenshots.downtown_store') %>: 15 <%= t('pims.screenshots.units_in_stock') %></p>
+                  <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                    <div class="inventory-item-block inline-block text-sm text-gray-700">
+                      <div class="inventory-item flex justify-between items-start gap-4">
+                        <div>
+                          <p class="font-medium">
+                            <%= t('pims.screenshots.main_warehouse') %>: 8 <%= t('pims.screenshots.units_in_stock') %> | 
+                            Unit Price: $2.99
+                          </p>
+                        </div>
+                        <button class="delete-item-btn text-red-500 text-sm px-2">×</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                    <div class="inventory-item-block inline-block text-sm text-gray-700">
+                      <div class="inventory-item flex justify-between items-start gap-4">
+                        <div>
+                          <p class="font-medium">
+                            <%= t('pims.screenshots.downtown_store') %>: 15 <%= t('pims.screenshots.units_in_stock') %> | 
+                            Unit Price: $2.99
+                          </p>
+                        </div>
+                        <button class="delete-item-btn text-red-500 text-sm px-2">×</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="mt-2 space-x-2">
@@ -365,21 +390,46 @@
                   <a href="#" class="text-yellow-500 hover:underline"><%= t('pims.screenshots.edit') %></a>
                   <a href="#" class="text-red-500 hover:underline"><%= t('pims.screenshots.delete') %></a>
                 </div>
-              </div>
+              </li>
 
               <!-- All-Purpose Flour -->
-              <div class="bg-white p-6 rounded-lg shadow">
+              <li style='list-style-type: none;' class="py-6 bg-white p-6 rounded-lg shadow">
                 <div>
                   <div class="text-lg font-semibold text-gray-800"><%= t('pims.screenshots.all_purpose_flour') %></div>
                   <div class="text-sm text-gray-600">
-                    <%= t('pims.screenshots.sku') %>: FLR-AP-001 | <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.baking') %> | <%= t('pims.screenshots.price') %>: $3.49
+                    <%= t('pims.screenshots.sku') %>: FLR-AP-001 | 
+                    <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.baking') %>
                   </div>
                 </div>
 
                 <div class="mt-2 text-sm text-gray-700">
                   <strong><%= t('pims.screenshots.stock_locations') %>:</strong>
-                  <p><%= t('pims.screenshots.main_warehouse') %>: 24 <%= t('pims.screenshots.pounds_in_stock') %></p>
-                  <p><%= t('pims.screenshots.downtown_store') %>: 12 <%= t('pims.screenshots.pounds_in_stock') %></p>
+                  <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                    <div class="inventory-item-block inline-block text-sm text-gray-700">
+                      <div class="inventory-item flex justify-between items-start gap-4">
+                        <div>
+                          <p class="font-medium">
+                            <%= t('pims.screenshots.main_warehouse') %>: 24 <%= t('pims.screenshots.pounds_in_stock') %> | 
+                            Unit Price: $3.49
+                          </p>
+                        </div>
+                        <button class="delete-item-btn text-red-500 text-sm px-2">×</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                    <div class="inventory-item-block inline-block text-sm text-gray-700">
+                      <div class="inventory-item flex justify-between items-start gap-4">
+                        <div>
+                          <p class="font-medium">
+                            <%= t('pims.screenshots.downtown_store') %>: 12 <%= t('pims.screenshots.pounds_in_stock') %> | 
+                            Unit Price: $3.49
+                          </p>
+                        </div>
+                        <button class="delete-item-btn text-red-500 text-sm px-2">×</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="mt-2 space-x-2">
@@ -387,21 +437,46 @@
                   <a href="#" class="text-yellow-500 hover:underline"><%= t('pims.screenshots.edit') %></a>
                   <a href="#" class="text-red-500 hover:underline"><%= t('pims.screenshots.delete') %></a>
                 </div>
-              </div>
+              </li>
 
               <!-- Granulated Sugar -->
-              <div class="bg-white p-6 rounded-lg shadow">
+              <li style='list-style-type: none;' class="py-6 bg-white p-6 rounded-lg shadow">
                 <div>
                   <div class="text-lg font-semibold text-gray-800"><%= t('pims.screenshots.granulated_sugar') %></div>
                   <div class="text-sm text-gray-600">
-                    <%= t('pims.screenshots.sku') %>: SUG-GR-001 | <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.pantry') %> | <%= t('pims.screenshots.price') %>: $2.29
+                    <%= t('pims.screenshots.sku') %>: SUG-GR-001 | 
+                    <%= t('pims.screenshots.category') %>: <%= t('pims.screenshots.pantry') %>
                   </div>
                 </div>
 
                 <div class="mt-2 text-sm text-gray-700">
                   <strong><%= t('pims.screenshots.stock_locations') %>:</strong>
-                  <p><%= t('pims.screenshots.main_warehouse') %>: 18 <%= t('pims.screenshots.pounds_in_stock') %></p>
-                  <p><%= t('pims.screenshots.downtown_store') %>: 9 <%= t('pims.screenshots.pounds_in_stock') %></p>
+                  <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                    <div class="inventory-item-block inline-block text-sm text-gray-700">
+                      <div class="inventory-item flex justify-between items-start gap-4">
+                        <div>
+                          <p class="font-medium">
+                            <%= t('pims.screenshots.main_warehouse') %>: 18 <%= t('pims.screenshots.pounds_in_stock') %> | 
+                            Unit Price: $2.29
+                          </p>
+                        </div>
+                        <button class="delete-item-btn text-red-500 text-sm px-2">×</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mt-1 pl-2 border-l-2 border-gray-200">
+                    <div class="inventory-item-block inline-block text-sm text-gray-700">
+                      <div class="inventory-item flex justify-between items-start gap-4">
+                        <div>
+                          <p class="font-medium">
+                            <%= t('pims.screenshots.downtown_store') %>: 9 <%= t('pims.screenshots.pounds_in_stock') %> | 
+                            Unit Price: $2.29
+                          </p>
+                        </div>
+                        <button class="delete-item-btn text-red-500 text-sm px-2">×</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="mt-2 space-x-2">
@@ -409,8 +484,8 @@
                   <a href="#" class="text-yellow-500 hover:underline"><%= t('pims.screenshots.edit') %></a>
                   <a href="#" class="text-red-500 hover:underline"><%= t('pims.screenshots.delete') %></a>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
 
@@ -637,30 +712,70 @@
             <span class="text-2xl font-bold text-blue-600">2</span>
           </div>
 
-          <div class="space-y-4">
+          <ul class="space-y-4">
             <!-- Fresh Strawberries -->
-            <div class="border-b border-gray-100 pb-4">
-              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.fresh_strawberries') %></h3>
-              <p class="text-sm text-red-500">
-                <%= t('pims.dashboard.exp') %>: May 6, 2025
-              </p>
-              <p class="text-sm text-gray-600 mt-1">
-                <%= t('pims.dashboard.qty') %>: 180 • <%= t('pims.dashboard.unit_type') %>: <%= t('pims.dashboard.ounces') %> • <%= t('pims.dashboard.location') %>: <%= t('pims.dashboard.second_location') %>
-              </p>
-            </div>
+            <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
+              <div class="flex justify-between">
+                <span class="text-gray-800 font-medium"><%= t('pims.dashboard.fresh_strawberries') %></span>
+                <span class="text-xs text-gray-500">SKU123</span> <!-- Placeholder SKU -->
+              </div>
+
+              <div class="mt-2">
+                <div class="p-2 border rounded">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="text-gray-700 text-sm font-medium">
+                        <%= t('pims.dashboard.second_location') %>
+                      </p>
+                      <p class="text-gray-500 ml-2">
+                        180 <%= t('pims.dashboard.ounces') %>
+                      </p>
+
+                      <div class="mt-1 text-xs text-red-600">
+                        <%= t('pims.dashboard.exp') %>: 05/06
+                        <span class="ml-1">(<%= t('pims.dashboard.expired') %>)</span>
+                      </div>
+                    </div>
+                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                      <%= t('pims.dashboard.low_stock') %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </li>
 
             <!-- Expiring Cheese -->
-            <div class="pb-4">
-              <h3 class="font-medium text-gray-800"><%= t('pims.dashboard.expiring_cheese') %></h3>
-              <p class="text-sm text-red-500">
-                <%= t('pims.dashboard.exp') %>: May 6, 2025
-              </p>
-              <p class="text-sm text-gray-600 mt-1">
-                <%= t('pims.dashboard.qty') %>: 50 • <%= t('pims.dashboard.unit_type') %>: <%= t('pims.dashboard.pounds') %> • <%= t('pims.dashboard.location') %>: <%= t('pims.dashboard.second_location') %>
-              </p>
-            </div>
-          </div>
+            <li class="bg-gray-50 p-4 rounded-md shadow-sm hover:shadow-md transition">
+              <div class="flex justify-between">
+                <span class="text-gray-800 font-medium"><%= t('pims.dashboard.expiring_cheese') %></span>
+                <span class="text-xs text-gray-500">SKU456</span>
+              </div>
+
+              <div class="mt-2">
+                <div class="p-2 border rounded">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <p class="text-gray-700 text-sm font-medium">
+                        <%= t('pims.dashboard.second_location') %>
+                      </p>
+                      <p class="text-gray-500 ml-2">
+                        50 <%= t('pims.dashboard.pounds') %>
+                      </p>
+
+                      <div class="mt-1 text-xs text-orange-500">
+                        <%= t('pims.dashboard.exp') %>: 05/06
+                      </div>
+                    </div>
+                    <span class="text-xs bg-red-100 text-red-800 px-2 py-1 rounded-full">
+                      <%= t('pims.dashboard.low_stock') %>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
+
 
         <!-- Batches Card -->
         <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">

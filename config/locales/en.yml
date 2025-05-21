@@ -607,6 +607,8 @@ en:
       pounds: "Pounds"
       batches: "Batches"
       mfg: "MFG"
+      low_stock: "Low Stock"
+      expired: "Expired"
     pricing:
       title: "Pricing"
       subtitle: "Simple, transparent pricing"

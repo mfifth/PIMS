@@ -615,6 +615,7 @@ es:
       available_recipes: "Recetas Disponibles"
       pancakes: "Panqueques"
       can_make: "se pueden hacer"
+      low_stock: "Stock Bajo"
       until: "Hasta"
       margherita_pizza: "Pizza Margarita"
       updated_days_ago: "Actualizado hace %{count} días"
@@ -629,6 +630,7 @@ es:
       pounds: "Libras"
       batches: "Lotes"
       mfg: "FAB"
+      expired: "Expirado"
     pricing:
       title: "Precios"
       subtitle: "Precios simples y transparentes"
