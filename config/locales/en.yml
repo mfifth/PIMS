@@ -629,7 +629,7 @@ en:
             - "Track up to 25 products"
             - "Manage up to 10 recipes"
             - "Receive email notifications for low stock and expiring items"
-            - "Optimize your meal pricing with margin and profit calculations"
+            - "Optimize your meal pricing with cost and profit calculations"
             - "Sync with Square for real time updates"
         plus:
           name: "Plus"
@@ -641,7 +641,7 @@ en:
             - "Track up to 50 products"
             - "Manage up to 15 recipes"
             - "Receive email and text notification alerts"
-            - "Optimize your meal pricing with margin and profit calculations"
+            - "Optimize your meal pricing with cost and profit calculations"
             - "Sync with Square for real time updates"
         premium:
           name: "Premium"
@@ -655,7 +655,7 @@ en:
             - "Support for 4 administrators"
             - "Priority support to keep you running smoothly"
             - "Receive email and text notifications"
-            - "Optimize your meal pricing with margin and profit calculations"
+            - "Optimize your meal pricing with cost and profit calculations"
             - "Sync with Square for real time updates"
       addons:
         title: "Need more? We've got you covered"
