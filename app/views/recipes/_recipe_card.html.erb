@@ -16,7 +16,11 @@
     <div class="flex flex-col gap-2 text-right">
       <%= link_to t("recipes.index.edit"), edit_recipe_path(recipe), class: "text-blue-500 hover:text-blue-700" %>
       <button data-action="click->recipe-card#toggle" class="text-sm text-gray-500 hover:text-gray-700">
-        <%= t("recipes.index.calculate_margin") %>
+        <%= t("recipes.index.calculate_cost_profit") %>
+      </button>
+      <button data-action="click->recipe-card#toggleIngredientsCalculator"
+              class="text-sm text-gray-500 hover:text-gray-700">
+        <%= t("recipes.index.calculate_ingredients") %>
       </button>
     </div>
   </div>
@@ -24,6 +28,24 @@
   <!-- Ingredients View -->
   <div data-recipe-card-target="details" class="mt-4">
     <h3 class="font-bold text-gray-700 mb-2"><%= t("recipes.index.ingredients") %></h3>
+
+    <!-- Ingredient Calculator Input -->
+    <div data-recipe-card-target="ingredientCalculator" class="mb-4 hidden">
+      <label for="recipeMultiplier" class="block text-sm font-medium text-gray-700">
+        <%= t("recipes.index.how_many_to_make") %>
+      </label>
+      <input
+        type="number"
+        min="1"
+        value="1"
+        id="recipeMultiplier"
+        class="mt-1 block w-full rounded border px-3 py-2"
+        data-action="input->recipe-card#updateIngredientQuantities"
+        data-recipe-card-target="multiplierInput"
+      >
+    </div>
+
+    <!-- Ingredient List -->
     <ul class="space-y-3">
       <% recipe.recipe_items.includes(product: :inventory_items).each do |item| %>
         <% product = item.product %>
@@ -33,9 +55,14 @@
             data-unit="<%= item.unit %>"
             data-translated-unit="<%= t("units.#{item.unit}", default: item.unit.humanize) %>">
           <span class="font-medium">
-            <%= product.name %> – <%= item.quantity %> <%= t("units.#{item.unit}", default: item.unit.humanize) %>
+            <%= product.name %> – 
+            <span data-recipe-card-target="ingredientQuantity"
+                  data-base-quantity="<%= item.quantity %>">
+              <%= item.quantity %>
+            </span>
+            <%= t("units.#{item.unit}", default: item.unit.humanize) %>
           </span>
-          
+
           <% product.inventory_items.each do |inv| %>
             <div class="inventory-option hidden"
                 data-inventory-unit="<%= inv.unit_type %>"
@@ -48,6 +75,7 @@
         </li>
       <% end %>
     </ul>
+
     <div class="mt-4 text-sm text-gray-500">
       <%= t("recipes.index.updated_ago", time: time_ago_in_words(recipe.updated_at)) %>
     </div>

@@ -284,9 +284,11 @@ en:
       edit: "Edit"
       ingredients: "Ingredients"
       updated_ago: "Updated %{time} ago"
-      calculate_margin: "Calculate Margin"
+      calculate_cost_profit: "Cost/Profit Calculator"
+      calculate_ingredients_necessary: "Ingredient Calculator"
       ingredients: "Ingredients"
       updated_ago: "Updated %{time} ago"
+      how_many_to_make: "How many would you like to make?"
     margin_calculator:
       title: "Margin Calculator"
       available_locations: "Available Locations"

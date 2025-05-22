@@ -166,7 +166,9 @@ es:
       edit: "Editar"
       ingredients: "Ingredientes"
       updated_ago: "Actualizado hace %{time}"
-      calculate_margin: "Calcular Margen"
+      calculate_cost_profit: "Calculadora de costo/beneficio"
+      calculate_ingredients_necessary: "Calculadora de ingredientes"
+      how_many_to_make: ¿Cuántos te gustaría hacer?
     margin_calculator:
       title: "Calculadora de Margen"
       available_locations: "Ubicaciones Disponibles"

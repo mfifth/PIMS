@@ -9,7 +9,10 @@ export default class extends Controller {
     "priceInput", 
     "totalCost", 
     "profit", 
-    "marginPct"
+    "marginPct",
+    "multiplierInput", 
+    "ingredientQuantity",
+    "ingredientCalculator"
   ]
 
   static values = {
@@ -36,6 +39,7 @@ export default class extends Controller {
       }))
     }));
 
+    this.updateIngredientQuantities()
     this.initializeLocationOptions();
     this.recalculate();
   }
@@ -48,6 +52,18 @@ export default class extends Controller {
       this.initializeLocationOptions();
       this.recalculate();
     }
+  }
+
+  updateIngredientQuantities() {
+    const multiplier = parseFloat(this.multiplierInputTarget.value) || 1
+    this.ingredientQuantityTargets.forEach(el => {
+      const base = parseFloat(el.dataset.baseQuantity) || 0
+      el.textContent = (base * multiplier).toFixed(2)
+    })
+  }
+
+  toggleIngredientsCalculator() {
+    this.ingredientCalculatorTarget.classList.toggle("hidden")
   }
 
   formatFromLocationPrice(locationName, unitPrice, unitType, translatedUnit) {
