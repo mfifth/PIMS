@@ -78,22 +78,14 @@ class RecipeItem < ApplicationRecord
   end
 
   def cost_per_recipe(location)
-    inventory_items = product.inventory_items.where(location: location)
-    return product.price.to_f * quantity if inventory_items.empty?
-  
-    price_per_recipe_unit = inventory_items.first.price
-    converted_quantity = quantity
-  
-    if unit != inventory_items.first.unit_type
-      conversion_rate = CONVERSION_RATES.dig(unit, inventory_items.first.unit_type)
-      if conversion_rate
-        converted_quantity = quantity * conversion_rate
-      else
-        return product.price.to_f * quantity
-      end
-    end
-  
-    price_per_recipe_unit || 0 * converted_quantity
+    inventory_item = product.inventory_items.where(location: location).first
+    return 0 unless inventory_item
+
+    conversion_rate = CONVERSION_RATES.dig(unit, inventory_item.unit_type)
+    return 0 unless conversion_rate
+
+    adjusted_quantity = quantity * conversion_rate
+    adjusted_quantity * inventory_item.price
   end
 
   def earliest_expiration(location)
