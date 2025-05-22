@@ -28,69 +28,95 @@
 
     <!-- Inventory Information -->
     <div class="bg-gray-100 p-4 rounded-lg">
-      <h3 class="text-lg font-medium text-gray-700"><%= t('products.details.inventory_info.title') %></h3>
+      <h3 class="text-lg mb-2 font-medium text-gray-700"><%= t('products.details.inventory_info.title') %></h3>
 
       <% if @locations.any? %>
         <% @locations.each do |location| %>
           <% inventory_item = @inventory_items.find { |item| item.location_id == location.id } %>
-          <div class="border-b border-gray-300 py-2">
-            <span class="text-gray-700 font-semibold"><%= t('products.details.inventory_info.location') %>:</span>
-            <span class="text-gray-600"><%= location.name %></span>
+          <div class="mb-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+            <!-- Location Header with Status Badge -->
+            <div class="px-5 py-4 flex justify-between items-center bg-gray-50">
+              <div class="flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <h3 class="font-medium text-gray-800"><%= location.name %></h3>
+              </div>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-medium <%= inventory_item ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+                <%= inventory_item ? t('products.details.inventory_info.in_stock') : t('products.details.inventory_info.out_of_stock') %>
+              </span>
+            </div>
 
-            <% if inventory_item %>
-              <div>
-                <span class="text-gray-700 font-semibold"><%= t('products.details.inventory_info.quantity') %>:</span>
-                <span class="text-gray-600"><%= inventory_item.quantity %></span>
-              </div>
-              <div>
-                <span class="text-gray-700 font-semibold"><%= t('products.details.inventory_info.unit_type') %>:</span>
-                <span class="text-gray-600"><%= inventory_item.unit_type.titleize %></span>
-              </div>
-              <div>
-                <span class="text-gray-700 font-semibold"><%= t('products.details.inventory_info.low_stock') %>:</span>
-                <span class="text-gray-600"><%= inventory_item.low_threshold || t('products.details.na') %></span>
-              </div>
-              <div>
-                <span class="text-gray-700 font-semibold"><%= t('products.details.inventory_info.price') %>:</span>
-                <span class="text-gray-600"><%= inventory_item.price || t('products.details.na') %></span>
-              </div>
-
-              <!-- Batch Information (for perishable products) -->
-              <% if @product.perishable? && inventory_item.batch %>
-                <div class="mt-2 border-l-2 border-gray-300">
-                  <h4 class="text-md font-medium text-gray-700"><%= t('products.details.batch_info.title') %></h4>
+            <div class="divide-y divide-gray-100">
+              <% if inventory_item %>
+                <!-- Key Metrics -->
+                <div class="px-5 py-3 grid grid-cols-3 gap-4">
                   <div>
-                    <span class="text-gray-700 font-semibold"><%= t('products.details.batch_info.number') %>:</span>
-                    <span class="text-gray-600"><%= inventory_item.batch.batch_number.presence || t('products.details.na') %></span>
+                    <p class="text-xs text-gray-500 font-medium"><%= t('products.details.inventory_info.quantity') %></p>
+                    <p class="text-lg font-semibold"><%= inventory_item.quantity %></p>
                   </div>
                   <div>
-                    <span class="text-gray-700 font-semibold"><%= t('products.details.batch_info.manufactured') %>:</span>
-                    <span class="text-gray-600"><%= inventory_item.batch.manufactured_date&.strftime('%B %d, %Y') || t('products.details.na') %></span>
+                    <p class="text-xs text-gray-500 font-medium"><%= t('products.details.inventory_info.unit_type') %></p>
+                    <p class="text-lg font-medium"><%= inventory_item.unit_type.titleize %></p>
                   </div>
                   <div>
-                    <span class="text-gray-700 font-semibold"><%= t('products.details.batch_info.expiration') %>:</span>
-                    <span class="text-gray-600">
-                      <%= inventory_item.batch.expiration_date&.strftime('%B %d, %Y') || t('products.details.na') %>
-                      <% if inventory_item.batch.expiration_date && inventory_item.batch.notification_days_before_expiration.to_i > 0 %>
-                        <% days_until_expiry = (inventory_item.batch.expiration_date - Date.today).to_i %>
-                        <% if days_until_expiry <= inventory_item.batch.notification_days_before_expiration %>
-                          <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                            <svg class="mr-1 h-3 w-3 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
-                              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                            </svg>
-                            <%= t('products.details.batch_info.expiring_soon', days: days_until_expiry) %>
-                          </span>
-                        <% end %>
-                      <% end %>
-                    </span>
+                    <p class="text-xs text-gray-500 font-medium"><%= t('products.details.inventory_info.total_value') %></p>
+                    <p class="text-lg font-semibold"><%= number_to_currency(inventory_item.price * inventory_item.quantity) %></p>
                   </div>
                 </div>
-              <% elsif @product.perishable? %>
-                <p class="text-gray-600 ml-4"><%= t('products.details.batch_info.none') %></p>
+
+                <!-- Secondary Details -->
+                <div class="px-5 py-3 grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <p class="text-gray-500"><%= t('products.details.inventory_info.price') %></p>
+                    <p><%= number_to_currency(inventory_item.price) %></p>
+                  </div>
+                  <div>
+                    <p class="text-gray-500"><%= t('products.details.inventory_info.low_stock') %></p>
+                    <p><%= inventory_item.low_threshold || t('products.details.na') %></p>
+                  </div>
+                </div>
+
+                <!-- Batch Information - Simplified Toggle -->
+                <% if @product.perishable? %>
+                  <div class="px-5 py-3">
+                    <button onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('.toggle-icon').classList.toggle('rotate-180')"
+                            class="flex items-center text-gray-600 hover:text-gray-800 w-full text-sm">
+                      <svg class="toggle-icon h-4 w-4 mr-2 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                      <%= t('products.details.batch_info.title') %>
+                    </button>
+
+                    <div class="hidden mt-2 pl-6 space-y-2 text-sm">
+                      <% if inventory_item.batch %>
+                        <div class="flex justify-between py-1">
+                          <span class="text-gray-500"><%= t('products.details.batch_info.number') %></span>
+                          <span><%= inventory_item.batch.batch_number.presence || t('products.details.na') %></span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                          <span class="text-gray-500"><%= t('products.details.batch_info.manufactured') %></span>
+                          <span><%= inventory_item.batch.manufactured_date&.strftime('%b %d, %Y') || t('products.details.na') %></span>
+                        </div>
+                        <div class="flex justify-between py-1">
+                          <span class="text-gray-500"><%= t('products.details.batch_info.expiration') %></span>
+                          <span class="<%= inventory_item.batch.expiring_soon? ? 'text-yellow-600' : '' %>">
+                            <%= inventory_item.batch.expiration_date&.strftime('%b %d, %Y') || t('products.details.na') %>
+                          </span>
+                        </div>
+                      <% else %>
+                        <p class="text-gray-500 py-1"><%= t('products.details.batch_info.none') %></p>
+                      <% end %>
+                    </div>
+                  </div>
+                <% end %>
+              <% else %>
+                <div class="px-5 py-4 text-center text-gray-500">
+                  <%= t('products.details.inventory_info.none') %>
+                </div>
               <% end %>
-            <% else %>
-              <p class="text-gray-600"><%= t('products.details.inventory_info.none') %></p>
-            <% end %>
+            </div>
           </div>
         <% end %>
       <% else %>

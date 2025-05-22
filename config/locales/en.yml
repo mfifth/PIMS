@@ -265,6 +265,7 @@ en:
         none: "No inventory data for this location."
         no_locations: "No inventory locations found for this product."
         price: "Unit Price"
+        total_value: "Total Value:"
       actions:
         edit: "Edit Product"
         back: "Back to Products"

@@ -284,6 +284,7 @@ es:
         low_stock: "Alerta de Bajo Inventario"
         none: "No hay datos de inventario para esta ubicación."
         no_locations: "No se encontraron ubicaciones de inventario para este producto."
+        total_value: "Valor Total:"
       actions:
         edit: "Editar Producto"
         back: "Volver a Productos"

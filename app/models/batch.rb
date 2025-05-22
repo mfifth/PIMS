@@ -11,6 +11,10 @@ class Batch < ApplicationRecord
     "#{batch_number} - MFG: #{manufactured_date || 'N/A'} | EXP: #{expiration_date || 'N/A'}"
   end
 
+  def expiring_soon?
+    expiration_date.in?(Date.current..(Date.current + 7.days))
+  end
+
   scope :not_expired, -> { where('expiration_date >= ?', Date.today) }
 
   scope :search, -> (term) {
