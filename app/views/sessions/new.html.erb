@@ -27,14 +27,13 @@
     <% end %>
 
     <div class="mt-4 text-center space-y-3">
-      <%= link_to t('sign_in.forgot_password'), new_password_path, 
-        class: "w-full inline-block px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition" %>
-
-      <!-- Sign Up (Blue) -->
       <div>
         <%= link_to t('sign_in.sign_up_link'), '/users/new', 
           class: "w-full inline-block px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 transition" %>
       </div>
+
+      <%= link_to t('sign_in.forgot_password'), new_password_path, 
+        class: "w-full inline-block px-4 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 transition" %>
 
       <div>
         <%= link_to t('sign_in.resend_confirmation'), '/resend_confirmation', 
