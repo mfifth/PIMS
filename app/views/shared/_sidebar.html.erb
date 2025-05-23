@@ -14,7 +14,7 @@
       <ul class="mt-4 space-y-1">
         <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.admin") %></span>
 
-        <li><%= link_to t("sidebar.dashboard"), "/dashboard", class: sidebar_link_class(root_path) %></li>
+        <li><%= link_to t("sidebar.dashboard"), dashboard_path, class: sidebar_link_class(root_path) %></li>
         <li><%= link_to t("sidebar.locations"), locations_path, class: sidebar_link_class(locations_path) %></li>
         <li><%= link_to t("sidebar.products"), products_path, class: sidebar_link_class(products_path) %></li>
         <li><%= link_to t("sidebar.batches"), batches_path, class: sidebar_link_class(batches_path) %></li>
