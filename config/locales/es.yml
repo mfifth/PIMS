@@ -573,6 +573,7 @@ es:
       main_warehouse: "Almacén Principal"
       city: "Ciudad"
       inventory: "Inventario"
+      location_inventory: "Inventario de ubicación"
       all: "Todos"
       perishable: "Perecedero"
       non_perishable: "No Perecedero"
