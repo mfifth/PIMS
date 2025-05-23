@@ -84,6 +84,9 @@ Rails.application.routes.draw do
   get 'signin', to: 'sessions#new'
   post 'signup', to: 'users#create'
 
+  get  "/resend_confirmation", to: "confirmations#new"
+  post "/resend_confirmation", to: "confirmations#create"
+
   get 'inventory', to: 'locations#inventory'
   post 'update_inventory', to: 'locations#update_inventory'
 

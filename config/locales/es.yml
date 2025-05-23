@@ -720,6 +720,9 @@ es:
     sign_in_link: "Iniciar Sesión"
   sign_in:
     title: "Iniciar Sesión"
+    confirmation_sent: Correo electrónico de confirmación enviado
+    not_found_or_confirmed: Correo electrónico no encontrado o ya confirmado
+    resend_confirmation: "Reenviar confirmación"
     form:
       email_placeholder: "Ingresa tu correo electrónico"
       password_placeholder: "Ingresa tu contraseña"

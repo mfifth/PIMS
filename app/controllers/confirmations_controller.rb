@@ -1,7 +1,22 @@
-# app/controllers/confirmations_controller.rb
 class ConfirmationsController < ApplicationController
   skip_before_action :require_authentication # Allow unauthenticated access
-  
+
+  def new
+  end
+
+  def create
+    user = User.find_by(email_address: params[:email].downcase.strip)
+
+    if user && !user.confirmed?
+      user.generate_confirmation_token!
+      InvitationMailer.confirmation_instructions(user).deliver_now
+      redirect_to root_path, notice: t('sign_in.confirmation_sent')
+    else
+      flash.now[:alert] = t('sign_in.not_found_or_confirmed')
+      render :new, status: :unprocessable_entity
+    end
+  end
+
   def show
     @user = User.find_by(confirmation_token: params[:token])
     

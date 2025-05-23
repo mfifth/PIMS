@@ -696,6 +696,9 @@ en:
     sign_in_link: "Sign In"
   sign_in:
     title: "Sign In"
+    confirmation_sent: "Confirmation email sent."
+    not_found_or_confirmed: "Email not found or already confirmed."
+    resend_confirmation: "Resend Confirmation"
     form:
       email_placeholder: "Enter your email"
       password_placeholder: "Enter your password"
