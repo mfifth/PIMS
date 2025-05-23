@@ -166,7 +166,7 @@
             <%= form.select :location_id, 
                   Location.where(account_id: Current.account.id).pluck(:name, :id),
                   { include_blank: t('products.select_location') }, 
-                  { class: "w-full px-3 py-2 border rounded-md",
+                  { class: "w-full px-3 py-2 border rounded-md", required: true,
                     data: { 
                       product_form_target: "locationSelect",
                       action: "change->product-form#fetchInventory"
