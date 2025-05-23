@@ -39,7 +39,7 @@ class User < ApplicationRecord
   end
 
   def generate_confirmation_token
-    regenerate_confirmation_token unless confirmation_token? && confirmation_token_valid?
+    regenerate_confirmation_token unless confirmation_token.present? && confirmation_token_valid?
   end
 
   def confirmation_token_valid?
