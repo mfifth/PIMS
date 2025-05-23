@@ -8,8 +8,7 @@ class ConfirmationsController < ApplicationController
     user = User.find_by(email_address: params[:email].downcase.strip)
 
     if user && !user.confirmed?
-      user.generate_confirmation_token!
-      InvitationMailer.confirmation_instructions(user).deliver_now
+      user.send_confirmation_email!
       redirect_to root_path, notice: t('sign_in.confirmation_sent')
     else
       flash.now[:alert] = t('sign_in.not_found_or_confirmed')
