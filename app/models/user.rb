@@ -30,7 +30,7 @@ class User < ApplicationRecord
   after_create :create_account_details
 
   def send_confirmation_email!
-    regenerate_confirmation_token! unless confirmation_token_valid?
+    generate_confirmation_token
     self.confirmation_sent_at = Time.current
     self.confirmation_token_expires_at = 24.hours.from_now
 
@@ -38,13 +38,12 @@ class User < ApplicationRecord
     InvitationMailer.confirmation_instructions(self).deliver_now
   end
 
-  def regenerate_confirmation_token!
-    regenerate_confirmation_token
-    confirmation_token
+  def generate_confirmation_token
+    regenerate_confirmation_token unless confirmation_token? && confirmation_token_valid?
   end
 
   def confirmation_token_valid?
-    confirmation_token_expires_at > Time.current
+    confirmation_token_expires_at.present? && confirmation_token_expires_at > Time.current
   end
   
   # Check if user is confirmed
