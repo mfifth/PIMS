@@ -6,8 +6,8 @@ class LocationsController < ApplicationController
   before_action :require_admin!, only: [:create, :edit, :update, :new, :destroy, :import_products]
 
   def index
-    @recipes = Current.account.recipes
-    @locations = Current.account.locations.includes(inventory_items: :product)
+    @recipes = Current.account.recipes.includes(recipe_items: :product)
+    @locations = Current.account.locations.includes(:inventory_items)
     
     @locations.each do |loc|
       perishable = loc.inventory_items.joins(:product).where(products: { perishable: true }).count

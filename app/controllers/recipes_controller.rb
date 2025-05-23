@@ -10,7 +10,7 @@ class RecipesController < ApplicationController
   end
   
   def index
-    @recipes = Current.account.recipes.includes(recipe_items: :product, products: :inventory_items).order(created_at: :desc)
+    @recipes = Current.account.recipes.includes(products: :inventory_items).order(created_at: :desc)
     
     if params[:search].present?
       search_term = "%#{params[:search].downcase}%"

@@ -27,7 +27,7 @@ class DashboardController < ApplicationController
   end
 
   def load_recipes
-    @recipes = Current.account.recipes.includes(:recipe_items).page(params[:recipes_page]).per(5)
+    @recipes = Current.account.recipes.includes(recipe_items: :product).page(params[:recipes_page]).per(5)
   end
 
   def load_products
