@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
     if subscription.trialing? && subscription.expired?
       subscription.update!(status: "expired", plan: "free")
   
-      redirect_to root_path, alert: t('notifications.free_trial_end')
+      flash[:alert] = t('notifications.free_trial_end')
     end
   end
 end

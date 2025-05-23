@@ -9,7 +9,6 @@ class SessionsController < ApplicationController
     user = User.authenticate_by(params.permit(:email_address, :password))
     
     if user&.confirmed_at.present?
-      reset_session
       start_new_session_for(user)
       redirect_to after_authentication_url
     else

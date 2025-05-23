@@ -4,9 +4,9 @@ class ProductsController < ApplicationController
 
   def index
     @products = Current.account.products
+                       .includes(:category, :recipe_items, inventory_items: :location)
                        .left_joins(:category)
                        .left_joins(recipe_items: :recipe)
-                       .includes(inventory_items: :location)
                        .joins(inventory_items: :location)
                        .distinct
   
