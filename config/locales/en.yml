@@ -198,7 +198,7 @@ en:
     in_stock: "in stock"
     create_new: "Create New Product"
     edit: "Edit Product"
-    general_info: "General Information"
+    general_info: "Product Information"
     product_name: "Product Name"
     sku: "SKU/Barcode (Use this as a unique external ID)"
     select_existing_category: "Select Existing Category"

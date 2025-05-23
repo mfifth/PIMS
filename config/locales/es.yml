@@ -217,10 +217,11 @@ es:
     exp: "Venc."
     na: "N/D"
     stock_locations: "Ubicaciones de Stock"
+    used_in_recipes: Incluido en las recetas
     in_stock: "en stock"
     create_new: "Crear Producto Nuevo"
     edit: "Editar Producto"
-    general_info: "Información General"
+    general_info: "Información de Producto"
     product_name: "Nombre del Producto"
     sku: "SKU/Código de Barras"
     select_existing_category: "Seleccionar Categoría Existente"
