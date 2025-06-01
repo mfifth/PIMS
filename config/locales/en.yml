@@ -683,6 +683,8 @@ en:
       eula: "End User License Agreement"
       privacy_policy: "Privacy Policy"
       copyright: "&copy; %{year} PIMS. All rights reserved."
+  sign_out:
+    sign_out_msg: "Are you sure you want to sign out?"
   sign_up:
     title: "Sign Up"
     form:

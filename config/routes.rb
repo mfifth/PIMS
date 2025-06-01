@@ -80,9 +80,9 @@ Rails.application.routes.draw do
   delete "/delete_account" => 'accounts#destroy'
 
   get 'signup', to: 'users#new'
-  get 'signout', to: 'sessions#destroy'
   get 'signin', to: 'sessions#new'
   post 'signup', to: 'users#create'
+  delete "/signout", to: "sessions#destroy", as: :signout
 
   get  "/resend_confirmation", to: "confirmations#new"
   post "/resend_confirmation", to: "confirmations#create"

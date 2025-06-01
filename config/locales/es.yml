@@ -707,6 +707,8 @@ es:
       eula: "Acuerdo de Licencia de Usuario Final"
       privacy_policy: "Política de Privacidad"
       copyright: "&copy; %{year} PIMS. Todos los derechos reservados."
+  sign_out:
+    sign_out_msg: "Estás segura de que quieres cerrar sesión?"
   sign_up:
     title: "Registrarse"
     form:
