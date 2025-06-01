@@ -67,11 +67,11 @@
                       step: (item_form.object.unit == "units" ? 1 : 0.1),
                       min: 1,
                       class: "border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
-                      style: "width: 50vh;",
+                      style: "width: 40vh;",
                       data: { unitType: item_form.object.unit } %>
 
                   <%= item_form.select :unit, RecipeItem.unit_options, {},
-                      style: "width: 50vh;",
+                      style: "width: 40vh;",
                       class: "border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
                       data: { recipe_items_target: "unitInput" } %>
 

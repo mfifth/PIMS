@@ -7,14 +7,14 @@
     step: (['units', 'fluid_oz'].include?(f.object.unit) ? 1 : 0.1),
     min: 1,
     class: "border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
-    style: "width: 50vh;",
+    style: "width: 40vh;",
     data: { unit_type: f.object.unit } %>
 
   <%= f.select :unit,
     f.object.compatible_unit_options,
     {},
     class: "border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
-    style: "width: 50vh;",
+    style: "width: 40vh;",
     data: { recipe_items_target: "unitInput" } %>
 
   <%= f.hidden_field :product_id %>
