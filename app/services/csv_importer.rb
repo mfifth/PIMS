@@ -56,21 +56,31 @@ class CsvImporter
     end
 
     product = find_or_initialize_product(row)
-    inventory = @location.inventory_items.find_or_initialize_by(product: product)
+    
+    # Set price if provided
+    product.price = row['price'].to_f if row['price'].present?
+    
+    # Save product first with error handling
+    unless product.save
+      raise "Product validation failed: #{product.errors.full_messages.join(', ')}"
+    end
 
+    inventory = @location.inventory_items.find_or_initialize_by(product: product)
     inventory.assign_attributes(
-      quantity:      row['quantity'].to_f,
+      quantity: row['quantity'].to_f,
       low_threshold: row['low_stock_alert'].to_f,
-      unit_type:     row['unit_type'].presence || 'units',
-      price: row['price'] || 0
+      unit_type: row['unit_type'].presence || 'units'
     )
 
     if row['batch_number'].present? && row['expiration_date'].present?
       inventory.batch = find_or_create_batch(row['batch_number'], row)
     end
 
-    product.save!
     inventory.save!
+  rescue ActiveRecord::RecordInvalid => e
+    raise "Validation failed: #{e.record.errors.full_messages.join(', ')}"
+  rescue => e
+    raise "Import failed: #{e.message}"
   end
 
   def find_or_initialize_product(data)
