@@ -56,6 +56,7 @@ Rails.application.routes.draw do
     resources :recipe_items, only: [:create, :update, :destroy]
     collection do
       get :product_search
+      post :import_recipes
     end
   end  
 

@@ -88,7 +88,25 @@ class RecipesController < ApplicationController
       format.turbo_stream
     end
   end
-  
+
+  def import_recipes
+    return unless params[:file].present?
+
+    file_contents = params[:file].read
+
+    if Rails.env.development?
+      RecipeImportService.new(
+        user: Current.user,
+        file_contents: file_contents
+      ).import
+
+      redirect_to recipes_path, notice: t('recipes.csv_import_success')
+    else
+      RecipeImportJob.perform_later(file_contents, Current.user.id)
+      redirect_to recipes_path, notice: t('recipes.csv_import_notice')
+    end
+  end
+
   private
 
   def set_recipe

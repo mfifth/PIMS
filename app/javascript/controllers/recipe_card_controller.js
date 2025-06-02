@@ -69,7 +69,7 @@ export default class extends Controller {
   formatFromLocationPrice(locationName, unitPrice, unitType, translatedUnit) {
     return this.i18nFromLocationPriceValue
       .replace("%{location}", locationName)
-      .replace("%{price}", unitPrice.toFixed(2))
+      .replace("%{price}", parseFloat(unitPrice).toFixed(2))
       .replace("%{unit}", translatedUnit || unitType);
   }
 
@@ -139,7 +139,9 @@ export default class extends Controller {
       }
 
       const adjustedQty = item.quantity * conversionRate;
-      const cost = adjustedQty * inventoryOption.price;
+      const pricePerUnit = parseFloat((inventoryOption.price || 0).toString().replace(",", "."));
+      const cost = adjustedQty * pricePerUnit;
+
       totalCost += cost;
 
       const fromLocationText = this.formatFromLocationPrice(
@@ -164,7 +166,7 @@ export default class extends Controller {
 
     this.ingredientsListTarget.innerHTML = ingredientsHTML;
 
-    const price = parseFloat(this.priceInputTarget.value) || 0;
+    const price = parseFloat(this.priceInputTarget.value.replace(",", ".")) || 0;
     const profit = price - totalCost;
     const margin = price > 0 ? ((profit / price) * 100).toFixed(2) : "0.00";
 
