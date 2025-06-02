@@ -56,35 +56,32 @@ class CsvImporter
     end
 
     product = find_or_initialize_product(row)
-    product.price = row['price'].to_f if row['price'].present?
-    product.save!
-
     inventory = @location.inventory_items.find_or_initialize_by(product: product)
+
     inventory.assign_attributes(
       quantity:      row['quantity'].to_f,
       low_threshold: row['low_stock_alert'].to_f,
-      unit_type:     row['unit_type'].presence || 'units'
+      unit_type:     row['unit_type'].presence || 'units',
+      price: row['price'] || 0
     )
 
     if row['batch_number'].present? && row['expiration_date'].present?
       inventory.batch = find_or_create_batch(row['batch_number'], row)
     end
 
+    product.save!
     inventory.save!
   end
 
   def find_or_initialize_product(data)
     product = @product_cache[data['sku']] || Product.new(sku: data['sku'], account: @account)
 
-    product.assign_attributes(
-      name: data['name'],
-      perishable: cast_boolean(data['perishable']),
-      price: data['price'].to_f
-    )
+    product.name       = data['name']
+    product.perishable = cast_boolean(data['perishable'])
 
     if data['category'].present?
       category = @category_cache[data['category']] ||=
-                @account.categories.create!(name: data['category'])
+                 @account.categories.create!(name: data['category'])
       product.category = category
     end
 
