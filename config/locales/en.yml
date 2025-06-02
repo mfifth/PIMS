@@ -628,7 +628,7 @@ en:
           price: "$30"
           period: "/mo"
           features:
-            - "Add up to two administrators with one location"
+            - "Add up to 3 administrators with one location"
             - "Track up to 50 products"
             - "Manage up to 25 recipes"
             - "Receive email notifications for low stock and expiring items"
@@ -640,7 +640,7 @@ en:
           price: "$60"
           period: "/mo"
           features:
-            - "Manage up to 3 locations with 3 administrators"
+            - "Manage up to 3 locations with 5 administrators"
             - "Track up to 100 products"
             - "Manage up to 50 recipes"
             - "Receive email and text notification alerts"
