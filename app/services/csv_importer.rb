@@ -17,16 +17,9 @@ class CsvImporter
 
   private
 
-  def cleaned_csv_text
-    @cleaned_csv_text ||= begin
-      text = @file_contents.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
-      text.sub("\uFEFF", '')
-    end
-  end
-
   def preload_caches
     skus = []
-    CSV.parse(cleaned_csv_text, headers: true) do |row|
+    CSV.parse(@file_contents, headers: true) do |row|
       skus << row['sku'] if row['sku'].present?
     end
     @product_cache  = Product.where(sku: skus, account: @account).index_by(&:sku)
@@ -34,7 +27,7 @@ class CsvImporter
   end
 
   def process_csv
-    CSV.parse(cleaned_csv_text, headers: true) do |row|
+    CSV.parse(@file_contents, headers: true) do |row|
       row_data = normalize_keys(row.to_h)
       begin
         import_row(row_data)
@@ -42,7 +35,7 @@ class CsvImporter
         @failed_rows << {
           name: row_data['name'] || 'Unknown',
           sku: row_data['sku'],
-          errors: full_error_details(e),
+          errors: e.message,
           row: row_data,
           backtrace: e.backtrace.join("\n")
         }
@@ -111,7 +104,7 @@ class CsvImporter
   end
 
   def notify_results
-    total = CSV.parse(cleaned_csv_text, headers: true).count
+    total = CSV.parse(@file_contents, headers: true).count
     success = total - @failed_rows.size
 
     if @failed_rows.any?
