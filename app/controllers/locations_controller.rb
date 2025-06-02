@@ -170,7 +170,7 @@ class LocationsController < ApplicationController
     manufactured_last_week = (Time.current - 7.days).strftime("%Y-%m-%d")
   
     sample_data = <<~CSV
-      sku*,name*,unit_type*,price,quantity*,category,perishable*,batch_number*,expiration_date*,low_stock_alert,notification_days_before_expiration,manufactured_date
+      sku,name,unit_type,price,quantity,category,perishable,batch_number,expiration_date,low_stock_alert,notification_days_before_expiration,manufactured_date
       BAK123,All-Purpose Flour,pounds,3.49,250,Baking,true,FLR001,#{long_expiration},50,10,#{manufactured_today}
       BVR456,Orange Juice,gallons,4.99,120,Beverages,true,OJU023,#{medium_expiration},30,7,#{manufactured_last_week}
       CLS789,Cotton T-Shirt,units,12.99,500,Clothing,false,,,,20,,2025-03-15
