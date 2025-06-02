@@ -48,7 +48,7 @@
     <!-- Recipes Card -->
     <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
       <h2 class="text-xl font-semibold text-gray-800 mb-4"><%= t('sidebar.recipes') %></h2>
-      <p class="text-4xl font-bold text-green-600"><%= @recipes.size %></p>
+      <p class="text-4xl font-bold text-green-600"><%= @recipes.total_count %></p>
 
       <div id="recipes-scroll-container" class="mt-4 overflow-y-auto max-h-[400px] scroll-container">
         <ul class="space-y-3" id="recipes-list">

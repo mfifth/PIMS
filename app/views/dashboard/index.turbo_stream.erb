@@ -20,16 +20,16 @@
     <% end %>
   <% end %>
 
-<% when 'locations' %>
-  <%= turbo_stream.append "locations-list" do %>
-    <%= render partial: "dashboard/location", collection: @locations, as: :location %>
+<% when 'recipes' %>
+  <%= turbo_stream.append "recipes-list" do %>
+    <%= render partial: "dashboard/recipe", collection: @recipes, as: :recipe %>
   <% end %>
   
-  <%= turbo_stream.replace "locations-pagination" do %>
-    <% if @locations.next_page %>
-      <div id="locations-pagination" class="hidden">
+  <%= turbo_stream.replace "recipes-pagination" do %>
+    <% if @recipes.next_page %>
+      <div id="recipes-pagination" class="hidden">
         <%= link_to "Next page", 
-                    dashboard_path(locations_page: @locations.next_page, card: 'locations'), 
+                    dashboard_path(recipes_page: @recipes.next_page, card: 'recipes'), 
                     rel: 'next', 
                     data: { 
                       turbo_frame: "_top",
@@ -37,7 +37,7 @@
                     } %>
       </div>
     <% else %>
-      <div id="locations-pagination" data-final-page="true" class="hidden"></div>
+      <div id="recipes-pagination" data-final-page="true" class="hidden"></div>
     <% end %>
   <% end %>
 
