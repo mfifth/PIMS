@@ -31,7 +31,7 @@ class Product < ApplicationRecord
   def product_limit_not_exceeded    
     current_limit = account.subscription.total_product_limit
     if account.products.count >= current_limit
-      errors.add(:base, t('notifications.product_limit_warning', limit: current_limit))
+      errors.add(:base, I18n.t('notifications.product_limit_warning', limit: current_limit))
     end
   end
 

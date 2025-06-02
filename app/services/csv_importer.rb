@@ -17,9 +17,16 @@ class CsvImporter
 
   private
 
+  def cleaned_csv_text
+    @cleaned_csv_text ||= begin
+      text = @file_contents.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
+      text.sub("\uFEFF", '')
+    end
+  end
+
   def preload_caches
     skus = []
-    CSV.parse(@file_contents, headers: true) do |row|
+    CSV.parse(cleaned_csv_text, headers: true) do |row|
       skus << row['sku'] if row['sku'].present?
     end
     @product_cache  = Product.where(sku: skus, account: @account).index_by(&:sku)
@@ -27,16 +34,17 @@ class CsvImporter
   end
 
   def process_csv
-    CSV.parse(@file_contents, headers: true) do |row|
+    CSV.parse(cleaned_csv_text, headers: true) do |row|
       row_data = normalize_keys(row.to_h)
       begin
         import_row(row_data)
       rescue => e
         @failed_rows << {
-          name:  row_data['name']  || 'Unknown',
-          sku:   row_data['sku'],
-          errors: e.message,
-          row:    row_data
+          name: row_data['name'] || 'Unknown',
+          sku: row_data['sku'],
+          errors: full_error_details(e),
+          row: row_data,
+          backtrace: e.backtrace.join("\n")
         }
         Rails.logger.error "CSV import error on SKU=#{row_data['sku']}: #{e.message}\n#{e.backtrace.join("\n")}"
       end
@@ -109,11 +117,7 @@ class CsvImporter
     if @failed_rows.any?
       notify(I18n.t('csv_import.completed_with_errors', success_count: success, error_count: @failed_rows.size), :alert)
       @failed_rows.each do |f|
-        error_message = "#{f[:name]} (SKU: #{f[:sku]}): #{f[:errors]}"
-        if f[:row].present?
-          error_message += "\nRow data: #{f[:row].except('manufactured_date', 'expiration_date')}"
-        end
-        notify(error_message, :alert)
+        notify(I18n.t('csv_import.failed_row', name: f[:name], sku: f[:sku], errors: f[:errors]), :alert)
       end
     else
       notify(I18n.t('csv_import.success'), :notice)
