@@ -94,7 +94,7 @@ class User < ApplicationRecord
   end
 
   def user_limit_not_exceeded
-    return unless account #skip this validation if account is not created yet
+    return unless account
 
     current_limit = account.subscription.total_user_limit
     if account.users.count >= current_limit

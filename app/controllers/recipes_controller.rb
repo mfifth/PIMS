@@ -48,14 +48,12 @@ class RecipesController < ApplicationController
       @products = []
     else
       base_scope = Current.account.products
-                            .left_joins(:inventory_items)
+                            .joins(:inventory_items)
                             .where.not(id: selected_ids)
                             .where(perishable: true)
                             .select("products.*, inventory_items.unit_type AS inventory_unit_type")
                             .distinct
-  
-      Rails.logger.debug "ProductSearch SQL: #{base_scope.to_sql}"
-  
+    
       @products = base_scope
                     .where("LOWER(products.name) LIKE LOWER(?)", "%#{query}%")
                     .limit(5)
@@ -100,10 +98,10 @@ class RecipesController < ApplicationController
         file_contents: file_contents
       ).import
 
-      redirect_to recipes_path, notice: t('recipes.csv_import_success')
+      redirect_to recipes_path, notice: t('recipes.index.csv_import_success')
     else
       RecipeImportJob.perform_later(file_contents, Current.user.id)
-      redirect_to recipes_path, notice: t('recipes.csv_import_notice')
+      redirect_to recipes_path, notice: t('recipes.index.csv_import_success')
     end
   end
 
