@@ -32,7 +32,7 @@ module Pims
       env.register_preprocessor('application/javascript', Sprockets::DirectiveProcessor)
     end
 
-    config.i18n.available_locales = [:en, :es]
+    config.i18n.available_locales = [:en, :es, :vi]
     config.i18n.default_locale = :en
     config.i18n.fallbacks = true
 

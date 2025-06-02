@@ -1,0 +1,746 @@
+vi:
+  account_settings:
+    clover:
+      connect: Kết nối với Clover
+      connected: Tài khoản Clover đã được kết nối
+      connecting: Đang kết nối...
+      sync_data: Đồng bộ dữ liệu
+      syncing: Đang đồng bộ...
+    confirm_delete: Bạn có chắc chắn muốn xóa tài khoản của mình không?
+    delete_account: Xóa tài khoản
+    invite:
+      admin_description: Quản trị viên có thể quản lý hàng tồn, công thức, người dùng
+        và cài đặt.
+      admin_label: Quản trị viên
+      general_description: Người dùng thông thường chỉ có thể xem hàng tồn (không
+        bao gồm công thức), và không thể chỉnh sửa.
+      general_label: Người dùng thông thường (Chỉ đọc)
+      label: Địa chỉ email
+      role_label: Chọn vai trò
+      submit: Gửi lời mời
+      title: Mời người dùng vào tài khoản của bạn
+    invited_users:
+      accepted: Đã chấp nhận
+      confirm_delete: Bạn có chắc chắn muốn xóa người dùng này khỏi tài khoản?
+      delete: Xóa
+      email: Địa chỉ email
+      none: Chưa có người dùng nào được mời.
+      pending: Đang chờ
+      status: Trạng thái
+      title: Người dùng đã được mời
+    square:
+      connect: Kết nối với Square
+      connected: Tài khoản Square đã được kết nối
+      connecting: Đang kết nối...
+      sync_data: Đồng bộ dữ liệu
+      sync_started: Đã bắt đầu đồng bộ với Square. Quá trình này có thể mất vài phút.
+      syncing: Đang đồng bộ...
+    title: Cài đặt tài khoản
+  actions:
+    cancel: Hủy bỏ
+    delete: Xóa
+    edit: Chỉnh sửa
+    search: Tìm kiếm
+    show: Xem
+  batch_label: Chọn lô hàng (tuỳ chọn)
+  batches:
+    alerts_before_expiry: Cảnh báo trước %{count} ngày khi hết hạn
+    edit_title: Chỉnh sửa lô hàng
+    exp: HSD
+    expiration_date: Ngày hết hạn
+    expires_in: Hết hạn sau %{count} ngày
+    form:
+      batch_number: Số lô
+      create: Tạo lô hàng
+      expiration_date: Ngày hết hạn
+      manufactured_date: Ngày sản xuất
+      notification_days: Thông báo trước (số ngày)
+      search: Tìm sản phẩm theo tên
+      select_products: Chọn sản phẩm
+      update: Cập nhật lô hàng
+    items: mặt hàng
+    loading: Đang tải thêm lô hàng...
+    manufactured_date: Ngày sản xuất
+    mfg: NSX
+    na: Không có
+    new: Lô hàng mới
+    new_title: Tạo lô hàng mới
+    no_location: Không có địa điểm
+    products: Sản phẩm
+    products_with_count: '%{count} sản phẩm'
+    search_placeholder: Tìm theo số lô, ngày hết hạn, hoặc tên sản phẩm
+    show:
+      back: Quay lại Lô hàng
+      edit: Chỉnh sửa
+      expiration_date: Ngày hết hạn
+      manufactured_date: Ngày sản xuất
+      na: Không có
+      no_location: Không có địa điểm
+      products_in_batch: Sản phẩm trong lô hàng này
+      table:
+        location: Địa điểm
+        notification_days: Thông báo trước (ngày)
+        product: Sản phẩm
+        quantity: Số lượng
+        sku: SKU
+        unit_type: Loại đơn vị
+      title: Lô hàng %{number}
+    title: Lô hàng
+  cancel: Hủy
+  categories:
+    baking: Làm bánh
+    fruits: Trái cây
+    organic: Hữu cơ
+    pantry: Thực phẩm khô
+    vegetables: Rau củ
+  category_label: Chọn danh mục (tuỳ chọn)
+  confirm_delete_location: Bạn có chắc muốn xóa địa điểm này không?
+  confirmations:
+    delete_batch: Bạn có chắc muốn xóa lô hàng này không?
+  csv_import:
+    completed_with_errors: Nhập CSV hoàn tất với lỗi. Một số sản phẩm không được nhập.
+    errors:
+      malformed: 'Lỗi, dữ liệu sai định dạng: %{error}'
+      unexpected: 'Lỗi không mong muốn: %{message}'
+    failed_row: 'Không thể nhập %{name} (SKU: %{sku}): %{errors}'
+    success: Nhập dữ liệu thành công
+  errors:
+    batch_header:
+      one: '1 lỗi đã ngăn lô hàng này được lưu:'
+      other: '%{count} lỗi đã ngăn lô hàng này được lưu:'
+  items: items
+  languages:
+    english: Tiếng Anh
+    spanish: Tiếng Tây Ban Nha
+  locations:
+    actions:
+      confirm: Bạn có chắc không?
+      delete: Xóa
+      edit: Chỉnh sửa
+      view: Xem
+    available_until: Có sẵn đến %{date}
+    back: Quay lại
+    back_to_location: Quay lại chi tiết địa điểm
+    can_make_count:
+      one: có thể làm 1 phần
+      other: có thể làm %{count} phần
+    categories: Danh mục
+    close: Đóng
+    csv_file_warning: Vui lòng chọn tệp CSV
+    csv_import_notice: Bắt đầu nhập - bạn sẽ nhận được thông báo khi hoàn tất
+    delete: Xóa
+    delete_confirmation: Bạn có chắc muốn xóa địa điểm này không?
+    edit: Chỉnh sửa
+    estimated_profit: Lợi nhuận ước tính
+    expiring:
+      date_format: '%d %b'
+      title: Sắp hết hạn
+    expiring_soon: Sắp hết hạn
+    form:
+      address: Địa chỉ
+      cancel: Hủy
+      city: Thành phố
+      country: Quốc gia
+      edit_title: Chỉnh sửa địa điểm
+      location_uid: 'Mã UID của địa điểm: Dùng làm mã định danh duy nhất bên ngoài'
+      name: Tên địa điểm
+      new_title: Thêm địa điểm mới
+      save: Lưu địa điểm
+      state: Tỉnh/Bang
+      zip_code: Mã bưu điện
+    inventory: Tổng quan tồn kho
+    inventory_title: Tồn kho
+    items: mặt hàng
+    items_count: '%{count} mặt hàng'
+    left: còn lại
+    low_stock_alert: Cảnh báo sắp hết hàng
+    new: Địa điểm mới
+    new_location: Địa điểm mới
+    no_recipes_description: Không có công thức nào với nguyên liệu sẵn tại địa điểm
+      này
+    no_recipes_title: Không có công thức nào
+    non_perishable:
+      items: '%{count} mặt hàng'
+      title: Không dễ hỏng
+    non_perishable_items: Không dễ hỏng
+    not_synced: Chưa đồng bộ
+    perishable:
+      items: '%{count} mặt hàng'
+      title: Dễ hỏng
+    perishable_items: Dễ hỏng
+    products: sản phẩm
+    products_count: '%{count} sản phẩm'
+    recipes_for_location: Công thức cho %{location}
+    show:
+      address: Địa chỉ
+      back_to_locations: Quay lại danh sách địa điểm
+      batch_details: Chi tiết lô hàng
+      batch_number: 'Số lô: %{number}'
+      city: Thành phố
+      download_sample: Tải xuống mẫu
+      edit_location: Chỉnh sửa địa điểm
+      expiration: Ngày hết hạn
+      expiring_soon: Hết hạn sau %{days} ngày
+      export_products: Xuất sản phẩm
+      filters:
+        all: Tất cả
+        expiring: Sắp hết hạn
+        low_stock: Sắp hết hàng
+        non_perishable: Không dễ hỏng
+        perishable: Dễ hỏng
+      import_products: Nhập sản phẩm
+      inventory: Tồn kho
+      low_stock: Cảnh báo tồn kho (dưới %{threshold})
+      non_perishable: Không dễ hỏng
+      notifications_enabled: Đã bật thông báo
+      perishable: Dễ hỏng
+      quantity: Số lượng
+      total_inventory_value: Tổng giá trị tồn kho
+      total_value: Tổng giá trị
+      unit_price: Đơn giá
+      unit_type: Loại đơn vị
+      updated: Cập nhật %{time} trước
+    synced: Đã đồng bộ
+    synced_with_square: Đã đồng bộ với Square
+    title: Địa điểm
+    total_value: Tổng giá trị
+    updated: Cập nhật %{time} trước
+    view: Xem
+  mailers:
+    automated_message: Đây là một tin nhắn tự động. Vui lòng không trả lời.
+    confirmation_instructions:
+      confirm_button: Xác nhận email của tôi
+      expiration_notice: Liên kết này sẽ hết hạn sau %{hours} giờ.
+      ignore_if_not_requested: Nếu bạn không yêu cầu, vui lòng bỏ qua email này.
+      one_step_away: 'Bạn chỉ còn một bước để kích hoạt tài khoản. Vui lòng xác nhận
+        địa chỉ email bằng cách nhấp vào liên kết bên dưới:'
+      welcome: Chào mừng đến với %{app_name}, %{user_name}!
+    date:
+      formats:
+        default: '%d/%m/%Y'
+    expiration_alert:
+      expiration_date: Ngày hết hạn
+      follow_up: Nếu bạn cần thực hiện hành động nào đó, vui lòng xem chi tiết lô
+        trong tài khoản của bạn.
+      locations_quantities: Vị trí & Số lượng
+      notification: Chúng tôi muốn thông báo rằng lô %{batch_number} sắp đến ngày
+        hết hạn.
+      product: Sản phẩm
+      products_in_batch: 'Sản phẩm trong lô này:'
+      sku: SKU
+      title: Cảnh báo ngày hết hạn sắp tới
+      units: đơn vị
+      view_details: Xem chi tiết lô hàng
+    greeting: Xin chào %{name}
+    invite:
+      accept_button: Chấp nhận lời mời
+      instruction: Nhấp vào bên dưới để chấp nhận lời mời.
+      title: Bạn đã được mời!
+    low_inventory_alert:
+      action_required: Vui lòng bổ sung hàng càng sớm càng tốt.
+      description: 'Sản phẩm sau đang gần hết hàng:'
+      location: Vị trí
+      product: Sản phẩm
+      quantity: Số lượng hiện tại
+      title: Cảnh báo tồn kho thấp
+    signature: 'Trân trọng,
+
+      Đội ngũ %{app_name}'
+    test_email:
+      message: Đây là một thử nghiệm, hy vọng bạn sẽ thích nó
+      title: Cảnh báo thử nghiệm
+    test_text:
+      message: Đây là một thử nghiệm
+      title: Cảnh báo thử nghiệm
+  n_a: Không có
+  notifications:
+    account_created: Tài khoản đã được tạo thành công.
+    ago: '%{time} trước'
+    basic_instructions: Bắt đầu bằng cách thêm địa điểm của bạn. Sau đó, thiết lập
+      sản phẩm bằng cách tải lên tệp CSV tại địa điểm bạn muốn cập nhật hoặc sử dụng
+      biểu mẫu tạo sản phẩm mới. Liên kết sản phẩm với công thức để tính số phần bạn
+      có thể chuẩn bị tại mỗi địa điểm và xem phân tích chi phí/lợi nhuận theo thời
+      gian thực.
+    batch_created: Lô hàng đã được tạo thành công.
+    batch_deleted: Lô hàng đã bị xóa.
+    batch_expiry: 'Cảnh báo lô hàng: %{batch_number}
+
+      Hết hạn: %{expiration_date} (còn %{days_remaining} ngày)
+
+      Địa điểm: %{locations}
+
+      Sản phẩm: %{product_count}'
+    batch_updated: Lô hàng đã được cập nhật thành công.
+    blank_email: Email không được để trống.
+    check_email: Kiểm tra hộp thư đến hoặc thư rác để nhận email xác nhận từ info@pimsco.com
+    complete_registration: Vui lòng hoàn tất đăng ký của bạn.
+    confirm_email: Vui lòng xác nhận email trước khi đăng nhập.
+    confirmation_token_expired: Mã xác nhận đã hết hạn.
+    email_notice: Email thử nghiệm đã được gửi thành công!
+    email_test: Đây là email thử nghiệm.
+    email_warning: Vui lòng nhập địa chỉ email hợp lệ.
+    expired_invitation: Lời mời không hợp lệ hoặc đã hết hạn.
+    failed_email_test: Không thể gửi email thử nghiệm.
+    failed_fetch: Không thể lấy thông tin địa điểm từ Square.
+    free_trial_end: Thời gian dùng thử của bạn đã kết thúc. Vui lòng chọn gói để tiếp
+      tục.
+    invalid_token: Mã xác nhận không hợp lệ.
+    inventory_synced: Tồn kho đã được đồng bộ từ Square, %{size} mặt hàng đã được
+      đồng bộ.
+    inventory_updated: Tồn kho đã được cập nhật thành công.
+    invitation_error: Không thể gửi lời mời.
+    invitation_sent: Lời mời đã được gửi!
+    location_created: Địa điểm đã được tạo thành công.
+    location_deleted: Địa điểm đã bị xóa.
+    location_limit_warning: Bạn đã đạt giới hạn tối đa %{limit} địa điểm cho gói của
+      mình.
+    location_updated: Địa điểm đã được cập nhật thành công.
+    low_limit_warning: '%{product} sắp hết hàng tại %{location_name} (chỉ còn %{quantity}).'
+    mark_all_as_read: Đánh dấu tất cả là đã đọc.
+    mark_as_read: Đã đánh dấu thông báo là đã đọc.
+    oauth_failed: Trao đổi OAuth thất bại.
+    password_confirmation_error: Mật khẩu không khớp.
+    password_instructions_notice: Hướng dẫn đặt lại mật khẩu đã được gửi (nếu có người
+      dùng với địa chỉ email đó).
+    password_reset_link_expired: Liên kết đặt lại mật khẩu không còn hợp lệ hoặc đã
+      hết hạn.
+    password_reset_notice: Mật khẩu đã được đặt lại.
+    product_limit_warning: Bạn đã đạt giới hạn tối đa %{limit} sản phẩm cho gói của
+      mình.
+    recipe_limit_warning: Bạn đã đạt giới hạn tối đa %{limit} công thức cho gói của
+      mình.
+    removed_user: Người dùng đã được xóa thành công.
+    square_account_connected: Tài khoản Square đã được kết nối!
+    square_synced: '%{quantity} địa điểm đã được đồng bộ. Bạn có thể đồng bộ sản phẩm
+      ngay bây giờ.'
+    successful_email_confirm: Email của bạn đã được xác nhận thành công!
+    sync_complete: Sau khi các món trong menu đã được đồng bộ, bạn có thể thêm sản
+      phẩm/nguyên liệu và liên kết với công thức để cập nhật tồn kho theo thời gian
+      thực.
+    test_text: Đây là một thử nghiệm.
+    test_text_notification: Đây là một thử nghiệm thông báo bằng tin nhắn.
+    title: Thông báo
+    try_again_later: Vui lòng thử lại sau.
+    try_another_login: Thử địa chỉ email hoặc mật khẩu khác.
+    updated_settings: Cài đặt đã được cập nhật thành công.
+    user_already_registered: đã được đăng ký. Vui lòng đăng nhập hoặc thử đặt lại
+      mật khẩu.
+    user_limit: Bạn đã đạt giới hạn tối đa %{limit} người dùng cho gói của mình.
+  permission_denied: Bạn không có quyền thực hiện hành động này.
+  pims:
+    cta:
+      contact_us: Liên hệ
+      get_started: Bắt đầu
+      line1: Sẵn sàng khám phá?
+      line2: Bắt đầu dùng thử miễn phí ngay hôm nay.
+    dashboard:
+      available_recipes: Công thức có sẵn
+      avocado_toast: Bánh mì bơ
+      batches: Lô hàng
+      can_make: có thể làm
+      chicken_stir_fry: Gà xào
+      exp: HSD
+      expired: Đã hết hạn
+      expiring_cheese: Phô mai sắp hết hạn
+      fresh_strawberries: Dâu tây tươi
+      items: mặt hàng
+      location: Địa điểm
+      locations: Địa điểm
+      low_stock: Sắp hết hàng
+      main_restaurant: Nhà hàng chính
+      margherita_pizza: Pizza Margherita
+      mfg: NSX
+      ounces: Ao-xơ
+      pancakes: Bánh kếp
+      pounds: Pao
+      products: Sản phẩm
+      qty: SL
+      second_location: Địa điểm thứ hai
+      synced: Đã đồng bộ
+      title: Bảng điều khiển
+      total_value: Tổng giá trị
+      unit_type: Loại đơn vị
+      until: Đến khi
+      updated_days_ago: Cập nhật %{count} ngày trước
+    features:
+      items:
+        batches:
+          description: Theo dõi sản phẩm dễ hỏng qua các lô hàng với ngày hết hạn
+            và số lô. Nhận cảnh báo tự động qua tin nhắn hoặc email.
+          title: Theo dõi lô hàng
+        dashboard:
+          description: Xem tổng quan nhanh về tài nguyên với các chỉ số chính cho
+            địa điểm, mặt hàng và lô hàng — tất cả ở một nơi.
+          title: Bảng điều khiển toàn diện
+        locations:
+          description: Theo dõi hàng tồn tại nhiều địa điểm với phân tích chi tiết
+            sản phẩm dễ hỏng và không dễ hỏng.
+          title: Quản lý nhiều địa điểm
+        products:
+          description: Quản lý toàn bộ danh mục của bạn với danh mục, giá cả và thông
+            tin theo dõi chi tiết.
+          title: Danh mục sản phẩm
+        recipes:
+          description: Liên kết sản phẩm với công thức để xem nguyên liệu có sẵn và
+            tính toán lợi nhuận trước.
+          title: Chi phí & phân tích công thức
+        reporting:
+          description: Tạo các báo cáo chi tiết về mức tồn kho, thông tin lô hàng
+            và sự di chuyển của sản phẩm.
+          title: Báo cáo nâng cao
+      subtitle: Tất cả những gì bạn cần để quản lý tồn kho
+      title: Tính năng
+    footer:
+      copyright: '&copy; %{year} PIMS. Đã đăng ký bản quyền.'
+      eula: Thỏa thuận cấp phép người dùng cuối
+      privacy_policy: Chính sách quyền riêng tư
+    hero:
+      cta: Bắt đầu miễn phí
+      description: Tối ưu hóa nguyên liệu, giữ mọi thứ gọn gàng giữa các địa điểm
+        và nắm bắt thông tin theo thời gian thực về món ăn bạn tạo ra — tất cả từ
+        một bảng điều khiển dễ sử dụng.
+      title_line1: Hàng tồn dễ hỏng
+      title_line2: Hệ thống quản lý
+    nav:
+      contact_us: Liên hệ
+      demo: Bản demo
+      features: Tính năng
+      get_started: Bắt đầu
+      login: Đăng nhập
+      pricing: Giá cả
+      screenshots: Ảnh màn hình
+    pricing:
+      addons:
+        additional_locations: Dodatkowe lokalizacje
+        additional_products: Sản phẩm bổ sung
+        additional_recipes: Dodatkowe przepisy
+        additional_users: Dodatkowi użytkownicy
+        contact_us: Liên hệ với chúng tôi
+        for_custom_solutions: cho các giải pháp tùy chỉnh.
+        price_per_location: $5/month per location
+        price_per_products: $5/tháng cho mỗi 10 sản phẩm
+        price_per_recipes: $5/month per 5 công thức nấu ăn
+        price_per_user: $3/month per người sử dụng
+        special_requirements: Có yêu cầu đặc biệt?
+        subtitle: Tùy chỉnh gói của bạn với các tiện ích bổ sung
+        title: Cần thêm? Chúng tôi hỗ trợ bạn
+      description: Chọn gói phù hợp với nhu cầu kinh doanh của bạn.
+      get_started: Bắt đầu
+      plans:
+        plus:
+          description: Dành cho nhà hàng và bếp ăn đang phát triển. Quản lý nhiều
+            hơn, lo lắng ít hơn.
+          features:
+            - Quản lý tối đa 3 địa điểm với 5 quản trị viên
+            - Theo dõi tối đa 100 sản phẩm
+            - Quản lý tối đa 50 công thức
+            - Nhận thông báo qua email và tin nhắn
+            - Tối ưu giá món ăn của bạn với tính toán chi phí và lợi nhuận
+            - Đồng bộ với Square để cập nhật theo thời gian thực
+          name: Nâng cao
+          period: /mo
+          price: $60
+        premium:
+          description: Dành cho doanh nghiệp lớn xử lý tồn kho phức tạp tại nhiều
+            địa điểm.
+          features:
+          - Manage up to 4 location
+          - Track up to 100 products
+          - Manage up to 20 recipes
+          - Support for 4 administrators
+          - Priority support to keep you running smoothly
+          - Receive email and text notifications
+          - Optimize your meal pricing with cost and profit calculations
+          - Sync with Square for real time updates
+          name: Premium
+          period: /mo
+          price: $99
+        starter:
+          description: Hoàn hảo cho nhà hàng nhỏ và doanh nghiệp thực phẩm đang bắt
+            đầu với quản lý tồn kho thông minh.
+          features:
+          - Thêm tối đa 3 quản trị viên với một địa điểm
+          - Theo dõi tối đa 50 sản phẩm
+          - Quản lý tối đa 25 công thức
+          - Nhận thông báo qua email khi sắp hết hàng và sản phẩm sắp hết hạn
+          - Tối ưu giá món ăn với tính toán chi phí và lợi nhuận
+          - Đồng bộ với Square để cập nhật theo thời gian thực
+          name: Người khởi đầu
+          period: /mo
+          price: $30
+      subtitle: Giá cả đơn giản, minh bạch
+      title: Giá cả
+      whats_included: Bao gồm những gì
+    screenshots:
+      all: Tất cả
+      all_purpose_flour: Bột đa dụng
+      apple_pie: Bánh táo
+      baking: Làm bánh
+      batch_details: Chi tiết lô hàng
+      batch_number: 'Số lô'
+      category: Danh mục
+      city: Thành phố
+      delete: Xóa
+      description: Giao diện trực quan giúp việc quản lý tồn kho trở nên đơn giản và hiệu quả.
+      downtown_store: Cửa hàng trung tâm
+      edit: Chỉnh sửa
+      expiration: Ngày hết hạn
+      expiring_in: Hết hạn sau %{days} ngày
+      fruits: Trái cây
+      grams: Gam
+      granulated_sugar: Đường tinh luyện
+      ingredients: Nguyên liệu
+      inventory: Tồn kho
+      location_inventory: Tồn kho theo địa điểm
+      low_stock: 'Sắp hết hàng (ngưỡng: %{threshold})'
+      main_warehouse: Kho chính
+      non_perishable: Không dễ hỏng
+      organic_apples: Táo hữu cơ
+      pantry: Thực phẩm khô
+      perishable: Dễ hỏng
+      pounds_in_stock: Pao còn lại
+      price: Giá
+      product_catalog: Danh mục sản phẩm
+      quantity: Số lượng
+      recipe_id: Mã công thức
+      recipe_management: Quản lý công thức
+      sku: Mã SKU
+      stock_locations: Vị trí lưu kho
+      subtitle: Xem PIMS hoạt động
+      title: Trong thực tế
+      total_value: Tổng giá trị
+      unit_price: Đơn giá
+      units: Đơn vị
+      units_in_stock: Đơn vị còn lại
+      updated_days_ago: Cập nhật %{count} ngày trước
+      view: Xem
+    title: PIMS - Hệ thống Quản lý Hàng tồn Dễ hỏng
+  products:
+    batch_info: Thông tin lô hàng
+    batch_number: Số lô
+    cancel: Hủy bỏ
+    category: Danh mục
+    confirm_delete_category_from_all: Bạn có chắc muốn xóa danh mục này khỏi tất cả
+      sản phẩm?
+    confirm_delete_item: Bạn có chắc muốn xóa mặt hàng này khỏi địa điểm của bạn?
+    confirm_remove_batch: Bạn có chắc muốn xóa lô hàng khỏi sản phẩm này?
+    confirm_remove_category: Bạn có chắc muốn xóa danh mục này?
+    count:
+      one: 1 sản phẩm
+      other: '%{count} sản phẩm'
+    create: Tạo sản phẩm
+    create_new: Tạo sản phẩm mới
+    create_new_batch: Tạo lô hàng mới
+    create_new_category: Hoặc tạo danh mục mới
+    current_batches: Lô hàng hiện tại
+    delete_category: Xóa danh mục
+    description: Mô tả
+    details:
+      title: Chi tiết sản phẩm
+      category: Danh mục
+      description: Mô tả
+      price: Giá
+      perishable: Dễ hỏng
+      true: 'Yes'
+      false: 'No'
+      na: Không có
+      no_description: Không có mô tả
+      batch_info:
+        expiration: Ngày hết hạn
+        manufactured: Ngày sản xuất
+        none: Không có thông tin lô hàng.
+        number: Số lô
+        title: Thông tin lô hàng
+      inventory_info:
+        location: Địa điểm
+        low_stock: Cảnh báo sắp hết hàng
+        no_locations: Không tìm thấy địa điểm tồn kho nào cho sản phẩm này.
+        none: Không có dữ liệu tồn kho cho địa điểm này.
+        price: Đơn giá
+        quantity: Số lượng
+        title: Thông tin tồn kho
+        total_value: 'Tổng giá trị:'
+      actions:
+        back: Quay lại sản phẩm
+        confirm_delete: Bạn có chắc muốn xóa sản phẩm này không?
+        delete: Xóa
+        edit: Chỉnh sửa sản phẩm
+      'yes': Có
+      'no': Không
+    edit: Chỉnh sửa sản phẩm
+    exp: HSD
+    expiration: 'HSD: %{date}'
+    expiration_date: Ngày hết hạn
+    general_info: Thông tin sản phẩm
+    in_stock: còn hàng
+    index:
+      new_product: Sản phẩm mới
+      search_button: Tìm kiếm
+      search_placeholder: Tìm theo tên sản phẩm, SKU, địa điểm, hoặc tên công thức
+      title: Sản phẩm
+    inventory_info: Tồn kho
+    is_perishable: Sản phẩm này có dễ hỏng không?
+    location: Địa điểm
+    location_with_name: 'Địa điểm: %{name}'
+    low_stock_alert: Cảnh báo hàng sắp hết
+    manufactured_date: Ngày sản xuất
+    mfg: NSX
+    na: Không có
+    notify_before_expiry: Thông báo trước hạn (Ngày)
+    price: Giá mỗi đơn vị
+    price_per_unit: Giá mỗi đơn vị
+    product_name: Tên sản phẩm
+    qty: 'SL: %{count}'
+    quantity: Số lượng
+    remove: Xóa
+    remove_category: Xóa danh mục
+    select_existing_batch: Chọn lô hàng hiện có
+    select_existing_category: Chọn danh mục hiện có
+    sku: SKU/Mã vạch (Dùng làm mã định danh duy nhất)
+    sku_title: SKU
+    stock_locations: Địa điểm lưu kho
+    unit_type: 'Loại đơn vị: %{type}'
+    unit_type_title: Loại đơn vị
+    update: Cập nhật sản phẩm
+    used_in_recipes: Có trong công thức
+  quantity: Số lượng
+  quick_update: Cập nhật nhanh
+  recipe_deleted: Công thức đã bị xóa thành công
+  recipe_updated: Công thức đã được cập nhật thành công
+  recipes:
+    form:
+      cancel: Hủy
+      delete_button: Xóa công thức
+      delete_confirm: Bạn có chắc muốn xóa công thức này không?
+      ingredients_heading: Nguyên liệu
+      name_label: Tên công thức
+      remove_button: Xóa
+      search_label: Tìm kiếm sản phẩm
+      search_placeholder: Gõ để tìm...
+      submit_edit: Cập nhật công thức
+      submit_new: Tạo công thức
+      title_edit: Chỉnh sửa công thức
+      title_new: Công thức mới
+      uid_label: ID công thức (sử dụng ID bên ngoài để đồng bộ theo thời gian thực)
+    index:
+      calculate_cost_profit: Tính giá thành/Lợi nhuận
+      calculate_ingredients_necessary: Tính toán nguyên liệu cần thiết
+      create_first: Tạo công thức đầu tiên của bạn
+      edit: Chỉnh sửa
+      how_many_to_make: Bạn muốn làm bao nhiêu phần?
+      ingredients: Nguyên liệu
+      new_recipe: Công thức mới
+      no_match: Không tìm thấy công thức nào phù hợp với "%{query}"
+      no_recipes: Bạn chưa tạo công thức nào
+      price_set: 'Giá: %{price}'
+      recipe_id: 'ID: %{id}'
+      search_placeholder: Tìm theo tên hoặc mã công thức
+      title: Công thức
+      updated_ago: Cập nhật %{time} trước
+    location:
+      unknown: Địa điểm không xác định
+    margin_calculator:
+      available_locations: Địa điểm có sẵn
+      back_to_ingredients: Quay lại nguyên liệu
+      cost_line: 'Chi phí cho %{product}: $%{cost}'
+      cost_to_make: Chi phí sản xuất
+      from_location_price: 'Từ: %{location} @ $%{price}/%{unit}'
+      invalid_price: Vui lòng nhập giá bán hợp lệ.
+      margin: 'Biên lợi nhuận:'
+      missing_inventory: Thiếu hàng tồn kho cho %{product}
+      profit: 'Lợi nhuận:'
+      select_location: Chọn địa điểm
+      selling_price: Giá bán
+      title: Máy tính biên lợi nhuận
+      total_cost: 'Tổng chi phí: $%{total}'
+    units:
+      fluid_oz: ao-xơ chất lỏng
+      gallons: gallon
+      grams: gam
+      kilograms: kilôgam
+      liters: lít
+      milliliters: mililít
+      ounces: ao-xơ
+      pounds: pao
+      units: đơn vị
+  select_location: Địa điểm
+  select_location_prompt: Chọn địa điểm
+  select_product: Sản phẩm
+  select_product_prompt: Chọn sản phẩm
+  settings:
+    email: Email
+    full_name: Họ và tên
+    language: Ngôn ngữ
+    notifications: Cài đặt thông báo
+    phone_number: Số điện thoại
+    phone_number_hint: Vui lòng chỉ nhập số
+    receive_email: Nhận thông báo qua địa chỉ email
+    receive_text: Nhận thông báo qua tin nhắn
+    test_email: Email thử nghiệm
+    test_text: Thử gửi tin nhắn
+    update_button: Cập nhật cài đặt
+    user_info: Thông tin người dùng
+  sidebar:
+    admin: Quản trị
+    batches: Lô hàng
+    dashboard: Bảng điều khiển
+    locations: Địa điểm
+    logo: PIMS
+    notifications: Thông báo
+    personal: Cá nhân
+    products: Sản phẩm
+    quick_update: Cập nhật nhanh
+    settings: Cài đặt
+    sign_out: Đăng xuất
+  sign_in:
+    confirmation_sent: Email xác nhận đã được gửi.
+    forgot_password: Quên mật khẩu?
+    form:
+      email_placeholder: Nhập địa chỉ email của bạn
+      password_placeholder: Nhập mật khẩu
+      submit_button: Đăng nhập
+    not_found_or_confirmed: Không tìm thấy email hoặc đã được xác nhận.
+    resend_confirmation: Gửi lại xác nhận
+    sign_up_link: Đăng ký
+    title: Đăng nhập
+  sign_out:
+    sign_out_msg: Bạn có chắc muốn đăng xuất không?
+  sign_up:
+    already_have_account: Đã có tài khoản?
+    form:
+      email_placeholder: Nhập địa chỉ email của bạn
+      name_placeholder: Họ và tên
+      password_confirmation_placeholder: Xác nhận mật khẩu
+      password_placeholder: Tạo mật khẩu
+      phone_placeholder: Số điện thoại
+      submit_button: Tạo tài khoản
+    sign_in_link: Đăng nhập
+    title: Đăng ký
+  submit: Gửi
+  subscription:
+    addons:
+      extra_locations: Thêm địa điểm (%{count})
+      extra_products: Thêm sản phẩm (%{count})
+      extra_recipes: Thêm công thức (%{count})
+      extra_users: Thêm người dùng (%{count})
+    addons_title: Tiện ích đã mua
+    current_plan: Bạn đang sử dụng gói %{plan}.
+    heading: Gói đăng ký
+    limit_reached:
+      locations: Bạn đã đạt giới hạn địa điểm.
+      products: Bạn đã đạt giới hạn sản phẩm.
+      users: Bạn đã đạt giới hạn người dùng.
+    locations_used: 'Địa điểm đã tạo: %{count} / %{limit}'
+    manage_link: Quản lý đăng ký
+    products_used: 'Sản phẩm đã sử dụng: %{count} / %{limit}'
+    users_used: 'Người dùng trong tài khoản: %{count} / %{limit}'
+  units:
+    fluid_oz: ao-xơ chất lỏng
+    gallons: gallon
+    grams: gam
+    kilograms: kilôgam
+    liters: lít
+    milliliters: mililít
+    ounces: ao-xơ
+    pounds: pao
+    units: đơn vị
