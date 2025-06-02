@@ -4,8 +4,8 @@ class Subscription < ApplicationRecord
   PRODUCT_PLAN_LIMITS = {
     'trial' => 25,
     'free' => 10,
-    'starter' => 25,
-    'plus' => 50,
+    'starter' => 50,
+    'plus' => 100,
     'premium' => 100
   }.freeze
 
@@ -13,7 +13,7 @@ class Subscription < ApplicationRecord
     'trial' => 1,
     'free' => 1,
     'starter' => 2,
-    'plus' => 3,
+    'plus' => 5,
     'premium' => 4
   }.freeze
 
@@ -21,15 +21,15 @@ class Subscription < ApplicationRecord
     'trial' => 1,
     'free' => 1,
     'starter' => 1,
-    'plus' => 2,
+    'plus' => 3,
     'premium' => 4
   }.freeze
 
   RECIPE_PLAN_LIMITS = {
     'trial' => 10,
     'free' => 3,
-    'starter' => 10,
-    'plus' => 20,
+    'starter' => 25,
+    'plus' => 50,
     'premium' => 30
   }.freeze
 
