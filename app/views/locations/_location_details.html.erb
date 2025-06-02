@@ -146,12 +146,12 @@
               <div class="mt-4 grid grid-cols-2 gap-4">
                 <div>
                   <p class="text-sm text-gray-500"><%= t("locations.show.unit_price") %></p>
-                  <p class="font-medium"><%= number_to_currency(product.price) %></p>
+                  <p class="font-medium"><%= number_to_currency(item.price) %></p>
                 </div>
                 <div>
                   <p class="text-sm text-gray-500"><%= t("locations.show.total_value") %></p>
                   <p class="font-medium">
-                    <% item_value = item.quantity * product.price %>
+                    <% item_value = item.quantity * item.price %>
                     <% total_inventory_value += item_value %>
                     <%= number_to_currency(item_value) %>
                   </p>

@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     collection do
       get :product_search
       post :import_recipes
+      get :sample_csv
     end
   end  
 

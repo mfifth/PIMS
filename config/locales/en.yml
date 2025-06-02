@@ -291,6 +291,7 @@ en:
       ingredients: "Ingredients"
       updated_ago: "Updated %{time} ago"
       how_many_to_make: "How many would you like to make?"
+      csv_import_success: CSV imported successfully
     margin_calculator:
       title: "Margin Calculator"
       available_locations: "Available Locations"

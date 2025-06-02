@@ -107,6 +107,28 @@ class RecipesController < ApplicationController
     end
   end
 
+  def sample_csv
+    sample_recipes_data = <<~CSV
+      recipe_name,sku,quantity,unit_type,price
+      Strawberry Smoothie,FRT654,6,ounces,4.99
+      Strawberry Smoothie,BVR456,0.25,gallons,4.99
+      Beef Stir Fry,MTD258,0.5,pounds,7.99
+      Beef Stir Fry,VEG147,0.3,pounds,7.99
+      Beef Stir Fry,BAK123,0.1,pounds,7.99
+      Tuna Salad,SEA369,1,units,5.49
+      Tuna Salad,VEG147,0.2,pounds,5.49
+      Tuna Salad,LTH111,50,grams,5.49
+      Carrot Juice,VEG147,0.5,pounds,3.99
+      Carrot Juice,BVR456,0.1,gallons,3.99
+    CSV
+
+
+    send_data sample_recipes_data,
+              filename: "sample_recipes.csv",
+              type: "text/csv",
+              disposition: "attachment"
+  end
+
   private
 
   def set_recipe

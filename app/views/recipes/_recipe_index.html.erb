@@ -4,7 +4,7 @@
 
     <div class="flex space-x-2">
       <%= link_to t("recipes.index.new_recipe"), new_recipe_path,
-            class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md" %>
+            class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md", style: "height: fit-content;" %>
 
       <%= form_with url: import_recipes_recipes_path,
             method: :post,
@@ -34,6 +34,15 @@
               </svg>
             </span>
           </label>
+          <%= link_to sample_csv_recipes_path,
+            class: "text-blue-600 hover:text-blue-800 text-sm flex items-center",
+            style: "margin-top: 10px;",
+            download: "sample_recipes.csv" do %>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <%= t("recipes.index.download_sample") %>
+          <% end %>
         </div>
       <% end %>
     </div>
