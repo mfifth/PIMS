@@ -17,44 +17,26 @@ class CsvImporter
 
   private
 
-  def cleaned_csv_text
-    @cleaned_csv_text ||= begin
-      text = @file_contents.encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
-      text.sub("\uFEFF", '')
-    end
-  end
-
   def preload_caches
     skus = []
-    CSV.parse(cleaned_csv_text, headers: true) do |row|
+    CSV.parse(@file_contents, headers: true) do |row|
       skus << row['sku'] if row['sku'].present?
     end
     @product_cache  = Product.where(sku: skus, account: @account).index_by(&:sku)
     @category_cache = @account.categories.index_by(&:name)
   end
 
-  def full_error_details(error)
-    if error.respond_to?(:record) && error.record.respond_to?(:errors)
-      # For ActiveRecord errors
-      error.record.errors.full_messages.join(', ')
-    else
-      # For other errors
-      "#{error.message}\n#{error.backtrace.first(5).join("\n")}"
-    end
-  end
-
   def process_csv
-    CSV.parse(cleaned_csv_text, headers: true) do |row|
+    CSV.parse(@file_contents, headers: true) do |row|
       row_data = normalize_keys(row.to_h)
       begin
         import_row(row_data)
       rescue => e
         @failed_rows << {
-          name: row_data['name'] || 'Unknown',
-          sku: row_data['sku'],
-          errors: full_error_details(e), # Modified this line
-          row: row_data,
-          backtrace: e.backtrace.join("\n") # Add backtrace if needed
+          name:  row_data['name']  || 'Unknown',
+          sku:   row_data['sku'],
+          errors: e.message,
+          row:    row_data
         }
         Rails.logger.error "CSV import error on SKU=#{row_data['sku']}: #{e.message}\n#{e.backtrace.join("\n")}"
       end
@@ -67,11 +49,8 @@ class CsvImporter
     end
 
     product = find_or_initialize_product(row)
-    
-    # Set price if provided
     product.price = row['price'].to_f if row['price'].present?
     
-    # Save product first with error handling
     unless product.save
       raise "Product validation failed: #{product.errors.full_messages.join(', ')}"
     end
