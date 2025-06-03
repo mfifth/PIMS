@@ -13,7 +13,7 @@ class NotificationMailer < ApplicationMailer
 
   def upcoming_expiration_date(user, batch)
     @user = user
-    @batch = batch.includes(products: :inventory_items)
+    @batch = batch
     mail(to: @user.email_address, subject: "Upcoming Expiration Date for Batch ##{@batch.batch_number}")
   end
 

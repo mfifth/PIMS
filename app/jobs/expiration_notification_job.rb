@@ -5,6 +5,7 @@ class ExpirationNotificationJob < ApplicationJob
     today = Date.current
 
     Batch.joins(:inventory_items)
+         .includes(:products)
          .where.not(expiration_date: nil)
          .where("expiration_date >= ?", today)
          .where("notification_days_before_expiration > 0")
