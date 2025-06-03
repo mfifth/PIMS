@@ -61,8 +61,7 @@ class ExpirationNotificationJob < ApplicationJob
     if user.email_notification
       NotificationMailer.upcoming_expiration_date(
         user: user,
-        batch: batch,
-        message: message
+        batch: batch
       ).deliver_now  # changed for rake task debugging
     end
 
