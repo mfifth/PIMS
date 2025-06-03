@@ -145,10 +145,10 @@
             </td>
             <td>
               <% product.inventory_items.group_by(&:location).each do |location, items| %>
-                <div>
+                <div style="margin-bottom: 8px;">
                   <span class="location-badge"><%= location.name %></span>
                   <span class="quantity-badge">
-                    <%= items.sum(&:quantity) %> <%= t('mailers.expiration_alert.units') %>
+                    <%= items.sum(&:quantity) %> <%= I18n.t("units.#{items.first.unit_type}") %>
                   </span>
                 </div>
               <% end %>
