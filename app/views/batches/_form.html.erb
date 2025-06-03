@@ -42,8 +42,8 @@
     <div
       data-controller="inventory-search"
       data-inventory-search-batch-id-value="<%= @batch.id %>"
-      class="space-y-4"
-    >
+      class="space-y-4">
+
       <%= form.label :inventory_item_ids, t("batches.form.search_inventory_items"), class: "block text-sm font-medium text-gray-700" %>
       <%= text_field_tag :inventory_search,
         "",
