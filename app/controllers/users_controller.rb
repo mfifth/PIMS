@@ -80,6 +80,6 @@ class UsersController < ApplicationController
   # Strong parameters to permit user inputs
   def user_params
     params.require(:user).permit(:name, :phone, :email_address, 
-    :password, :password_confirmation, :invitation_token, :locale)
+    :password, :password_confirmation, :invitation_token, :email_notification, :text_notification, :locale)
   end  
 end
