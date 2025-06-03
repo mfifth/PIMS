@@ -15,7 +15,7 @@ class Batch < ApplicationRecord
     expiration_date.in?(Date.current..(Date.current + 7.days))
   end
 
-  scope :not_expired, -> { where('expiration_date >= ?', Date.today) }
+  scope :not_expired, -> { where('expiration_date >= ?', Date.current) }
 
   scope :search, -> (term) {
     return all if term.blank?
