@@ -3,9 +3,9 @@
     <%= f.object.product&.name || "Product not selected" %>
   </div>
 
-  <%= f.number_field :quantity,
-    step: (['units', 'fluid_oz'].include?(f.object.unit) ? 1 : 0.1),
-    min: 1,
+  <%= f.number_field :quantity, 
+    step: (f.object.unit == 'units' ? 1 : 0.1),
+    min: (f.object.unit == 'units' ? 1 : 0.1),
     class: "border rounded px-3 py-2 focus:ring-blue-500 focus:border-blue-500",
     style: "width: 40vh;",
     data: { unit_type: f.object.unit } %>
