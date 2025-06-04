@@ -39,6 +39,8 @@ class RecipeImportService
       end
     end
 
+    create_failure_notifications
+
     {
       success: @success_count,
       failed: @failure_rows.size,
@@ -49,14 +51,6 @@ class RecipeImportService
   private
 
   def log_import_failure(line_num, error, row_data)
-    message = "CSV Recipe Import Error on line #{line_num}: #{error}. Data: #{row_data.to_json}"
-
-    Notification.create!(
-      account_id: @account.id,
-      message: message,
-      notification_type: "Recipe Import Error"
-    )
-
     @failure_rows << {
       line: line_num,
       error: error,
@@ -64,6 +58,15 @@ class RecipeImportService
     }
   end
 
+  def create_failure_notifications
+    @failure_rows.each do |failure|
+      Notification.create!(
+        account_id: @account.id,
+        message: "CSV Recipe Import Error on line #{failure[:line]}: #{failure[:error]}. Data: #{failure[:data].to_json}",
+        notification_type: "recipe_import_error"
+      )
+    end
+  end
 
   def find_or_create_recipe(name, price)
     Recipe.find_or_create_by!(account: @account, name: name) do |r|
