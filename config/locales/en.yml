@@ -334,6 +334,8 @@ en:
       submit_edit: "Update Recipe"
       delete_button: "Delete Recipe"
       delete_confirm: "Are you sure you want to delete this recipe?"
+      unit_type: "Unit Type"
+      quantity: "Quantity"
   locations:
     title: "Locations"
     back: "Back"

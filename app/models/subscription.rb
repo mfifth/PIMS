@@ -2,7 +2,7 @@ class Subscription < ApplicationRecord
   belongs_to :account
 
   PRODUCT_PLAN_LIMITS = {
-    'trial' => 25,
+    'trial' => 50,
     'free' => 10,
     'starter' => 50,
     'plus' => 100,
@@ -26,7 +26,7 @@ class Subscription < ApplicationRecord
   }.freeze
 
   RECIPE_PLAN_LIMITS = {
-    'trial' => 10,
+    'trial' => 20,
     'free' => 3,
     'starter' => 25,
     'plus' => 50,
