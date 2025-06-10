@@ -1,14 +1,13 @@
 class CloverOrderSyncJob < ApplicationJob
-  MODIFIER_KEYWORDS = %w[extra add double triple xtra x addon].freeze
-  NEGATION_KEYWORDS = %w[no without hold omit exclude].freeze
   queue_as :default
 
   def perform(account_id, order_id)
     account = Account.includes(:products, :recipes, locations: :inventory_items).find(account_id)
     order = fetch_order(account, order_id)
+    return if order.blank?
 
     line_items = order["lineItems"] || []
-    location_id = order.dig('device', 'location', 'id')
+    location_id = order.dig("device", "location", "id")
     return if location_id.blank?
 
     location = account.locations.find_by(location_uid: location_id)
@@ -19,17 +18,11 @@ class CloverOrderSyncJob < ApplicationJob
         item_id  = line.dig("item", "id")
         quantity = line["quantity"].to_i
         next if item_id.blank? || quantity <= 0
-        
+
         recipe = account.recipes.find_by(uid: item_id)
-        
+
         if recipe
-          if line["modifications"]
-            line["modifications"].each do |mod|
-              process_clover_modifier(account, mod, quantity, location)
-            end
-          end
-          
-          RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity)
+          process_recipe_line(account, recipe, line, quantity, location)
         else
           process_product_order(account, item_id, quantity, location)
         end
@@ -42,6 +35,31 @@ class CloverOrderSyncJob < ApplicationJob
 
   private
 
+  def process_recipe_line(account, recipe, line, quantity, location)
+    excluded_products = []
+
+    if line["modifications"]
+      line["modifications"].each do |mod|
+        mod_name = mod.dig("modification", "name")
+        next unless mod_name.present?
+
+        if negation_modifier?(mod_name)
+          product = find_product_for_modifier(account, mod_name)
+          if product
+            excluded_products << (product.id || product.sku)
+            Rails.logger.info("Skipping deduction for '#{product.name}' due to negation modifier '#{mod_name}'")
+          end
+          next
+        end
+
+        process_clover_modifier(account, mod, quantity, location)
+      end
+    end
+
+    RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity, excluded_modifiers: excluded_products.compact)
+    Rails.logger.info("Processed recipe '#{recipe.name}' x#{quantity} at location '#{location.name}'")
+  end
+
   def process_clover_modifier(account, modifier, parent_quantity, location)
     mod_name = modifier.dig("modification", "name")
     return unless mod_name.present?
@@ -50,7 +68,10 @@ class CloverOrderSyncJob < ApplicationJob
     product = find_product_for_modifier(account, mod_name)
     return unless product
 
-    process_product_order(account, product.sku, modifier["quantity"].to_i * parent_quantity, location)
+    modifier_quantity = (modifier["quantity"] || 1).to_i
+    total_quantity = modifier_quantity * parent_quantity
+
+    process_product_order(account, product.sku, total_quantity, location)
   end
 
   def negation_modifier?(modifier_name)
@@ -60,7 +81,15 @@ class CloverOrderSyncJob < ApplicationJob
 
   def find_product_for_modifier(account, modifier_name)
     cleaned_name = clean_modifier_name(modifier_name)
-    Product.find_product_by_fuzzy_name(account, modifier_name)
+
+    product = account.products.find_by("LOWER(name) = ?", cleaned_name.downcase)
+
+    unless product
+      product = account.products.order(:name).find_by("LOWER(name) LIKE ?", "%#{cleaned_name.downcase}%")
+      Rails.logger.warn("Using fuzzy match for modifier '#{modifier_name}' → matched product '#{product&.name}'") if product
+    end
+
+    product
   end
 
   def clean_modifier_name(name)
@@ -73,13 +102,27 @@ class CloverOrderSyncJob < ApplicationJob
 
   def process_product_order(account, item_id, quantity, location)
     product = account.products.find_by(sku: item_id)
-    inventory_item = location.inventory_items.find_by(product: product)
-    return unless product && inventory_item
+    unless product
+      Rails.logger.warn("Product with SKU #{item_id} not found for account #{account.id}")
+      return
+    end
 
-    inventory_item.quantity -= quantity
+    inventory_item = location.inventory_items.find_by(product: product)
+    unless inventory_item
+      Rails.logger.warn("Inventory item for product '#{product.name}' not found in location '#{location.name}'")
+      return
+    end
+
+    new_quantity = inventory_item.quantity - quantity
+    if new_quantity < 0
+      Rails.logger.warn("Inventory for '#{product.name}' would go negative. Setting to 0 instead.")
+      inventory_item.quantity = 0
+    else
+      inventory_item.quantity = new_quantity
+    end
+
     inventory_item.save!
-    
-    Rails.logger.info("Deducted #{quantity} #{product.unit_type} of #{product.name}")
+    Rails.logger.info("Deducted #{quantity} #{product.unit_type} of '#{product.name}' at location '#{location.name}' (remaining: #{inventory_item.quantity})")
   end
 
   def fetch_order(account, order_id)
@@ -89,7 +132,12 @@ class CloverOrderSyncJob < ApplicationJob
       req.headers["Authorization"] = "Bearer #{account.clover_access_token}"
     end
 
-    raise "Failed to fetch Clover order" unless response.success?
+    if response.status == 404
+      Rails.logger.warn("Clover order #{order_id} not found (404)")
+      return nil
+    end
+
+    raise "Failed to fetch Clover order #{order_id}: #{response.status}" unless response.success?
 
     JSON.parse(response.body)
   end
