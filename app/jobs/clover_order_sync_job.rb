@@ -21,6 +21,14 @@ class CloverOrderSyncJob < ApplicationJob
         recipe = account.recipes.find_by(uid: item_id)
         
         if recipe
+          if line["modifications"]
+            line["modifications"].each do |mod|
+              mod_id = mod.dig("modification", "id")
+              mod_quantity = mod["quantity"].to_i
+              next if mod_id.blank? || mod_quantity <= 0
+              process_product_order(account, mod_id, mod_quantity * quantity, location)
+            end
+          end
           RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity)
         else
           process_product_order(account, item_id, quantity, location)
