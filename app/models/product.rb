@@ -24,6 +24,14 @@ class Product < ApplicationRecord
     VALID_UNITS.map { |u| [u.humanize, u] }
   end
 
+  def self.find_product_by_fuzzy_name(account, name)
+    product = account.products.find_by("LOWER(name) = ?", mod_name.downcase)
+    return product if product
+
+    base_name = mod_name.gsub(/extra\s+/i, '').strip
+    account.products.find_by("LOWER(name) LIKE ?", "%#{base_name.downcase}%")
+  end
+
   VALID_UNITS = %w[grams ounces pounds kilograms liters gallons fluid_oz milliliters units].freeze
 
   private

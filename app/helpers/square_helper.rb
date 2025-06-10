@@ -1,9 +1,13 @@
 module SquareHelper
+  MODIFIER_KEYWORDS = %w[extra add double triple xtra x addon].freeze
+  NEGATION_KEYWORDS = %w[no without hold omit exclude].freeze
+
   private
-  
+
   def process_order(account, data)
     order_id = data["id"]
     order_items = data["line_items"]
+    
     ActiveRecord::Base.transaction do
       order_items.each do |item|
         catalog_object_id = item["catalog_object_id"]
@@ -17,14 +21,10 @@ module SquareHelper
 
           if item["modifiers"]
             item["modifiers"].each do |mod|
-              mod_id = mod["catalog_object_id"]
-              mod_quantity = mod["quantity"].to_i
-              next if mod_id.blank? || mod_quantity <= 0
-              
-              process_product_order(account, mod_id, mod_quantity * quantity_sold, location)
+              process_modifier(account, mod, quantity_sold, location)
             end
           end
-          
+
           RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity_sold)
         else
           product = account.products.find_by(sku: catalog_object_id)
@@ -41,14 +41,40 @@ module SquareHelper
     Rails.logger.info("Processed order #{order_id} for account #{account.id}")
   end
 
-  def process_product_order(account, item_id, quantity, location)
-    product = account.products.find_by(sku: item_id)
-    inventory_item = location.inventory_items.find_by(product: product)
-    return unless product && inventory_item
+  def process_modifier(account, modifier, parent_quantity, location)
+    mod_name = modifier["name"]
+    return unless mod_name.present?
+    return if negation_modifier?(mod_name)
 
-    inventory_item.quantity -= quantity
+    product = find_product_for_modifier(account, mod_name)
+    return unless product
+
+    update_inventory_item(product, location, -parent_quantity)
+  end
+
+  def negation_modifier?(modifier_name)
+    cleaned = modifier_name.downcase.gsub(/[^a-z\s]/, '')
+    NEGATION_KEYWORDS.any? { |word| cleaned.match?(/\b#{word}\b/) }
+  end
+
+  def find_product_for_modifier(account, modifier_name)
+    cleaned_name = clean_modifier_name(modifier_name)
+    Product.find_product_for_modifier(account, modifier_name)
+  end
+
+  def clean_modifier_name(name)
+    name.downcase
+        .gsub(/\b(#{MODIFIER_KEYWORDS.join('|')})\b/i, '')
+        .gsub(/[^a-z0-9\s]/, '')
+        .strip
+        .squeeze(' ')
+  end
+
+  def update_inventory_item(product, location, quantity_change)
+    inventory_item = InventoryItem.find_by(product: product, location: location)
+    return unless inventory_item
+
+    inventory_item.quantity += quantity_change
     inventory_item.save!
-    
-    Rails.logger.info("Deducted #{quantity} #{product.unit_type} of #{product.name}")
   end
 end

@@ -1,4 +1,6 @@
 class CloverOrderSyncJob < ApplicationJob
+  MODIFIER_KEYWORDS = %w[extra add double triple xtra x addon].freeze
+  NEGATION_KEYWORDS = %w[no without hold omit exclude].freeze
   queue_as :default
 
   def perform(account_id, order_id)
@@ -23,12 +25,10 @@ class CloverOrderSyncJob < ApplicationJob
         if recipe
           if line["modifications"]
             line["modifications"].each do |mod|
-              mod_id = mod.dig("modification", "id")
-              mod_quantity = mod["quantity"].to_i
-              next if mod_id.blank? || mod_quantity <= 0
-              process_product_order(account, mod_id, mod_quantity * quantity, location)
+              process_clover_modifier(account, mod, quantity, location)
             end
           end
+          
           RecipeOrderProcessorService.new(location).process_recipe(recipe, quantity)
         else
           process_product_order(account, item_id, quantity, location)
@@ -37,10 +37,39 @@ class CloverOrderSyncJob < ApplicationJob
     end
   rescue => e
     Rails.logger.error("Failed to process Clover order #{order_id}: #{e.message}")
-    raise e # Re-raise to retry the job if configured
+    raise e
   end
 
   private
+
+  def process_clover_modifier(account, modifier, parent_quantity, location)
+    mod_name = modifier.dig("modification", "name")
+    return unless mod_name.present?
+    return if negation_modifier?(mod_name)
+
+    product = find_product_for_modifier(account, mod_name)
+    return unless product
+
+    process_product_order(account, product.sku, modifier["quantity"].to_i * parent_quantity, location)
+  end
+
+  def negation_modifier?(modifier_name)
+    cleaned = modifier_name.downcase.gsub(/[^a-z\s]/, '')
+    NEGATION_KEYWORDS.any? { |word| cleaned.match?(/\b#{word}\b/) }
+  end
+
+  def find_product_for_modifier(account, modifier_name)
+    cleaned_name = clean_modifier_name(modifier_name)
+    Product.find_product_by_fuzzy_name(account, modifier_name)
+  end
+
+  def clean_modifier_name(name)
+    name.downcase
+        .gsub(/\b(#{MODIFIER_KEYWORDS.join('|')})\b/i, '')
+        .gsub(/[^a-z0-9\s]/, '')
+        .strip
+        .squeeze(' ')
+  end
 
   def process_product_order(account, item_id, quantity, location)
     product = account.products.find_by(sku: item_id)
