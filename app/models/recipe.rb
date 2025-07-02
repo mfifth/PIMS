@@ -5,7 +5,6 @@ class Recipe < ApplicationRecord
 
   accepts_nested_attributes_for :recipe_items, allow_destroy: true
 
-  validates :uid, presence: true, uniqueness: { scope: :account_id }
   validates :name, presence: true, uniqueness: { scope: :account_id }
   validate :recipe_limit_not_exceeded, on: :create
 
