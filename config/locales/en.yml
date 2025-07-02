@@ -630,7 +630,7 @@ en:
         starter:
           name: "Starter"
           description: "Perfect for small restaurants and food businesses getting started with smart inventory management."
-          price: "$30"
+          price: "$50"
           period: "/mo"
           features:
             - "Add up to 3 administrators with one location"
@@ -642,7 +642,7 @@ en:
         plus:
           name: "Plus"
           description: "For growing restaurants and kitchens looking to scale. Manage more, worry about less."
-          price: "$60"
+          price: "$100"
           period: "/mo"
           features:
             - "Manage up to 3 locations with 5 administrators"
