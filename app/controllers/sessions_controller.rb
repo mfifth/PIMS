@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
     
     if user&.confirmed_at.present?
       start_new_session_for(user)
+      set_user_locale(user)
       redirect_to after_authentication_url
     else
       redirect_to new_session_path, 
@@ -20,5 +21,11 @@ class SessionsController < ApplicationController
   def destroy
     terminate_session
     redirect_to new_session_path
+  end
+
+  private
+
+  def set_user_locale(user)
+    user.update(locale: params[:locale]) if params[:locale]
   end
 end
