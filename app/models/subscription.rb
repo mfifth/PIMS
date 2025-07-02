@@ -28,8 +28,8 @@ class Subscription < ApplicationRecord
   RECIPE_PLAN_LIMITS = {
     'trial' => 20,
     'free' => 3,
-    'starter' => 25,
-    'plus' => 50,
+    'starter' => 20,
+    'plus' => 40,
     'premium' => 30
   }.freeze
 
