@@ -7,6 +7,9 @@ export default class extends Controller {
 
   connect() {
     this.updateTotal()
+    this.itemsListTarget.querySelectorAll(".quantity-input").forEach(input => {
+      input.addEventListener("input", () => this.updateTotal())
+    })
   }
 
   search() {
@@ -35,9 +38,12 @@ export default class extends Controller {
     )
     if (existing) return
 
+    // Generate a unique id for new items to match form structure
+    const newId = `new_${Date.now()}`
+
     const wrapper = document.createElement("div")
     wrapper.className = "flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3"
-    wrapper.dataset.itemId = item.id
+    wrapper.dataset.orderItemId = newId
 
     wrapper.innerHTML = `
       <div class="flex flex-col">
@@ -53,13 +59,14 @@ export default class extends Controller {
                 aria-label="Remove item"
                 class="text-red-600 hover:text-red-800 focus:outline-none"
                 data-action="click->order-item-search#removeItem"
-                data-item-id="${item.id}">
+                data-item-id="${newId}">
           &times;
         </button>
         <input type="hidden" name="order[order_items_attributes][][item_id]" value="${item.id}">
         <input type="hidden" name="order[order_items_attributes][][item_type]" value="${item.item_type}">
         <input type="hidden" name="order[order_items_attributes][][price]" value="${item.price}">
         <input type="hidden" name="order[order_items_attributes][][location_id]" value="${item.location_id}">
+        <input type="hidden" name="order[order_items_attributes][][_destroy]" value="false" data-destroy-field="true">
       </div>
     `
 
@@ -71,14 +78,20 @@ export default class extends Controller {
 
   removeItem(e) {
     const id = e.target.dataset.itemId
-    const el = this.itemsListTarget.querySelector(`[data-item-id="${id}"]`)
-    if (el) el.remove()
+    const el = this.itemsListTarget.querySelector(`[data-order-item-id="${id}"]`)
+    if (el) {
+      const destroyInput = el.querySelector('input[data-destroy-field="true"]')
+      if (destroyInput) destroyInput.value = '1'  // mark for deletion
+      el.style.display = 'none'  // hide it visually
+    }
     this.updateTotal()
   }
 
   updateTotal() {
     let total = 0.0
     this.itemsListTarget.querySelectorAll(".quantity-input").forEach(input => {
+      const parent = input.closest('[data-order-item-id]')
+      if (parent && parent.style.display === 'none') return  // skip hidden (deleted) items
       const price = parseFloat(input.dataset.price)
       const quantity = parseFloat(input.value) || 0
       total += price * quantity

@@ -5,7 +5,7 @@
     <%= form.select :location_id,
       options_from_collection_for_select(@locations, :id, :name, order.location_id),
       { include_blank: "Choose a location" },
-      class: "w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" ,
+      class: "w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
       data: { "order-item-search-target": "location" } %>
   </div>
 
@@ -29,40 +29,41 @@
   <div class="mb-8">
     <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-800">Selected Items</h3>
     <div data-order-item-search-target="itemsList" class="space-y-3 border border-gray-200 rounded-md p-4 bg-gray-50 min-h-[100px]">
-      <% if order.persisted? %>
-        <% order.order_items.each do |order_item| %>
-          <div class="flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3" data-item-id="<%= order_item.item.id %>">
-            <div class="flex flex-col">
-              <span class="font-medium text-gray-900"><%= order_item.item.try(:name) || order_item.item.product.name %></span>
-              <span class="text-sm text-gray-500">$<%= number_with_precision(order_item.price, precision: 2) %></span>
-            </div>
-            <div class="flex items-center space-x-3">
-              <label for="quantity_<%= order_item.item.id %>" class="sr-only">Quantity</label>
-              <input type="number"
-                     id="quantity_<%= order_item.item.id %>"
-                     name="order[order_items_attributes][][quantity]"
-                     value="<%= order_item.quantity %>"
-                     min="1"
-                     class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                     data-price="<%= order_item.price %>"
-                     data-action="input->order-item-search#updateTotal">
-
-              <button type="button"
-                      aria-label="Remove item"
-                      class="text-red-600 hover:text-red-800 focus:outline-none"
-                      data-action="click->order-item-search#removeItem"
-                      data-item-id="<%= order_item.item.id %>">
-                &times;
-              </button>
-
-              <!-- Hidden inputs -->
-              <input type="hidden" name="order[order_items_attributes][][item_id]" value="<%= order_item.item.id %>">
-              <input type="hidden" name="order[order_items_attributes][][item_type]" value="<%= order_item.item_type %>">
-              <input type="hidden" name="order[order_items_attributes][][price]" value="<%= order_item.price %>">
-              <input type="hidden" name="order[order_items_attributes][][location_id]" value="<%= order_item.location_id %>">
-            </div>
+      <% order.order_items.each_with_index do |order_item, index| %>
+        <% item_dom_id = order_item.id || "new_#{index}" %>
+        <div
+          class="flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3"
+          data-order-item-id="<%= item_dom_id %>"
+        >
+          <div class="flex flex-col">
+            <span class="font-medium text-gray-900"><%= order_item.item.try(:name) || order_item.item.product.name %></span>
+            <span class="text-sm text-gray-500">$<%= number_with_precision(order_item.price, precision: 2) %></span>
           </div>
-        <% end %>
+          <div class="flex items-center space-x-3">
+            <input type="number"
+                   name="order[order_items_attributes][][quantity]"
+                   value="<%= order_item.quantity %>"
+                   min="1"
+                   class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                   data-price="<%= order_item.price %>"
+                   data-action="input->order-item-search#updateTotal">
+
+            <button type="button"
+                    aria-label="Remove item"
+                    class="text-red-600 hover:text-red-800 focus:outline-none"
+                    data-action="click->order-item-search#removeItem"
+                    data-item-id="<%= item_dom_id %>">
+              &times;
+            </button>
+
+            <input type="hidden" name="order[order_items_attributes][][id]" value="<%= order_item.id %>">
+            <input type="hidden" name="order[order_items_attributes][][item_id]" value="<%= order_item.item_id %>">
+            <input type="hidden" name="order[order_items_attributes][][item_type]" value="<%= order_item.item_type %>">
+            <input type="hidden" name="order[order_items_attributes][][price]" value="<%= order_item.price %>">
+            <input type="hidden" name="order[order_items_attributes][][location_id]" value="<%= order_item.location_id %>">
+            <input type="hidden" name="order[order_items_attributes][][_destroy]" value="false" data-destroy-field="true">
+          </div>
+        </div>
       <% end %>
     </div>
   </div>

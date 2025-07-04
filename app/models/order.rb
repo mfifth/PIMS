@@ -5,9 +5,13 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :order_items, allow_destroy: true
 
-  before_save :calculate_total
+  before_save :recalculate_total
 
-  def calculate_total
-    self.total = order_items.sum { |item| item.quantity.to_i * item.price.to_f }
+  private
+
+  def recalculate_total
+    self.total = order_items.reject(&:marked_for_destruction?).sum do |item|
+      item.price.to_f * item.quantity.to_i
+    end
   end
 end
