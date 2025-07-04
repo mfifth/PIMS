@@ -15,14 +15,33 @@ class OrdersController < ApplicationController
   end
 
   def update
-    @order = Current.account.orders.find(params[:id])
+    @order = Current.account.orders.includes(order_items: [:item]).find(params[:id])
 
-    if @order.update(order_params)
-      redirect_to @order, notice: "Order updated"
-    else
-      @locations = Current.account.locations
-      render :edit, status: :unprocessable_entity
+    ActiveRecord::Base.transaction do
+      @order.order_items.each do |order_item|
+        if order_item.item.is_a?(Recipe)
+          RecipeOrderProcessorService.new(@order.location).process_recipe(
+            order_item.item,
+            -order_item.quantity # reverse it
+          )
+        elsif order_item.item.is_a?(InventoryItem)
+          order_item.item.update!(
+            quantity: order_item.item.quantity + order_item.quantity
+          )
+        end
+      end
+
+      if @order.update(order_params)
+        redirect_to @order, notice: "Order updated"
+      else
+        @locations = Current.account.locations
+        raise ActiveRecord::Rollback
+      end
     end
+  rescue => e
+    logger.error "Order update failed: #{e.message}"
+    @locations = Current.account.locations
+    render :edit, status: :unprocessable_entity
   end
 
   def destroy
