@@ -156,6 +156,15 @@ class RecipeItem < ApplicationRecord
     (volume_units?(unit) && volume_units?(from_unit)) ||
     (unit == 'units' && from_unit == 'units')
   end
+
+  def convert_quantity(amount, from_unit)
+    return amount if unit == from_unit
+    
+    conversion_rate = CONVERSION_RATES.dig(from_unit, unit)
+    return 0 unless conversion_rate
+
+    amount * conversion_rate
+  end
   
   private
   
@@ -186,14 +195,5 @@ class RecipeItem < ApplicationRecord
   def can_convert?(from_unit)
     return true if unit == from_unit
     CONVERSION_RATES.dig(from_unit, unit).present?
-  end
-
-  def convert_quantity(amount, from_unit)
-    return amount if unit == from_unit
-    
-    conversion_rate = CONVERSION_RATES.dig(from_unit, unit)
-    return 0 unless conversion_rate
-
-    amount * conversion_rate
   end
 end

@@ -30,50 +30,49 @@
     <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-800">Selected Items</h3>
     <div data-order-item-search-target="itemsList" class="space-y-3 border border-gray-200 rounded-md p-4 bg-gray-50 min-h-[100px]">
       <% order.order_items.each_with_index do |order_item, index| %>
-        <% item_dom_id = order_item.id || "new_#{index}" %>
         <div
-          class="flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3"
-          data-order-item-id="<%= item_dom_id %>"
+            class="flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3"
+            data-key="<%= "#{order_item.item_type}-#{order_item.item_id}" %>"
         >
-          <div class="flex flex-col">
-            <span class="font-medium text-gray-900"><%= order_item.item.try(:name) || order_item.item.product.name %></span>
-            <span class="text-sm text-gray-500">$<%= number_with_precision(order_item.price, precision: 2) %></span>
-          </div>
-          <div class="flex items-center space-x-3">
-            <input type="number"
-                   name="order[order_items_attributes][][quantity]"
-                   value="<%= order_item.quantity %>"
-                   min="1"
-                   class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                   data-price="<%= order_item.price %>"
-                   data-action="input->order-item-search#updateTotal">
+            <div class="flex flex-col">
+              <span class="font-medium text-gray-900"><%= order_item.item.try(:name) || order_item.item.product.name %></span>
+              <span class="text-sm text-gray-500">$<%= number_with_precision(order_item.price, precision: 2) %></span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <input type="number"
+                      name="order[order_items_attributes][<%= index %>][quantity]"
+                      value="<%= order_item.quantity %>"
+                      min="1"
+                      class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                      data-price="<%= order_item.price %>"
+                      data-action="input->order-item-search#updateTotal">
 
-            <button type="button"
-                    aria-label="Remove item"
-                    class="text-red-600 hover:text-red-800 focus:outline-none"
-                    data-action="click->order-item-search#removeItem"
-                    data-item-id="<%= item_dom_id %>">
-              &times;
-            </button>
+              <button type="button"
+                      aria-label="Remove item"
+                      class="text-red-600 hover:text-red-800 focus:outline-none"
+                      data-action="click->order-item-search#removeItem"
+                      data-key="<%= "#{order_item.item_type}-#{order_item.item_id}" %>">
+                  &times;
+              </button>
 
-            <input type="hidden" name="order[order_items_attributes][][id]" value="<%= order_item.id %>">
-            <input type="hidden" name="order[order_items_attributes][][item_id]" value="<%= order_item.item_id %>">
-            <input type="hidden" name="order[order_items_attributes][][item_type]" value="<%= order_item.item_type %>">
-            <input type="hidden" name="order[order_items_attributes][][price]" value="<%= order_item.price %>">
-            <input type="hidden" name="order[order_items_attributes][][location_id]" value="<%= order_item.location_id %>">
-            <input type="hidden" name="order[order_items_attributes][][_destroy]" value="false" data-destroy-field="true">
-          </div>
+              <%# Hidden Fields %>
+              <%= hidden_field_tag "order[order_items_attributes][#{index}][id]", order_item.id if order_item.persisted? %>
+              <%= hidden_field_tag "order[order_items_attributes][#{index}][item_id]", order_item.item_id %>
+              <%= hidden_field_tag "order[order_items_attributes][#{index}][item_type]", order_item.item_type %>
+              <%= hidden_field_tag "order[order_items_attributes][#{index}][price]", order_item.price %>
+              <%= hidden_field_tag "order[order_items_attributes][#{index}][location_id]", order_item.location_id %>
+            </div>
         </div>
       <% end %>
     </div>
   </div>
 
-  <!-- Hidden Inputs Container (for dynamically added items) -->
   <div data-order-item-search-target="hiddenInputs"></div>
 
-  <!-- Total Price -->
   <div class="text-right mb-8">
-    <span data-order-item-search-target="total" class="text-2xl font-bold text-gray-900">Total: $0.00</span>
+    <span data-order-item-search-target="total" class="text-2xl font-bold text-gray-900">
+      Total: $<%= number_with_precision(order.order_items.sum { |item| item.price * item.quantity }, precision: 2) %>
+    </span>
   </div>
 
   <!-- Form Actions -->

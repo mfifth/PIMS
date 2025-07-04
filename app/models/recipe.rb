@@ -2,6 +2,7 @@ class Recipe < ApplicationRecord
   belongs_to :account
   has_many :recipe_items, dependent: :destroy
   has_many :products, through: :recipe_items
+  has_many :order_items, as: :item, dependent: :restrict_with_error
 
   accepts_nested_attributes_for :recipe_items, allow_destroy: true
 

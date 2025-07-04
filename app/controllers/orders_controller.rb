@@ -22,7 +22,7 @@ class OrdersController < ApplicationController
         if order_item.item.is_a?(Recipe)
           RecipeOrderProcessorService.new(@order.location).process_recipe(
             order_item.item,
-            -order_item.quantity # reverse it
+            -order_item.quantity
           )
         elsif order_item.item.is_a?(InventoryItem)
           order_item.item.update!(
@@ -55,40 +55,44 @@ class OrdersController < ApplicationController
   end
 
   def create
-    @order = Current.account.orders.new(order_params)
+    @order = Current.account.orders.new(location_id: order_params[:location_id])
     @order.total = 0
 
     ActiveRecord::Base.transaction do
-      @order.save!
+      grouped_items = order_params[:order_items_attributes].values.group_by do |item|
+        [item[:item_type], item[:item_id]]
+      end
 
-      params[:order][:order_items_attributes].each do |item_params|
-        klass = item_params[:item_type].constantize
-        item = klass.find(item_params[:item_id])
-        quantity = item_params[:quantity].to_i
-        price = item_params[:price].to_f
+      grouped_items.each do |(item_type, item_id), items|
+        total_quantity = items.sum { |i| i[:quantity].to_i }
+        first_item = items.first
 
-        @order.order_items.create!(
+        klass = item_type.constantize
+        item = klass.find(item_id)
+        price = first_item[:price].to_f
+
+        @order.order_items.build(
           item: item,
-          location_id: item_params[:location_id],
-          quantity: quantity,
+          location_id: first_item[:location_id],
+          quantity: total_quantity,
           price: price
         )
 
         if item.is_a?(Recipe)
-          RecipeOrderProcessorService.new(@order.location).process_recipe(item, quantity)
+          RecipeOrderProcessorService.new(@order.location).process_recipe(item, total_quantity)
         elsif item.is_a?(InventoryItem)
-          item.update!(quantity: item.quantity - quantity)
+          item.update!(quantity: item.quantity - total_quantity)
         end
 
-        @order.total += price * quantity
+        @order.total += price * total_quantity
       end
 
       @order.save!
+      redirect_to @order, notice: "Order created successfully"
     end
-
-    redirect_to @order, notice: "Order created successfully"
   rescue => e
     logger.error "Order creation failed: #{e.message}"
+    @locations = Current.account.locations
     render :new, status: :unprocessable_entity
   end
 
@@ -98,7 +102,11 @@ class OrdersController < ApplicationController
     params.require(:order).permit(
       :location_id,
       order_items_attributes: [:id, :item_id, :item_type, :quantity, :price, :location_id, :_destroy]
-    )
+    ).tap do |whitelisted|
+      if whitelisted[:order_items_attributes].is_a?(Hash)
+        whitelisted[:order_items_attributes] = whitelisted[:order_items_attributes].values
+      end
+    end
   end
 
   def set_locations
