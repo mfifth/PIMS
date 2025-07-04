@@ -10,6 +10,7 @@ class Product < ApplicationRecord
   has_many :batches, through: :inventory_items, dependent: :destroy
   has_many :locations, through: :inventory_items
   has_many :recipe_items, dependent: :destroy
+  has_many :order_items, as: :item, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :sku, presence: true, uniqueness: { scope: [:account_id] }

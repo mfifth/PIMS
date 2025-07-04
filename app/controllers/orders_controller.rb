@@ -45,9 +45,24 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    @order = Current.account.orders.find(params[:id])
-    @order.destroy
-    redirect_to orders_path, notice: "Order deleted"
+    @order = Current.account.orders.includes(order_items: [:item]).find(params[:id])
+
+    ActiveRecord::Base.transaction do
+      @order.order_items.each do |order_item|
+        if order_item.item.is_a?(Recipe)
+          RecipeOrderProcessorService.new(@order.location).process_recipe(order_item.item, -order_item.quantity)
+        elsif order_item.item.is_a?(InventoryItem)
+          order_item.item.update!(quantity: order_item.item.quantity + order_item.quantity)
+        end
+      end
+
+      @order.destroy!
+    end
+
+    redirect_to orders_path, notice: "Order deleted and inventory restored"
+  rescue => e
+    logger.error "Order delete failed: #{e.message}"
+    redirect_to orders_path, alert: "Failed to delete order"
   end
 
   def show
