@@ -96,7 +96,8 @@ class OrdersController < ApplicationController
         if item.is_a?(Recipe)
           RecipeOrderProcessorService.new(@order.location).process_recipe(item, total_quantity)
         elsif item.is_a?(InventoryItem)
-          item.update!(quantity: item.quantity - total_quantity)
+          new_quantity = [item.quantity - total_quantity, 0].max
+          item.update!(quantity: new_quantity)
         end
 
         @order.total += price * total_quantity
