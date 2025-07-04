@@ -1,0 +1,49 @@
+<turbo-frame id="main" class="max-w-4xl mx-auto px-6 py-10">
+  <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Order #<%= @order.id %></h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-sm">
+      <div>
+        <p class="font-semibold">Location:</p>
+        <p><%= @order.location.name %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Date:</p>
+        <p><%= @order.created_at.strftime("%B %d, %Y %I:%M %p") %></p>
+      </div>
+      <div>
+        <p class="font-semibold">Total:</p>
+        <p class="text-green-700 font-semibold text-lg">$<%= number_with_precision(@order.total, precision: 2) %></p>
+      </div>
+    </div>
+
+    <h2 class="mt-8 mb-4 text-xl font-semibold text-gray-800 border-b pb-2">Order Items</h2>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-gray-700 border border-gray-200 rounded-lg overflow-hidden">
+        <thead class="bg-gray-50 text-xs text-gray-600 uppercase tracking-wide">
+          <tr>
+            <th class="px-4 py-3 text-left">Item</th>
+            <th class="px-4 py-3 text-center">Quantity</th>
+            <th class="px-4 py-3 text-right">Price</th>
+            <th class="px-4 py-3 text-right">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% @order.order_items.includes(:item).each do |order_item| %>
+            <tr>
+              <td class="px-4 py-2"><%= order_item.item.try(:name) || order_item.item.product.name %></td>
+              <td class="px-4 py-2 text-center"><%= order_item.quantity %></td>
+              <td class="px-4 py-2 text-right">$<%= number_with_precision(order_item.price, precision: 2) %></td>
+              <td class="px-4 py-2 text-right">$<%= number_with_precision(order_item.price * order_item.quantity, precision: 2) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-8">
+      <%= link_to "← Back to Orders", orders_path, class: "inline-block text-blue-600 hover:underline text-sm font-medium" %>
+    </div>
+  </div>
+</turbo-frame>

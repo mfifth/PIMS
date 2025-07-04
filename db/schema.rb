@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_051708) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_04_045319) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -147,17 +147,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_051708) do
 
   create_table "order_items", force: :cascade do |t|
     t.integer "order_id", null: false
-    t.integer "product_id", null: false
     t.integer "location_id", null: false
     t.integer "quantity"
     t.decimal "price", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "batch_id"
+    t.string "item_type"
+    t.integer "item_id"
     t.index ["batch_id"], name: "index_order_items_on_batch_id"
+    t.index ["item_type", "item_id"], name: "index_order_items_on_item_type_and_item_id"
     t.index ["location_id"], name: "index_order_items_on_location_id"
     t.index ["order_id"], name: "index_order_items_on_order_id"
-    t.index ["product_id"], name: "index_order_items_on_product_id"
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.decimal "total", precision: 10, scale: 2, default: "0.0", null: false
+    t.integer "account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "location_id"
+    t.index ["account_id"], name: "index_orders_on_account_id"
   end
 
   create_table "products", force: :cascade do |t|

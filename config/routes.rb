@@ -72,6 +72,7 @@ Rails.application.routes.draw do
 
   resources :subscriptions, only: [:new, :create]
   resources :invitations, only: [:create, :destroy]
+  resources :orders
   
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -93,6 +94,7 @@ Rails.application.routes.draw do
   post 'update_inventory', to: 'locations#update_inventory'
 
   get 'inventory_items/lookup', to: 'inventory_items#lookup'
+  get 'inventory_items/search', to: 'inventory_items#search'
   delete 'inventory_items/:id', to: 'inventory_items#destroy'
 
   get 'subscriptions/success', to: 'subscriptions#success'

@@ -1,6 +1,8 @@
 class Location < ApplicationRecord
   has_many :inventory_items, dependent: :destroy
   has_many :products, through: :inventory_items
+  has_many :orders
+
   belongs_to :account
 
   validates :name, presence: true, uniqueness: { scope: :account_id }

@@ -21,6 +21,7 @@
         <% if Current.user.admin? %>
           <li><%= link_to t("sidebar.recipes"), recipes_path, class: sidebar_link_class(recipes_path) %></li>
         <% end %>
+        <li><%= link_to t("sidebar.orders"), orders_path, class: sidebar_link_class(orders_path) %></li>
 
         <span class="text-gray-500 text-xs font-bold uppercase tracking-wide"><%= t("sidebar.personal") %></span>
         <li>
