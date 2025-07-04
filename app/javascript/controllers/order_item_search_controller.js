@@ -36,29 +36,30 @@ export default class extends Controller {
     if (existing) return
 
     const wrapper = document.createElement("div")
-    wrapper.className = "flex items-center justify-between py-2 border-b"
+    wrapper.className = "flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3"
     wrapper.dataset.itemId = item.id
 
     wrapper.innerHTML = `
-      <div>
-        <strong>${item.product_name}</strong> — ${item.price}
+      <div class="flex flex-col">
+        <span class="font-medium text-gray-900">${item.product_name}</span>
+        <span class="text-sm text-gray-500">$${item.price.toFixed(2)}</span>
+      </div>
+      <div class="flex items-center space-x-3">
+        <input type="number" name="order[order_items_attributes][][quantity]" value="1" min="1"
+               class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               data-price="${item.price.toFixed(2)}"
+               data-action="input->order-item-search#updateTotal">
+        <button type="button"
+                aria-label="Remove item"
+                class="text-red-600 hover:text-red-800 focus:outline-none"
+                data-action="click->order-item-search#removeItem"
+                data-item-id="${item.id}">
+          &times;
+        </button>
         <input type="hidden" name="order[order_items_attributes][][item_id]" value="${item.id}">
         <input type="hidden" name="order[order_items_attributes][][item_type]" value="${item.item_type}">
         <input type="hidden" name="order[order_items_attributes][][price]" value="${item.price}">
         <input type="hidden" name="order[order_items_attributes][][location_id]" value="${item.location_id}">
-      </div>
-      <div>
-        Qty:
-        <input type="number" name="order[order_items_attributes][][quantity]" value="1" min="1"
-               class="border px-2 py-1 w-16 ml-2 quantity-input"
-               data-action="input->order-item-search#updateTotal"
-               data-price="${item.price}">
-        <button type="button"
-                class="ml-4 text-red-600 hover:underline"
-                data-action="click->order-item-search#removeItem"
-                data-item-id="${item.id}">
-          ✕
-        </button>
       </div>
     `
 
@@ -79,7 +80,7 @@ export default class extends Controller {
     let total = 0.0
     this.itemsListTarget.querySelectorAll(".quantity-input").forEach(input => {
       const price = parseFloat(input.dataset.price)
-      const quantity = parseFloat(input.value)
+      const quantity = parseFloat(input.value) || 0
       total += price * quantity
     })
     this.totalTarget.textContent = `Total: $${total.toFixed(2)}`

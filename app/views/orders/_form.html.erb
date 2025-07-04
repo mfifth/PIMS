@@ -1,0 +1,85 @@
+<%= form_with(model: order, local: true, data: { controller: "order-item-search" }, class: "max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg") do |form| %>
+  <!-- Location Selection -->
+  <div class="mb-8">
+    <%= form.label :location_id, "Select Location", class: "block mb-2 font-semibold text-gray-700" %>
+    <%= form.select :location_id,
+      options_from_collection_for_select(@locations, :id, :name, order.location_id),
+      { include_blank: "Choose a location" },
+      class: "w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" ,
+      data: { "order-item-search-target": "location" } %>
+  </div>
+
+  <!-- Inventory Search -->
+  <div class="mb-8">
+    <%= label_tag :inventory_search, "Search Products & Recipes", class: "block mb-2 font-semibold text-gray-700" %>
+    <%= text_field_tag :inventory_search,
+      "",
+      placeholder: "Start typing to search...",
+      autocomplete: "off",
+      class: "w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
+      data: {
+        order_item_search_target: "input",
+        action: "input->order-item-search#search"
+      } %>
+
+    <ul data-order-item-search-target="results" class="mt-2 max-h-56 overflow-auto border border-gray-300 rounded-md bg-white shadow-sm"></ul>
+  </div>
+
+  <!-- Selected Items -->
+  <div class="mb-8">
+    <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-800">Selected Items</h3>
+    <div data-order-item-search-target="itemsList" class="space-y-3 border border-gray-200 rounded-md p-4 bg-gray-50 min-h-[100px]">
+      <% if order.persisted? %>
+        <% order.order_items.each do |order_item| %>
+          <div class="flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3" data-item-id="<%= order_item.item.id %>">
+            <div class="flex flex-col">
+              <span class="font-medium text-gray-900"><%= order_item.item.try(:name) || order_item.item.product.name %></span>
+              <span class="text-sm text-gray-500">$<%= number_with_precision(order_item.price, precision: 2) %></span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <label for="quantity_<%= order_item.item.id %>" class="sr-only">Quantity</label>
+              <input type="number"
+                     id="quantity_<%= order_item.item.id %>"
+                     name="order[order_items_attributes][][quantity]"
+                     value="<%= order_item.quantity %>"
+                     min="1"
+                     class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                     data-price="<%= order_item.price %>"
+                     data-action="input->order-item-search#updateTotal">
+
+              <button type="button"
+                      aria-label="Remove item"
+                      class="text-red-600 hover:text-red-800 focus:outline-none"
+                      data-action="click->order-item-search#removeItem"
+                      data-item-id="<%= order_item.item.id %>">
+                &times;
+              </button>
+
+              <!-- Hidden inputs -->
+              <input type="hidden" name="order[order_items_attributes][][item_id]" value="<%= order_item.item.id %>">
+              <input type="hidden" name="order[order_items_attributes][][item_type]" value="<%= order_item.item_type %>">
+              <input type="hidden" name="order[order_items_attributes][][price]" value="<%= order_item.price %>">
+              <input type="hidden" name="order[order_items_attributes][][location_id]" value="<%= order_item.location_id %>">
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Hidden Inputs Container (for dynamically added items) -->
+  <div data-order-item-search-target="hiddenInputs"></div>
+
+  <!-- Total Price -->
+  <div class="text-right mb-8">
+    <span data-order-item-search-target="total" class="text-2xl font-bold text-gray-900">Total: $0.00</span>
+  </div>
+
+  <!-- Form Actions -->
+  <div class="flex space-x-4">
+    <%= form.submit "Save Order",
+      class: "flex-grow py-3 bg-green hover:bg-indigo-700 text-white font-semibold rounded-md transition" %>
+    <%= link_to "Cancel", orders_path,
+      class: "flex-grow py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-md text-center" %>
+  </div>
+<% end %>

@@ -9,6 +9,28 @@ class OrdersController < ApplicationController
     @order = Current.account.orders.new
   end
 
+  def edit
+    @order = Current.account.orders.includes(order_items: [:item]).find(params[:id])
+    @locations = Current.account.locations
+  end
+
+  def update
+    @order = Current.account.orders.find(params[:id])
+
+    if @order.update(order_params)
+      redirect_to @order, notice: "Order updated"
+    else
+      @locations = Current.account.locations
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    @order = Current.account.orders.find(params[:id])
+    @order.destroy
+    redirect_to orders_path, notice: "Order deleted"
+  end
+
   def show
     @order = Current.account.orders.includes(order_items: :item).find(params[:id])
   end
