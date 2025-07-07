@@ -34,7 +34,9 @@ class InventoryItemsController < ApplicationController
         quantity: item.quantity,
         price: item.price.to_f,
         location_id: item.location_id,
-        location_name: item.location.name
+        location_name: item.location.name,
+        conversion_rates: UnitConversion::CONVERSION_RATES[item.unit_type] || {},
+        unit_options: UnitConversion.compatible_units_for(item.unit_type).map { |u| { value: u, label: u.humanize } }
       }
     end
 

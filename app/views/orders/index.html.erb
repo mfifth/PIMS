@@ -24,7 +24,7 @@
                 <%= order.order_items.first&.location&.name || "N/A" %>
               </td>
               <td class="px-6 py-4"><%= l(order.created_at, format: :short) %></td>
-              <td class="px-6 py-4 font-semibold text-green-700">$<%= number_with_precision(order.total, precision: 2) %></td>
+              <td class="px-6 py-4 font-semibold text-green-700">$<%= number_with_precision(order.calculate_total, precision: 2) %></td>
               <td class="px-6 py-4 space-x-2">
                 <%= link_to "View", order_path(order), class: "text-blue-600 hover:underline text-sm" %>
                 <%= link_to "Edit", edit_order_path(order), class: "text-yellow-600 hover:underline text-sm" %>

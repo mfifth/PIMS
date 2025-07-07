@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_04_045319) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_05_220152) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -155,6 +155,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_04_045319) do
     t.integer "batch_id"
     t.string "item_type"
     t.integer "item_id"
+    t.string "unit"
     t.index ["batch_id"], name: "index_order_items_on_batch_id"
     t.index ["item_type", "item_id"], name: "index_order_items_on_item_type_and_item_id"
     t.index ["location_id"], name: "index_order_items_on_location_id"

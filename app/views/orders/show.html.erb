@@ -13,7 +13,7 @@
       </div>
       <div>
         <p class="font-semibold">Total:</p>
-        <p class="text-green-700 font-semibold text-lg">$<%= number_with_precision(@order.total, precision: 2) %></p>
+        <p class="text-green-700 font-semibold text-lg">$<%= number_with_precision(@order.calculate_total, precision: 2) %></p>
       </div>
     </div>
 
@@ -26,18 +26,18 @@
         <thead class="bg-gray-50 text-xs text-gray-600 uppercase tracking-wide">
           <tr>
             <th class="px-4 py-3 text-left">Item</th>
+            <th class="px-4 py-3 text-left">Unit Type</th>
             <th class="px-4 py-3 text-center">Quantity</th>
             <th class="px-4 py-3 text-right">Price</th>
-            <th class="px-4 py-3 text-right">Subtotal</th>
           </tr>
         </thead>
         <tbody class="bg-white divide-y divide-gray-200">
           <% @order.order_items.includes(:item).each do |order_item| %>
             <tr>
               <td class="px-4 py-2"><%= order_item.item.try(:name) || order_item.item.product.name %></td>
+              <td class="px-4 py-2"><%= order_item&.unit&.titleize.presence || 'N/A' %></td>
               <td class="px-4 py-2 text-center"><%= order_item.quantity %></td>
-              <td class="px-4 py-2 text-right">$<%= number_with_precision(order_item.price, precision: 2) %></td>
-              <td class="px-4 py-2 text-right">$<%= number_with_precision(order_item.price * order_item.quantity, precision: 2) %></td>
+              <td class="px-4 py-2 text-right">$<%= number_with_precision(order_item.total_price, precision: 2) %></td>
             </tr>
           <% end %>
         </tbody>

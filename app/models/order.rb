@@ -5,6 +5,10 @@ class Order < ApplicationRecord
 
   accepts_nested_attributes_for :order_items, allow_destroy: true
 
+  def calculate_total
+    order_items.sum(&:subtotal)
+  end
+
   before_save :recalculate_total
 
   private

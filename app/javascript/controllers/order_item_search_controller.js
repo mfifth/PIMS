@@ -6,7 +6,21 @@ export default class extends Controller {
   ]
 
   connect() {
+    this.initializeExistingItems()
     this.updateTotal()
+  }
+
+  initializeExistingItems() {
+    // Add data attributes to existing items for proper total calculation
+    this.itemsListTarget.querySelectorAll("[data-key]").forEach(wrapper => {
+      const quantityInput = wrapper.querySelector(".quantity-input")
+      const price = parseFloat(quantityInput?.dataset.price || "0")
+      const unitSelect = wrapper.querySelector("select[name*='[unit]']")
+      
+      wrapper.dataset.price = price
+      wrapper.dataset.baseUnit = unitSelect?.dataset.baseUnit || ""
+      wrapper.dataset.conversionRates = unitSelect?.dataset.conversionRates || "{}"
+    })
   }
 
   search() {
@@ -22,7 +36,6 @@ export default class extends Controller {
           const li = document.createElement("li")
           li.className = "px-4 py-2 hover:bg-gray-100 cursor-pointer"
           li.textContent = `${item.product_name} - ($${item.price})`
-
           li.addEventListener("click", () => this.addItem(item))
           this.resultsTarget.appendChild(li)
         })
@@ -32,7 +45,6 @@ export default class extends Controller {
   addItem(item) {
     const key = `${item.item_type}-${item.id}`
     const existingItem = this.itemsListTarget.querySelector(`[data-key="${key}"]`)
-  
     if (existingItem) {
       const quantityInput = existingItem.querySelector('.quantity-input')
       quantityInput.value = parseInt(quantityInput.value) + 1
@@ -40,34 +52,50 @@ export default class extends Controller {
       return
     }
 
-    const itemsCount = this.itemsListTarget.querySelectorAll('[data-key]').length
-    const index = itemsCount
+    const index = this.itemsListTarget.querySelectorAll('[data-key]').length
+
+    const unitOptionsHtml = (item.unit_options || []).map(opt =>
+      `<option value="${opt.value}" ${opt.value === item.unit_type ? 'selected' : ''}>${opt.label}</option>`
+    ).join("")
+
+    const unitSelect = item.item_type === "InventoryItem"
+      ? `<select name="order[order_items_attributes][${index}][unit]" 
+                class="unit-select mt-1 border rounded px-2 py-1"
+                data-base-unit="${item.unit_type || ''}"
+                data-conversion-rates='${JSON.stringify(item.conversion_rates || {})}'
+                data-action="change->order-item-search#updateTotal">
+                  ${unitOptionsHtml}
+          </select>
+        `
+      : ""
 
     const wrapper = document.createElement("div")
-    wrapper.className = "flex items-center justify-between p-3 bg-white rounded shadow-sm mb-3"
+    wrapper.className = "grid grid-cols-5 gap-4 items-center p-3 bg-white rounded shadow-sm mb-3"
     wrapper.dataset.key = key
+    wrapper.dataset.price = item.price
+    wrapper.dataset.baseUnit = item.unit_type || ""
+    wrapper.dataset.conversionRates = JSON.stringify(item.conversion_rates || {})
 
     wrapper.innerHTML = `
-      <div class="flex flex-col">
-        <span class="font-medium text-gray-900">${item.product_name}</span>
-        <span class="text-sm text-gray-500">$${item.price.toFixed(2)}</span>
+      <div class="col-span-2">
+        <div class="font-medium text-gray-900">${item.product_name}</div>
+        <div class="text-sm text-gray-500">$${item.price.toFixed(2)}</div>
       </div>
-      <div class="flex items-center space-x-3">
+      <div>${unitSelect}</div>
+      <div>
         <input type="number"
-              name="order[order_items_attributes][${index}][quantity]"
-              value="1" min="1"
-              class="quantity-input w-20 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              data-price="${item.price.toFixed(2)}"
-              data-action="input->order-item-search#updateTotal">
-
+               name="order[order_items_attributes][${index}][quantity]"
+               value="1"
+               min="0"
+               class="quantity-input w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               data-action="input->order-item-search#updateTotal">
+      </div>
+      <div class="flex justify-end space-x-2">
         <button type="button"
                 aria-label="Remove item"
                 class="text-red-600 hover:text-red-800 focus:outline-none"
                 data-action="click->order-item-search#removeItem"
-                data-key="${key}">
-          &times;
-        </button>
-
+                data-key="${key}">&times;</button>
         <input type="hidden" name="order[order_items_attributes][${index}][item_id]" value="${item.id}">
         <input type="hidden" name="order[order_items_attributes][${index}][item_type]" value="${item.item_type}">
         <input type="hidden" name="order[order_items_attributes][${index}][price]" value="${item.price}">
@@ -84,34 +112,49 @@ export default class extends Controller {
   removeItem(e) {
     const key = e.target.dataset.key
     const el = this.itemsListTarget.querySelector(`[data-key="${key}"]`)
-    if (!el) return
 
-    // Find the index in the field name
-    const idInput = el.querySelector('input[name*="[id]"]')
-    const indexMatch = idInput?.name.match(/\[order_items_attributes\]\[(\d+)\]/) || 
-                      idInput?.name.match(/\[(\d+)\]\[id\]/)
+    if (el) {
+      const inputs = el.querySelectorAll('input, select')
+      inputs.forEach(input => {
+        if (input.name && input.name.match(/\[(quantity|item_id|item_type|price|unit)\]$/)) {
+          const newInput = document.createElement("input")
+          newInput.type = "hidden"
+          newInput.name = input.name.replace(/\[(\w+)\]$/, '[_destroy]')
+          newInput.value = "1"
+          this.hiddenInputsTarget.appendChild(newInput)
+        }
+      })
 
-    if (idInput && indexMatch) {
-      const index = indexMatch[1]
-
-      // Append _destroy and id as hidden inputs
-      this.hiddenInputsTarget.insertAdjacentHTML('beforeend', `
-        <input type="hidden" name="order[order_items_attributes][${index}][id]" value="${idInput.value}">
-        <input type="hidden" name="order[order_items_attributes][${index}][_destroy]" value="1">
-      `)
+      el.remove()
+      this.updateTotal()
     }
-
-    el.remove()
-    this.updateTotal()
   }
 
   updateTotal() {
     let total = 0.0
-    this.itemsListTarget.querySelectorAll(".quantity-input").forEach(input => {
-      const price = parseFloat(input.dataset.price || "0")
-      const quantity = parseFloat(input.value || "0")
-      total += price * quantity
+
+    this.itemsListTarget.querySelectorAll("[data-key]").forEach(wrapper => {
+      const price = parseFloat(wrapper.dataset.price || "0")
+      const baseUnit = wrapper.dataset.baseUnit || null
+      const conversionRates = JSON.parse(wrapper.dataset.conversionRates || "{}")
+
+      const quantityInput = wrapper.querySelector(".quantity-input")
+      const unitSelect = wrapper.querySelector(".unit-select")
+
+      const quantity = parseFloat(quantityInput?.value || "0")
+      const selectedUnit = unitSelect?.value || baseUnit
+
+      let adjustedQuantity = quantity
+
+      // Only apply unit conversion if it's an InventoryItem with unit select
+      if (unitSelect && selectedUnit && selectedUnit !== baseUnit && conversionRates[selectedUnit]) {
+        const rate = conversionRates[selectedUnit]
+        adjustedQuantity = quantity / rate // Convert to base unit quantity
+      }
+
+      total += adjustedQuantity * price
     })
+
     this.totalTarget.textContent = `Total: $${total.toFixed(2)}`
   }
 }
