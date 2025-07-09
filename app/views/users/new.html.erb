@@ -65,6 +65,15 @@
           class: "w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" %>
       </div>
 
+      <!-- Terms Acceptance Checkbox -->
+      <div class="flex items-start">
+        <%= form.check_box :accepted_terms, required: true, class: "mr-2 mt-1" %>
+        <label class="text-sm text-gray-700">
+          I agree to the 
+          <%= link_to "End User License Agreement", "/eula", target: "_blank", class: "text-blue-600 hover:underline" %>
+        </label>
+      </div>
+
       <!-- Submit Button -->
       <div class="w-full px-1 py-1 text-white text-center bg-blue-600 rounded-lg hover:bg-blue-700 transition font-semibold text-lg">
         <%= form.submit t('sign_up.form.submit_button') %>

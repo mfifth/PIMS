@@ -13,6 +13,7 @@ class User < ApplicationRecord
 
   has_many :sessions, dependent: :destroy
 
+  validates :accepted_terms, acceptance: true
   validates :email_address, 
   presence: { message: I18n.t('notifications.blank_email') },
   uniqueness: { 
