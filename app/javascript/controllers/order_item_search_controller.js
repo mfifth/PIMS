@@ -11,12 +11,13 @@ export default class extends Controller {
   }
 
   initializeExistingItems() {
-    // Add data attributes to existing items for proper total calculation
     this.itemsListTarget.querySelectorAll("[data-key]").forEach(wrapper => {
       const quantityInput = wrapper.querySelector(".quantity-input")
-      const price = parseFloat(quantityInput?.dataset.price || "0")
+      const priceInput = wrapper.querySelector("input[name*='[price]']")
       const unitSelect = wrapper.querySelector("select[name*='[unit]']")
-      
+
+      const price = parseFloat(wrapper.dataset.price || priceInput?.value || "0")
+
       wrapper.dataset.price = price
       wrapper.dataset.baseUnit = unitSelect?.dataset.baseUnit || ""
       wrapper.dataset.conversionRates = unitSelect?.dataset.conversionRates || "{}"

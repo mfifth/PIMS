@@ -1,98 +1,90 @@
-<%= form_with(model: order, local: true, data: { controller: "order-item-search" }, class: "max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg") do |form| %>
-  <!-- Location Selection -->
-  <div class="mb-8">
-    <%= form.label :location_id, "Select Location", class: "block mb-2 font-semibold text-gray-700" %>
-    <%= form.select :location_id,
-      options_from_collection_for_select(@locations, :id, :name, order.location_id),
-      { include_blank: "Choose a location" },
-      class: "w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
-      data: { "order-item-search-target": "location" } %>
+<%= form_with model: @order, local: false, data: { controller: "order-item-search" }, class: "bg-gray-50 p-8 rounded-lg shadow-md" do |f| %>
+  <div class="mb-6">
+    <%= f.label :location_id, "Location", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= f.collection_select :location_id, @locations, :id, :name, {},
+      class: "w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
+      data: { order_item_search_target: "location" } %>
   </div>
 
-  <!-- Search Field -->
-  <div class="mb-8">
-    <%= label_tag :inventory_search, "Search Products & Recipes", class: "block mb-2 font-semibold text-gray-700" %>
-    <%= text_field_tag :inventory_search,
-      "",
-      placeholder: "Start typing...",
-      autocomplete: "off",
-      class: "w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
-      data: {
-        order_item_search_target: "input",
-        action: "input->order-item-search#search"
-      } %>
-    <ul data-order-item-search-target="results" class="mt-2 max-h-56 overflow-auto border border-gray-300 rounded-md bg-white shadow-sm"></ul>
+  <div class="mb-6">
+    <%= label_tag :inventory_search, "Search Inventory", class: "block text-sm font-semibold text-gray-700 mb-2" %>
+    <%= text_field_tag :inventory_search, nil, placeholder: "Start typing to search inventory...", autocomplete: "off",
+      class: "w-full rounded-md border border-gray-300 bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500",
+      data: { action: "input->order-item-search#search", order_item_search_target: "input" } %>
+    <ul data-order-item-search-target="results" class="bg-white border border-gray-200 rounded mt-1 max-h-52 overflow-y-auto shadow-lg z-10"></ul>
   </div>
 
-  <!-- Selected Items -->
-  <div class="mb-8">
-    <h3 class="text-xl font-semibold mb-4 border-b pb-2 text-gray-800">Selected Items</h3>
-    <div data-order-item-search-target="itemsList" class="space-y-3 border border-gray-200 rounded-md p-4 bg-gray-50 min-h-[100px]">
-      <% order.order_items.each_with_index do |order_item, index| %>
-        <div class="grid grid-cols-12 items-center gap-4 bg-white p-4 rounded shadow-sm" data-key="<%= "#{order_item.item_type}-#{order_item.item_id}" %>">
-          <!-- Name -->
-          <div class="col-span-4">
-            <div class="font-medium text-gray-900"><%= order_item.item.try(:name) || order_item.item.product.name %></div>
-            <div class="text-sm text-gray-500">$<%= number_with_precision(order_item.price, precision: 2) %></div>
-          </div>
+  <div data-order-item-search-target="itemsList" class="space-y-4 mb-8">
+    <% @order.order_items.each_with_index do |order_item, index| %>
+      <% item = order_item.item %>
+      <% key = "#{order_item.item_type}-#{order_item.item_id}" %>
+      <% base_unit = item.try(:unit_type) %>
+      <% conversion_rates = item.try(:conversion_rates) || {} %>
+      <% price = order_item.price %>
 
-          <!-- Unit Dropdown (InventoryItem only) -->
-          <% if order_item.item_type == "InventoryItem" %>
-            <div class="col-span-3">
-              <label class="block text-sm text-gray-600">Unit</label>
-              <%= select_tag "order[order_items_attributes][#{index}][unit]",
-                  options_for_select(UnitConversion.compatible_units_for(order_item.item.unit_type).map { |u| [u.humanize, u] }, order_item.unit),
-                  class: "mt-1 block w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" %>
-            </div>
-          <% end %>
+      <div class="grid grid-cols-12 gap-2 items-center p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow duration-200"
+           data-key="<%= key %>"
+           data-price="<%= price %>"
+           data-base-unit="<%= base_unit %>"
+           data-conversion-rates="<%= conversion_rates.to_json %>">
 
-          <!-- Quantity -->
-          <div class="col-span-2">
-            <label class="block text-sm text-gray-600">Qty</label>
-            <input type="number"
-                   name="order[order_items_attributes][<%= index %>][quantity]"
-                   value="<%= order_item.quantity %>"
-                   min="1"
-                   class="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 quantity-input"
-                   data-price="<%= order_item.price %>"
-                   data-action="input->order-item-search#updateTotal">
-          </div>
-
-          <!-- Remove Button -->
-          <div class="col-span-1 text-right">
-            <button type="button"
-                    aria-label="Remove item"
-                    class="text-red-600 hover:text-red-800 focus:outline-none"
-                    data-action="click->order-item-search#removeItem"
-                    data-key="<%= "#{order_item.item_type}-#{order_item.item_id}" %>">
-              &times;
-            </button>
-          </div>
-
-          <!-- Hidden Fields -->
-          <%= hidden_field_tag "order[order_items_attributes][#{index}][id]", order_item.id if order_item.persisted? %>
-          <%= hidden_field_tag "order[order_items_attributes][#{index}][item_id]", order_item.item_id %>
-          <%= hidden_field_tag "order[order_items_attributes][#{index}][item_type]", order_item.item_type %>
-          <%= hidden_field_tag "order[order_items_attributes][#{index}][price]", order_item.price %>
-          <%= hidden_field_tag "order[order_items_attributes][#{index}][location_id]", order_item.location_id %>
+        <div class="col-span-5">
+          <div class="text-lg font-semibold text-gray-900"><%= item.try(:name) || item.product.name %></div>
+          <div class="text-sm text-gray-500">$<%= '%.2f' % price %></div>
         </div>
-      <% end %>
-    </div>
+
+        <div class="col-span-2">
+          <% if order_item.item_type == "InventoryItem" %>
+            <% compatible_units = UnitConversion.compatible_unit_options(item.unit_type || 'units') %>
+            <select name="order[order_items_attributes][<%= index %>][unit]" 
+                    class="unit-select w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    data-base-unit="<%= item.unit_type || '' %>"
+                    data-conversion-rates='<%= item.conversion_rates.to_json %>'
+                    data-action="change->order-item-search#updateTotal">
+              <% compatible_units.each do |opt| %>
+                <option value="<%= opt[:value] %>" <%= "selected" if opt[:value] == order_item.unit %>>
+                  <%= opt[:label] %>
+                </option>
+              <% end %>
+            </select>
+          <% else %>
+            <div class="text-gray-700 font-medium"><%= order_item.unit %></div>
+          <% end %>
+        </div>
+
+        <div class="col-span-2">
+          <input type="number"
+                 name="order[order_items_attributes][<%= index %>][quantity]"
+                 value="<%= order_item.quantity %>"
+                 min="0"
+                 class="quantity-input w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                 data-action="input->order-item-search#updateTotal"
+                 aria-label="Quantity">
+        </div>
+
+        <div class="col-span-2 flex justify-end space-x-3">
+          <button type="button"
+                  class="text-red-600 hover:text-red-800 focus:outline-none"
+                  data-action="click->order-item-search#removeItem"
+                  data-key="<%= key %>"
+                  aria-label="Remove item">&times;</button>
+
+          <input type="hidden" name="order[order_items_attributes][<%= index %>][item_id]" value="<%= order_item.item_id %>">
+          <input type="hidden" name="order[order_items_attributes][<%= index %>][item_type]" value="<%= order_item.item_type %>">
+          <input type="hidden" name="order[order_items_attributes][<%= index %>][price]" value="<%= price %>">
+          <input type="hidden" name="order[order_items_attributes][<%= index %>][location_id]" value="<%= order_item.location_id %>">
+        </div>
+      </div>
+    <% end %>
   </div>
 
   <div data-order-item-search-target="hiddenInputs"></div>
 
-  <div class="text-right mb-8">
-    <span data-order-item-search-target="total" class="text-2xl font-bold text-gray-900">
-      Total: $<%= number_with_precision(order.order_items.sum { |i| i.quantity * i.price }, precision: 2) %>
-    </span>
+  <div data-order-item-search-target="total" class="text-right font-extrabold text-2xl text-green-700 mb-6 tracking-wide">
+    Total: $0.00
   </div>
 
-  <!-- Form Actions -->
-  <div class="flex space-x-4">
-    <%= form.submit "Save Order",
-      class: "flex-grow py-3 bg-green hover:bg-green-700 text-white font-semibold rounded-md transition" %>
-    <%= link_to "Cancel", orders_path,
-      class: "flex-grow py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-md text-center" %>
+  <div class="flex justify-end">
+    <%= f.submit "Save Order", class: "bg-green hover:bg-indigo-700 active:bg-indigo-800 text-white font-semibold px-6 py-3 rounded-md shadow-md transition-colors duration-200" %>
   </div>
 <% end %>

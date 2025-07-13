@@ -5,7 +5,7 @@ class OrderItemProcessorService
 
   def process(order_item:, action:)
     item = order_item.item
-    quantity = order_item.quantity
+    quantity = order_item.quantity.to_f
     unit = order_item.unit
 
     case item
@@ -25,16 +25,21 @@ class OrderItemProcessorService
 
   def process_inventory_item(item, quantity, unit, action)
     base_unit = item.unit_type
-    return unless UnitConversion.compatible_units_for(unit).include?(base_unit)
 
-    converted_quantity = UnitConversion.convert(quantity, from: unit, to: base_unit)
-    converted_quantity = UnitConversion.rounded(converted_quantity, base_unit)
+    compatible_units = UnitConversion.unit_compatibility_map[base_unit] || [base_unit]
+    return unless compatible_units.include?(unit)
+
+    # Convert quantity from given unit to base unit
+    converted_quantity = UnitConversion.convert_quantity(quantity, unit, base_unit)
+    # Round quantity according to unit precision
+    rounded_quantity = UnitConversion.round_for_unit(converted_quantity, base_unit)
 
     case action
     when :add
-      item.update!(quantity: [item.quantity - converted_quantity, 0].max)
+      new_quantity = [item.quantity - rounded_quantity, 0].max
+      item.update!(quantity: new_quantity)
     when :remove
-      item.update!(quantity: item.quantity + converted_quantity)
+      item.update!(quantity: item.quantity + rounded_quantity)
     end
   end
 end

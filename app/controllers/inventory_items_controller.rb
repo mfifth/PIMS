@@ -36,7 +36,7 @@ class InventoryItemsController < ApplicationController
         location_id: item.location_id,
         location_name: item.location.name,
         conversion_rates: UnitConversion::CONVERSION_RATES[item.unit_type] || {},
-        unit_options: UnitConversion.compatible_units_for(item.unit_type).map { |u| { value: u, label: u.humanize } }
+        unit_options: UnitConversion.compatible_unit_options(item.unit_type)
       }
     end
 
@@ -56,7 +56,6 @@ class InventoryItemsController < ApplicationController
 
     render json: results
   end
-
 
   def destroy
     @inventory_item = InventoryItem.find(params[:id])

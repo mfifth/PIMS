@@ -22,14 +22,16 @@ class OrdersController < ApplicationController
     @order.total = 0
 
     ActiveRecord::Base.transaction do
-      grouped_items = order_params[:order_items_attributes].group_by { |i| [i[:item_type], i[:item_id], i[:unit]] }
+      raw_items = order_params[:order_items_attributes]
+      item_attrs = raw_items.is_a?(Hash) ? raw_items.values : Array.wrap(raw_items)
+
+      grouped_items = item_attrs.group_by { |i| [i[:item_type], i[:item_id], i[:unit]] }
 
       grouped_items.each do |(item_type, item_id, unit), items|
         total_quantity = items.sum { |i| i[:quantity].to_f }
         first_item = items.first
 
-        klass = item_type.constantize
-        item = klass.find(item_id)
+        item = item_type.constantize.find(item_id)
         price = first_item[:price].to_f
 
         order_item = @order.order_items.build(
@@ -57,7 +59,6 @@ class OrdersController < ApplicationController
     @order = Current.account.orders.includes(order_items: [:item]).find(params[:id])
 
     ActiveRecord::Base.transaction do
-      # Restore inventory from existing items
       @order.order_items.each do |order_item|
         OrderItemProcessorService.new(@order.location).process(order_item: order_item, action: :remove)
       end
@@ -66,20 +67,16 @@ class OrdersController < ApplicationController
       total = 0
       items_attributes = order_params[:order_items_attributes] || []
 
-      # Create a hash to accumulate quantities for identical items
       items_hash = {}
       items_attributes.each do |item_attrs|
         key = [item_attrs[:item_type], item_attrs[:item_id], item_attrs[:unit]].join('-')
         if items_hash[key]
-          # Accumulate quantity for identical items
           items_hash[key][:quantity] += item_attrs[:quantity].to_f
         else
-          # Store the first occurrence
           items_hash[key] = item_attrs.merge(quantity: item_attrs[:quantity].to_f)
         end
       end
 
-      # Process each unique item
       items_hash.each_value do |item_attrs|
         klass = item_attrs[:item_type].constantize
         item = klass.find(item_attrs[:item_id])

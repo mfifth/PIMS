@@ -1,4 +1,6 @@
 class InventoryItem < ApplicationRecord
+  include UnitConversion
+
   belongs_to :location
   belongs_to :product
   belongs_to :batch, optional: true
@@ -22,6 +24,14 @@ class InventoryItem < ApplicationRecord
   
   def manufactured_date
     batch&.manufactured_date
+  end
+
+  def unit_options
+    UnitConversion.unit_options
+  end
+
+  def conversion_rates
+    CONVERSION_RATES[unit_type] || {}
   end
   
   private

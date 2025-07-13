@@ -10,8 +10,8 @@ class OrderItem < ApplicationRecord
   def total_price
     if inventory_item?
       item_unit = item.unit_type
-      converted_quantity = UnitConversion.convert(quantity, from: unit, to: item_unit)
-      UnitConversion.rounded(converted_quantity * price, item_unit)
+      converted_quantity = UnitConversion.convert_quantity(quantity, unit, item_unit)
+      UnitConversion.round_for_unit(converted_quantity * price, item_unit)
     else
       (quantity * price).round(2)
     end
@@ -25,7 +25,7 @@ class OrderItem < ApplicationRecord
     return price unless inventory_item?
 
     if sold_unit != base_unit
-      UnitConversion.convert(1.0, from: sold_unit, to: base_unit) * item.price
+      UnitConversion.convert_quantity(1.0, sold_unit, base_unit) * item.price
     else
       item.price
     end
@@ -37,7 +37,7 @@ class OrderItem < ApplicationRecord
     return quantity unless inventory_item?
 
     if sold_unit != base_unit
-      UnitConversion.convert(quantity.to_f, from: sold_unit, to: base_unit)
+      UnitConversion.convert_quantity(quantity.to_f, sold_unit, base_unit)
     else
       quantity.to_f
     end
