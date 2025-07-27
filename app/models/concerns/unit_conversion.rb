@@ -51,6 +51,10 @@ module UnitConversion
     def convertible_units?(from_unit, to_unit)
       return true if from_unit == to_unit
 
+      # Check if we have a conversion rate defined for this unit pair
+      return true if CONVERSION_RATES.dig(from_unit, to_unit)
+
+      # Fallback to category-based conversion (for backward compatibility)
       (metric_weight_units?(from_unit) && metric_weight_units?(to_unit)) ||
         (imperial_weight_units?(from_unit) && imperial_weight_units?(to_unit)) ||
         (volume_units?(from_unit) && volume_units?(to_unit)) ||
