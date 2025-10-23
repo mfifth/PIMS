@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_09_205600) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_10_000000) do
   create_table "accounts", force: :cascade do |t|
     t.integer "users_id"
     t.datetime "created_at", null: false
@@ -168,6 +168,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_205600) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "location_id"
+    t.boolean "replenish_on_arrival", default: false
     t.index ["account_id"], name: "index_orders_on_account_id"
   end
 
@@ -277,6 +278,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_09_205600) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "batches", "suppliers"
   add_foreign_key "inventory_items", "products"
+  add_foreign_key "order_items", "orders"
   add_foreign_key "invitations", "accounts"
   add_foreign_key "location_product_capacities", "locations"
   add_foreign_key "location_product_capacities", "products"
