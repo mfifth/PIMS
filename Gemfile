@@ -35,7 +35,7 @@ gem 'stripe_event'
 
 gem 'dotenv', groups: [:development, :test]
 
-gem 'pg', group: :production
+gem 'pg'
 
 gem 'square.rb'
 

@@ -1,0 +1,28 @@
+app = "pims"
+primary_region = "iad"
+
+[build]
+  builder = "heroku/builder:24"
+
+[build.release]
+  command = "rails db:migrate"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[processes]
+  app = "bin/rails server -b 0.0.0.0"
+  worker = "bundle exec good_job start"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
+
+[env]
+  PORT = "3000"
