@@ -65,30 +65,15 @@ class User < ApplicationRecord
   private
 
   def create_account_details
-    return if Invitation.find_by(email: email_address).present?
+    account = Account.create!(
+      stripe_customer_id: SecureRandom.hex(8),
+      created_at: Time.current,
+      updated_at: Time.current
+    )
 
-    account = Account.create
-    account.users << self
-    account.save
+    self.account = account
 
-    Subscription.create(account_id: account.id)
-
-    customer_params = {
-        email: email_address,
-        metadata: { user_id: id, account_id: account.id, app: "PIMS" },
-        name: name
-      }
-    
-    unless Rails.env.development?
-      customer = Stripe::Customer.create(customer_params)
-      account.update(stripe_customer_id: customer['id'])
-        
-      Stripe::Subscription.create(
-          customer: customer['id'],
-          items: [{ price: ENV['STRIPE_FREE_SUBSCRIPTION_PRICE_ID'] }],
-          metadata: { account_id: account.id }
-        )
-    end
+    subscription = Subscription.create(account_id: account.id)
 
     Notification.create(message: I18n.t('notifications.basic_instructions'), 
     notification_type: "notice", account_id: account.id)

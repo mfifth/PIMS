@@ -26,8 +26,9 @@ class UsersController < ApplicationController
         start_new_session_for(@user)
         redirect_to dashboard_path, notice: t('notifications.account_created')
       else
-        @user.send_confirmation_email!
-        redirect_to root_path, notice: t('notifications.check_email')
+        @user.update(confirmed_at: Time.current)
+        start_new_session_for(@user)
+        redirect_to dashboard_path, notice: t('notifications.account_created')
       end
     else
       render :new, status: :unprocessable_entity
