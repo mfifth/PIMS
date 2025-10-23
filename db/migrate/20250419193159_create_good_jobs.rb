@@ -2,8 +2,6 @@
 
 class CreateGoodJobs < ActiveRecord::Migration[8.0]
   def change
-    return if Rails.env.development?
-
     create_table :good_jobs, id: :uuid do |t|
       t.text :queue_name
       t.integer :priority

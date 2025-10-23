@@ -53,7 +53,6 @@ products = [
     attrs.merge(
       description: Faker::Food.description,
       price: rand(1.0..15.0).round(2),
-      user: user,
       account: account
     )
   )

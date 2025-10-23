@@ -5,7 +5,7 @@ primary_region = "iad"
   builder = "heroku/builder:24"
 
 [build.release]
-  command = "rails db:migrate"
+  command = "RAILS_ENV=production rails db:migrate"
 
 [http_service]
   internal_port = 3000
@@ -26,3 +26,4 @@ primary_region = "iad"
 
 [env]
   PORT = "3000"
+  RAILS_ENV = "production"
